@@ -3,7 +3,7 @@ import { Outlet, Navigate } from "react-router-dom";
 
 const AdminPrivateRoute = () => {
   const currentUser = {
-    isAdmin: true,
+    isAdmin: false,
   };
   return currentUser && currentUser.isAdmin ? (
     <Outlet />

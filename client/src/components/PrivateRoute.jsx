@@ -3,9 +3,7 @@ import { Outlet, Navigate } from "react-router-dom";
 
 const PrivateRoute = () => {
   const currentUser = {
-    isAdmin: true,
-    name: "admin",
-    email: "email@admin.com",
+    isAdmin: false,
   };
 
   return currentUser && !currentUser.isAdmin ? (
