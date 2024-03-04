@@ -1,10 +1,10 @@
 import React from "react";
-import { Outlet, Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const PrivateRoute = () => {
-  const currentUser = {
-    isAdmin: false,
-  };
+  const currentUser = useSelector((state) => state.currentUser);
+  console.log(currentUser);
 
   return currentUser && !currentUser.isAdmin ? (
     <Outlet />

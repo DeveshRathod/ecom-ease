@@ -3,7 +3,7 @@ import image from "../assets/authimage.png";
 
 const Authwrapper = ({ children }) => {
   return (
-    <div className="w-screen h-screen bg-white flex flex-col md:flex-row">
+    <div className="w-screen h-screen bg-white flex flex-col md:flex-row auth">
       <div className="hidden md:flex md:flex-1 justify-center items-center">
         <img
           src={image}
@@ -12,7 +12,7 @@ const Authwrapper = ({ children }) => {
         />
       </div>
       <div className="flex-1 flex justify-center items-center">
-        <div className="w-full md:w-96 h-fit md:h-auto rounded-md p-8 md:p-4 shadow-md bg-white">
+        <div className="w-fit h-fit md:h-auto rounded-md p-8 md:p-4 shadow-md bg-white">
           {children}
         </div>
       </div>

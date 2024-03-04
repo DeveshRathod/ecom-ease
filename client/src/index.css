@@ -1,3 +1,26 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.nav {
+  height: 10vh;
+  width: 100%;
+}
+
+.auth {
+  height: 90vh;
+  width: 100%;
+}
+
+.main {
+  height: 90vh;
+  background-color: white;
+  padding-left: 10%;
+  padding-right: 10%;
+}

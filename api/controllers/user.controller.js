@@ -4,7 +4,7 @@ import bcryptjs from "bcryptjs";
 
 export const me = async (req, res) => {
   try {
-    const token = req.headers.authorization.split(" ")[1];
+    const token = req.headers.authorization;
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded);
 
@@ -42,13 +42,25 @@ export const signup = async (req, res) => {
       password: hashedPassword,
     });
 
-    user.save();
+    await user.save();
 
     const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
       expiresIn: 86400,
     });
 
-    return res.status(201).json({ token: token, user });
+    const currentUser = {
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      profile: user.profile,
+      cart: user.cart,
+      address: user.address,
+      wishlist: user.wishlist,
+      orders: user.orders,
+      isAdmin: user.isAdmin,
+    };
+
+    return res.status(201).json({ token: token, currentUser });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Server error" });
@@ -86,7 +98,19 @@ export const signin = async (req, res) => {
       expiresIn: 86400,
     });
 
-    return res.status(200).json({ token: token, user });
+    const currentUser = {
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      profile: user.profile,
+      cart: user.cart,
+      address: user.address,
+      wishlist: user.wishlist,
+      orders: user.orders,
+      isAdmin: user.isAdmin,
+    };
+
+    return res.status(200).json({ token: token, currentUser });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Server error" });
