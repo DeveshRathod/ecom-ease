@@ -12,7 +12,7 @@ const Navbar = () => {
   return (
     <div className="nav flex p-4 sm:p-8 justify-between items-center bg-[#FFBE98] ">
       <Link to="/" className="text-xs sm:text-xl">
-        <h1>Ecom Ease</h1>
+        <h1>ShopEase</h1>
       </Link>
       <div className="bg-[#FEECE2] rounded-md flex items-center">
         <div className="p-2">

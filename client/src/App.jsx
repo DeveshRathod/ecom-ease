@@ -10,6 +10,7 @@ import AdminPrivateRoute from "./components/AdminPrivateRoute";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { setUser } from "./store/reducers/user.slice";
+import Explore from "./pages/Explore";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -37,6 +38,7 @@ const App = () => {
           <Navigate to="/signin" />;
         }
       } catch (error) {
+        localStorage.setItem("currentUser", null);
         <Navigate to="/signin" />;
         console.error("Error fetching user data:", error.message);
       }
@@ -51,6 +53,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/signin" element={<Signin />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/explore" element={<Explore />} />
         <Route element={<PrivateRoute />}>
           <Route path="/cart" element={<Cart />} />
         </Route>
