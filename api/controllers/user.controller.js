@@ -244,7 +244,7 @@ export const addAddress = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    return res.status(200).json({ user: updatedUser });
+    return res.status(200).json({ message: "Address Added" });
   } catch (error) {
     return res.status(500).json({ message: "Internal Server Error" });
   }
@@ -265,7 +265,7 @@ export const deleteAddress = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    return res.status(200).json(updatedUser);
+    return res.status(200).json({ message: "Address Deleted" });
   } catch (error) {
     return res.status(500).json({ message: "Internal Server Error" });
   }
