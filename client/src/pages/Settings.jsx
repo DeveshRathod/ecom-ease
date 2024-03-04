@@ -28,6 +28,15 @@ const Settings = () => {
     pincode: "",
   });
 
+  const resetAddress = () => {
+    setAddressData({
+      addressLine1: "",
+      addressLine2: "",
+      addressLine3: "",
+      pincode: "",
+    });
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setSuccess("");
@@ -95,15 +104,11 @@ const Settings = () => {
         );
 
         setSuccess("Successfully added address");
-        setAddressData({
-          addressLine1: "",
-          addressLine2: "",
-          addressLine3: "",
-          pincode: "",
-        });
+        resetAddress();
       } catch (error) {
         setErrorMessage(error.response.data.message);
         setShowModal(true);
+        resetAddress();
       }
     } else {
       setShowModal(true);
