@@ -8,6 +8,7 @@ import Cart from "./pages/Cart";
 import PrivateRoute from "./components/PrivateRoute";
 import AdminPrivateRoute from "./components/AdminPrivateRoute";
 import Explore from "./pages/Explore";
+import Settings from "./pages/Settings";
 
 const App = () => {
   return (
@@ -19,9 +20,12 @@ const App = () => {
         <Route path="/explore" element={<Explore />} />
         <Route element={<PrivateRoute />}>
           <Route path="/cart" element={<Cart />} />
+          <Route path="/setting" element={<Settings />} />
         </Route>
         <Route element={<AdminPrivateRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/admincart" element={<Cart />} />
+          <Route path="/adminsetting" element={<Settings />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -24,9 +24,9 @@ const AdminPrivateRoute = () => {
           );
 
           const userData = await response.data;
-          dispatch(setUser(userData.user));
+          dispatch(setUser(userData.currentUser));
 
-          const user = JSON.stringify(userData.user);
+          const user = JSON.stringify(userData.currentUser);
           localStorage.setItem("currentUser", user);
         } else {
           navigate("/signin");

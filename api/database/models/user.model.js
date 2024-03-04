@@ -1,25 +1,6 @@
 import mongoose from "mongoose";
+import Address from "./address.model.js";
 
-// Define Address Schema
-const addressSchema = mongoose.Schema({
-  _id: mongoose.Schema.Types.ObjectId,
-  addressLine1: {
-    type: String,
-    required: true,
-  },
-  addressLine2: {
-    type: String,
-  },
-  addressLine3: {
-    type: String,
-  },
-  pincode: {
-    type: String,
-    required: true,
-  },
-});
-
-// Define User Schema
 const userSchema = mongoose.Schema(
   {
     username: {
@@ -44,7 +25,7 @@ const userSchema = mongoose.Schema(
       type: Array,
       default: [],
     },
-    address: [addressSchema],
+    address: [{ type: mongoose.Schema.Types.ObjectId, ref: "Address" }],
     wishlist: {
       type: Array,
       default: [],
@@ -63,7 +44,6 @@ const userSchema = mongoose.Schema(
   }
 );
 
-// Compile User model
 const User = mongoose.model("User", userSchema);
 
 export default User;

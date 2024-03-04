@@ -6,8 +6,9 @@ import { setUser } from "../store/reducers/user.slice";
 
 const PrivateRoute = () => {
   const currentUser = useSelector((state) => state.currentUser);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -23,9 +24,8 @@ const PrivateRoute = () => {
           );
 
           const userData = await response.data;
-          dispatch(setUser(userData.user));
-
-          const user = JSON.stringify(userData.user);
+          dispatch(setUser(userData.currentUser));
+          const user = JSON.stringify(userData.currentUser);
           localStorage.setItem("currentUser", user);
         } else {
           navigate("/signin");
