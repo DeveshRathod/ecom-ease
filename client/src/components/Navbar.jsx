@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 
 const Navbar = () => {
   const currentUser = useSelector((state) => state.currentUser);
+  const token = localStorage.getItem("token");
 
   return (
     <div className="nav flex p-4 sm:p-8 justify-between items-center bg-[#FFBE98] ">
@@ -25,14 +26,14 @@ const Navbar = () => {
         />
       </div>
       <div className="flex items-center gap-2 sm:gap-4">
-        {currentUser && currentUser.isAdmin && (
+        {token && currentUser && currentUser.isAdmin && (
           <div>
             <Link to="/dashboard">
               <DashboardRoundedIcon />
             </Link>
           </div>
         )}
-        {currentUser && !currentUser.isAdmin && (
+        {token && currentUser && !currentUser.isAdmin && (
           <div className="flex justify-center items-center gap-2 sm:gap-4">
             <Link>
               <FavoriteIcon />
@@ -43,7 +44,7 @@ const Navbar = () => {
           </div>
         )}
         <div>
-          {currentUser ? (
+          {token && currentUser ? (
             <>
               <div>
                 <img
@@ -58,7 +59,7 @@ const Navbar = () => {
               <div>
                 <Link
                   to="/signin"
-                  className="p-2 rounded-md bg-[#FFBE98] text-sm"
+                  className="p-2 rounded-md bg-[#FFBE98] text-md"
                 >
                   Sign In
                 </Link>
