@@ -24,3 +24,12 @@
   padding-left: 10%;
   padding-right: 10%;
 }
+
+.hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
