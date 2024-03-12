@@ -89,7 +89,7 @@ const Navbar = () => {
                 <img
                   src={currentUser.profile}
                   alt="profle"
-                  className="w-8 object-contain rounded-full self-center"
+                  className="w-8 h-8 object-cover rounded-full self-center"
                 />
               </button>
               {isDropdownOpen && (

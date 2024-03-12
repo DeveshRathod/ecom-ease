@@ -1,17 +1,27 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import SettingsWrapper from "../components/SettingsWrapper";
 import axios from "axios";
 import { setUser } from "../store/reducers/user.slice";
 import Error from "../components/Error";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
+import { app } from "../firebase/firebase";
 
 const Settings = () => {
   const currentUser = useSelector((state) => state.currentUser);
   const dispatch = useDispatch();
+  const fileRef = useRef(null);
   const [errorMessage, setErrorMessage] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [success, setSuccess] = useState("");
   const [address, setAddress] = useState({});
+  const [file, setFile] = useState(undefined);
+  const [filePerc, setFilePerc] = useState(null);
 
   const [formData, setFormData] = useState({
     username: currentUser.username,
@@ -55,6 +65,37 @@ const Settings = () => {
     });
   };
 
+  useEffect(() => {
+    if (file) {
+      handleFileUpload(file);
+    }
+  }, [file]);
+
+  const handleFileUpload = (file) => {
+    const storage = getStorage(app);
+    const fileName = new Date().getTime() + file.name;
+    const storageRef = ref(storage, fileName);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setFilePerc(Math.round(progress));
+      },
+      (error) => {
+        setErrorMessage("Image upload failed");
+        setShowModal(true);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
+          setFormData({ ...formData, profile: downloadURL })
+        );
+      }
+    );
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
@@ -74,6 +115,7 @@ const Settings = () => {
         dispatch(setUser(response.data));
         const user = JSON.stringify(response.data);
         localStorage.setItem("currentUser", user);
+        setFilePerc(null);
         setSuccess("User updated successfully");
       } catch (error) {
         setErrorMessage(error.response.data.message);
@@ -147,22 +189,38 @@ const Settings = () => {
     fetchAddress();
   }, [addressSubmit]);
 
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
+  };
+
   return (
     <SettingsWrapper>
       <div className="main flex flex-col items-center pt-6">
         <h1 className="text-5xl">Settings</h1>
 
         <div className="flex justify-center">
-          <img
-            src={currentUser.profile}
-            alt="profile"
-            className="w-56 h-56 pt-2 self-center object-cover rounded-full shadow-md mt-2 mb-2"
+          <label htmlFor="imageUpload" className="cursor-pointer">
+            <img
+              src={formData.profile || currentUser.profile}
+              alt="profile"
+              onClick={() => fileRef.current.click()}
+              className="w-56 h-56 pt-2 self-center object-cover rounded-full shadow-md mt-2 mb-2"
+            />
+          </label>
+          <input
+            onChange={handleFileChange}
+            type="file"
+            ref={fileRef}
+            hidden
+            accept="image/*"
           />
         </div>
-        <div className="min-h-10 w-full sm:min-w-full">
+        <div className="min-h-10 w-full sm:min-w-full flex justify-center items-center">
           {showModal && (
             <Error message={errorMessage} setShowModal={setShowModal} />
           )}
+          {filePerc && <div>Uploading {filePerc}%</div>}
         </div>
 
         <div className="flex flex-wrap gap-6">
