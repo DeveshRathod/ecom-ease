@@ -95,7 +95,9 @@ const Navbar = () => {
               {isDropdownOpen && (
                 <div className="absolute top-full right-0 mt-1 bg-[#FEECE2] rounded-md shadow-md transition ease-in-out">
                   <ul className="p-4 flex flex-col gap-2">
-                    <li>
+                    <li
+                      className={`${!currentUser.isAdmin ? "block" : "hidden"}`}
+                    >
                       <Link>Orders</Link>
                     </li>
                     <li>

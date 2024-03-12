@@ -8,6 +8,10 @@
   box-sizing: border-box;
 }
 
+.dash {
+  height: calc(100vh - 10px);
+}
+
 .nav {
   height: 8vh;
   width: 100%;
