@@ -152,14 +152,14 @@ const Settings = () => {
       <div className="main flex flex-col items-center pt-6">
         <h1 className="text-5xl">Settings</h1>
 
-        <div className=" flex justify-center">
+        <div className="flex justify-center">
           <img
             src={currentUser.profile}
             alt="profile"
-            className=" w-3/4 pt-2 self-center"
+            className="w-56 h-56 pt-2 self-center object-cover rounded-full shadow-md mt-2 mb-2"
           />
         </div>
-        <div className=" min-h-10 w-full sm:min-w-full">
+        <div className="min-h-10 w-full sm:min-w-full">
           {showModal && (
             <Error message={errorMessage} setShowModal={setShowModal} />
           )}

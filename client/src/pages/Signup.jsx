@@ -6,6 +6,7 @@ const Signup = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -33,6 +34,7 @@ const Signup = () => {
           username: username,
           email: email,
           password: password,
+          confirmPassword: confirmPassword,
         }),
       });
       if (!response.ok) {
@@ -94,6 +96,16 @@ const Signup = () => {
               onChange={handlePasswordChange}
               className="w-full md:w-96 px-4 py-3 rounded-md outline-none shadow-inner"
               placeholder="Password"
+            />
+          </div>
+          <div className="relative">
+            <input
+              type="password"
+              id="confirmation"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="w-full md:w-96 px-4 py-3 rounded-md outline-none shadow-inner"
+              placeholder="Confirm Password"
             />
           </div>
           <button

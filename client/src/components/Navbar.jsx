@@ -82,14 +82,14 @@ const Navbar = () => {
             </Link>
           </div>
         )}
-        <div className="relative ">
+        <div className="relative flex">
           {token && currentUser ? (
             <>
               <button onClick={toggleDropdown}>
                 <img
                   src={currentUser.profile}
                   alt="profle"
-                  className="w-8 object-contain rounded-full"
+                  className="w-8 object-contain rounded-full self-center"
                 />
               </button>
               {isDropdownOpen && (

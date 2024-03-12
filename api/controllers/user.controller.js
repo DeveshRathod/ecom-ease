@@ -45,7 +45,7 @@ export const signup = async (req, res) => {
     return res.status(400).json({ message: "Passwords do not match" });
   }
 
-  if (!username || !email || !password || confirmPassword) {
+  if (!username || !email || !password || !confirmPassword) {
     return res.status(400).json({ message: "Please fill all fields" });
   }
 
