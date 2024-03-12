@@ -102,12 +102,7 @@ export const signin = async (req, res) => {
   }
 
   try {
-    let user;
-    if (email) {
-      user = await User.findOne({ email: email });
-    } else if (username) {
-      user = await User.findOne({ username: username });
-    }
+    let user = await User.findOne({ email: email });
 
     if (!user) {
       return res.status(401).json({ message: "User not found" });

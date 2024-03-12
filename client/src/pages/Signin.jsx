@@ -48,7 +48,6 @@ const Signin = () => {
       setError("Cannot sign in");
       setEmail("");
       setPassword("");
-      console.log(error.message);
       return;
     }
   };
