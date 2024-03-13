@@ -26,6 +26,9 @@ export const me = async (req, res) => {
       _id: user._id,
       username: user.username,
       email: user.email,
+      birthday: user.birthday,
+      gender: user.gender,
+      mobile: user.mobile,
       profile: user.profile,
       isAdmin: user.isAdmin,
     };
@@ -65,11 +68,14 @@ export const signup = async (req, res) => {
 
   const hashedPassword = bcryptjs.hashSync(password, 8);
   try {
+    console.log("One");
     const user = new User({
       username: username,
       email: email,
       password: hashedPassword,
     });
+
+    console.log("Two");
 
     await user.save();
 
@@ -81,6 +87,9 @@ export const signup = async (req, res) => {
       _id: user._id,
       username: user.username,
       email: user.email,
+      birthday: user.birthday,
+      gender: user.gender,
+      mobile: user.mobile,
       profile: user.profile,
       isAdmin: user.isAdmin,
     };
@@ -122,6 +131,9 @@ export const signin = async (req, res) => {
       _id: user._id,
       username: user.username,
       email: user.email,
+      birthday: user.birthday,
+      gender: user.gender,
+      mobile: user.mobile,
       profile: user.profile,
       isAdmin: user.isAdmin,
     };
@@ -160,11 +172,15 @@ export const updateUser = async (req, res) => {
         return res.status(400).json({ message: "Passwords do not match" });
       }
     }
+    const hashedPassword = bcryptjs.hashSync(userData.password, 8);
 
     userData = {
       ...(userData.username && { username: userData.username }),
       ...(userData.email && { email: userData.email }),
-      ...(userData.password && { password: userData.password }),
+      ...(userData.password && { password: hashedPassword }),
+      ...(userData.birthday && { birthday: userData.birthday }),
+      ...(userData.gender && { gender: userData.gender }),
+      ...(userData.mobile && { mobile: userData.mobile }),
       ...(userData.profile && { profile: userData.profile }),
     };
 
@@ -180,6 +196,9 @@ export const updateUser = async (req, res) => {
       _id: updatedUser._id,
       username: updatedUser.username,
       email: updatedUser.email,
+      birthday: updatedUser.birthday,
+      gender: updatedUser.gender,
+      mobile: updatedUser.mobile,
       profile: updatedUser.profile,
       isAdmin: updatedUser.isAdmin,
     };

@@ -18,10 +18,6 @@ const productSchema = mongoose.model({
     type: String,
     required: true,
   },
-  image: {
-    type: String,
-    required: true,
-  },
   images: {
     type: Array,
     required: true,

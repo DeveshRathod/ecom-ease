@@ -16,6 +16,32 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    birthday: {
+      type: Date,
+      default: "1999-01-01",
+    },
+    gender: {
+      type: String,
+      default: "M",
+      validate: {
+        validator: function (v) {
+          return /^[MFO]$/.test(v);
+        },
+        message: (props) =>
+          `${props.value} is not a valid gender value! Must be 'M' or 'F'.`,
+      },
+    },
+    mobile: {
+      type: Number,
+      validate: {
+        validator: function (v) {
+          return /^[0-9]{10}$/.test(v.toString());
+        },
+        message: (props) =>
+          `${props.value} is not a valid 10-digit mobile number!`,
+      },
+      default: 9999999999,
+    },
     profile: {
       type: String,
       default:

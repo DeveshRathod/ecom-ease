@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import Authwrapper from "../components/Authwrapper";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setUser } from "../store/reducers/user.slice";
 
 const Signup = () => {
   const [username, setUsername] = useState("");
@@ -9,6 +11,7 @@ const Signup = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -45,9 +48,11 @@ const Signup = () => {
       localStorage.setItem("token", data.token);
       const user = JSON.stringify(data.currentUser);
       localStorage.setItem("currentUser", user);
+      dispatch(setUser(data.currentUser));
       setUsername("");
       setEmail("");
       setPassword("");
+      setConfirmPassword("");
       navigate("/");
     } catch (error) {
       setError("Cannot sign up");

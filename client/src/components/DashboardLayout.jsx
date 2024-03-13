@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useSelector } from "react-redux";
 import Exit from "./Exit";
@@ -9,6 +9,7 @@ function DashboardLayout({ children }) {
   const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
   const currentUser = useSelector((state) => state.currentUser);
   const [showModal, setShowModal] = useState(false);
+  const location = useLocation();
 
   const handleModalClose = () => {
     setShowModal(false);
@@ -18,35 +19,42 @@ function DashboardLayout({ children }) {
     <div className="bg-[#F7DED0] font-family-karla flex">
       <aside className="relative bg-[#FFBE98] h-screen w-64 hidden sm:block shadow-xl">
         <div className="p-6 ">
-          <h1 className="text-white text-3xl font-semibold uppercase overflow-hidden whitespace-nowrap overflow-ellipsis">
-            {currentUser.username}
-          </h1>
-        </div>
-        <nav className="text-white text-base font-semibold pt-3">
           <Link
             to="/dashboard"
-            className="flex items-center active-nav-link text-white py-4 pl-6 nav-item"
+            className="text-white text-3xl font-semibold uppercase overflow-hidden whitespace-nowrap overflow-ellipsis"
+          >
+            {currentUser.username}
+          </Link>
+        </div>
+        <nav className=" text-base font-semibold pt-3">
+          <NavLink
+            to="/dashboard"
+            className="flex items-center py-4 pl-6 nav-item"
+            activeclassname="active"
           >
             Home
-          </Link>
-          <Link
+          </NavLink>
+          <NavLink
             to="/items"
             className="flex items-center text-black opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
+            activeclassname="active"
           >
             Items
-          </Link>
-          <Link
+          </NavLink>
+          <NavLink
             to="/users"
             className="flex items-center text-black opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
+            activeclassname="active"
           >
             Users
-          </Link>
-          <Link
+          </NavLink>
+          <NavLink
             to="/orders"
             className="flex items-center text-black opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
+            activeclassname="active"
           >
             Orders
-          </Link>
+          </NavLink>
         </nav>
         <button
           className="flex items-center text-red-500 py-4 pl-6"
@@ -95,34 +103,38 @@ function DashboardLayout({ children }) {
           </div>
 
           <nav className={isSidebarOpen ? "flex flex-col pt-4" : "hidden"}>
-            <Link
+            <NavLink
               to="/dashboard"
-              className="flex items-center active-nav-link text-white py-2 pl-4 nav-item"
+              className="flex items-center text-black py-2 pl-4 nav-item"
+              activeclassname="active"
             >
               Home
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               to="/items"
-              className="flex items-center text-white opacity-75 hover:opacity-100 py-2 pl-4 nav-item"
+              className="flex items-center text-black opacity-75 hover:opacity-100 py-2 pl-4 nav-item"
+              activeclassname="active"
             >
               Items
-            </Link>
+            </NavLink>
 
-            <Link
+            <NavLink
               to="/users"
-              className="flex items-center text-white opacity-75 hover:opacity-100 py-2 pl-4 nav-item"
+              className="flex items-center text-black opacity-75 hover:opacity-100 py-2 pl-4 nav-item"
+              activeclassname="active"
             >
               Users
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               to="/orders"
-              className="flex items-center text-white opacity-75 hover:opacity-100 py-2 pl-4 nav-item"
+              className="flex items-center text-black opacity-75 hover:opacity-100 py-2 pl-4 nav-item"
+              activeclassname="active"
             >
               Orders
-            </Link>
+            </NavLink>
 
             <button
-              className=" flex items-center text-red-500 py-2 pl-4 "
+              className="flex items-center text-red-500 py-2 pl-4 "
               onClick={() => setShowModal(true)}
             >
               Exit
