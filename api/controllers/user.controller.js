@@ -68,14 +68,11 @@ export const signup = async (req, res) => {
 
   const hashedPassword = bcryptjs.hashSync(password, 8);
   try {
-    console.log("One");
     const user = new User({
       username: username,
       email: email,
       password: hashedPassword,
     });
-
-    console.log("Two");
 
     await user.save();
 
@@ -202,8 +199,6 @@ export const updateUser = async (req, res) => {
       profile: updatedUser.profile,
       isAdmin: updatedUser.isAdmin,
     };
-
-    console.log(currentUser);
 
     return res.status(200).json(currentUser);
   } catch (error) {
