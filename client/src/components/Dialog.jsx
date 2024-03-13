@@ -1,13 +1,6 @@
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
 
-const Exit = ({ message, setShowModal }) => {
-  const navigate = useNavigate();
-  const exit = () => {
-    setShowModal(false);
-    navigate("/");
-  };
-
+const Dialog = ({ message, setShowModal, dialogFun }) => {
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto">
       <div className="flex items-center justify-center min-h-screen pb-20 text-center">
@@ -48,7 +41,7 @@ const Exit = ({ message, setShowModal }) => {
             </button>
             <button
               className="inline-flex justify-center w-full  rounded-md border border-transparent shadow-sm px-1 py-2 sm:px-2 sm:py-3 bg-[#FFBE98] text-xs font-medium text-white hover:opacity-95 focus:outline-none  sm:text-sm"
-              onClick={exit}
+              onClick={dialogFun}
             >
               Confirm
             </button>
@@ -59,4 +52,4 @@ const Exit = ({ message, setShowModal }) => {
   );
 };
 
-export default Exit;
+export default Dialog;

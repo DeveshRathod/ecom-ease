@@ -1,15 +1,20 @@
-import React, { useState, useEffect } from "react";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useSelector } from "react-redux";
-import Exit from "./Exit";
+import Dialog from "./Dialog";
 
 function DashboardLayout({ children }) {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
   const currentUser = useSelector((state) => state.currentUser);
   const [showModal, setShowModal] = useState(false);
-  const location = useLocation();
+  const navigate = useNavigate();
+
+  const dialogFun = () => {
+    setShowModal(false);
+    navigate("/");
+  };
 
   const handleModalClose = () => {
     setShowModal(false);
@@ -65,9 +70,10 @@ function DashboardLayout({ children }) {
       </aside>
       <div>
         {showModal && (
-          <Exit
+          <Dialog
             setShowModal={handleModalClose}
             message={"All unsaved data will be lost"}
+            dialogFun={dialogFun}
           />
         )}
       </div>

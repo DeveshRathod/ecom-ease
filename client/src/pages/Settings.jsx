@@ -13,6 +13,8 @@ import {
 } from "firebase/storage";
 import { app } from "../firebase/firebase";
 import Address from "../components/Address";
+import Dialog from "../components/Dialog";
+import { useNavigate } from "react-router-dom";
 
 const Settings = () => {
   const currentUser = useSelector((state) => state.currentUser);
@@ -20,12 +22,14 @@ const Settings = () => {
   const fileRef = useRef(null);
   const [errorMessage, setErrorMessage] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [showModal2, setShowModal2] = useState(false);
   const [success, setSuccess] = useState("");
   const [file, setFile] = useState(undefined);
   const [filePerc, setFilePerc] = useState(null);
   const [showAddressForm, setShowAddressForm] = useState(false);
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [address, setAddress] = useState(false);
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     username: currentUser.username,
@@ -182,6 +186,36 @@ const Settings = () => {
     );
   };
 
+  const dialogFun = async () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const response = await axios.delete(
+          "http://localhost:4000/api/user/delete",
+          {
+            headers: {
+              authorization: `${token}`,
+            },
+          }
+        );
+
+        if (response.status === 200) {
+          localStorage.setItem("token", "");
+          localStorage.setItem("currentUser", null);
+          dispatch(setUser(null));
+          navigate("/");
+          setSuccess("Account deleted successfully");
+        } else {
+          setShowModal(true);
+          setErrorMessage("Account deletion failed");
+        }
+      } catch (error) {
+        setShowModal(true);
+        setErrorMessage(error.message);
+      }
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
@@ -258,6 +292,17 @@ const Settings = () => {
                 <Error message={errorMessage} setShowModal={setShowModal} />
               )}
             </div>
+
+            <div>
+              {showModal2 && (
+                <Dialog
+                  setShowModal={setShowModal2}
+                  message={"Do You really want to delete"}
+                  dialogFun={dialogFun}
+                />
+              )}
+            </div>
+
             <div className="flex justify-center min-h-10">{success}</div>
           </div>
 
@@ -469,7 +514,10 @@ const Settings = () => {
                     Once deleted order and cart details will be lost
                   </p>
                 </div>
-                <button className="p-2 rounded-md text-sm bg-[#F7DED0] py-2 px-6 text-red-500">
+                <button
+                  className="p-2 rounded-md text-sm bg-[#F7DED0] py-2 px-6 text-red-500"
+                  onClick={() => setShowModal2(true)}
+                >
                   Delete
                 </button>
               </div>
@@ -481,7 +529,7 @@ const Settings = () => {
               !currentUser.isAdmin && (
                 <div className="p-2 flex flex-col h-fit">
                   <h1>Addresses</h1>
-                  <div className="flex p-3 bg-[#FEECE2] flex-col h-[350px] overflow-y-scroll gap-3">
+                  <div className="flex p-3 bg-[#FEECE2] flex-col h-[266px] overflow-y-scroll gap-3">
                     {address.map((add, index) => (
                       <Address key={index} address={add} />
                     ))}
