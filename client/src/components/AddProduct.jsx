@@ -9,7 +9,7 @@ import {
 } from "firebase/storage";
 import { app } from "../firebase/firebase";
 
-function AddNew({ setForm }) {
+function AddNew({ setForm, setItems }) {
   const [showModal, setShowModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const [file, setFile] = useState([]);
@@ -107,6 +107,8 @@ function AddNew({ setForm }) {
         }
       );
       const data = await response.data;
+      console.log(data);
+      setItems(data);
       setForm(false);
     } catch (error) {
       setErrorMessage(error.response.data.message);

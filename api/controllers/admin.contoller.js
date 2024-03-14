@@ -56,7 +56,8 @@ export const addProduct = async (req, res) => {
       stock,
     });
     await product.save();
-    return res.status(200).json(product);
+    const all = await Product.find();
+    return res.status(200).json(all);
   } catch (error) {
     return res.status(500).json({ message: "Internal Server Error" });
   }
