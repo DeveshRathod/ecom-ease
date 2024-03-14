@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import connectionDB from "./database/connection.js";
 import userRoutes from "./routes/user.routes.js";
+import adminRoutes from "./routes/admin.routes.js";
 
 //configurations
 const app = express();
@@ -15,6 +16,7 @@ connectionDB();
 
 //routes
 app.use("/api/user", userRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.listen(4000, () => {
   console.log(`Server Started`);

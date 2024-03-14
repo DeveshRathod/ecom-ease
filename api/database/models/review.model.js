@@ -2,11 +2,7 @@ import mongoose from "mongoose";
 import User from "./user.model.js";
 import Product from "./product.model.js";
 
-const reviewSchema = mongoose.model({
-  name: {
-    type: String,
-    required: true,
-  },
+const reviewSchema = mongoose.Schema({
   rating: {
     type: Number,
     required: true,
