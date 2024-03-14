@@ -21,7 +21,7 @@ function DashboardLayout({ children }) {
   };
 
   return (
-    <div className="bg-[#F7DED0] font-family-karla flex">
+    <div className="bg-white font-family-karla flex">
       <aside className="relative bg-[#FFBE98] h-screen w-64 hidden sm:block shadow-xl">
         <div className="p-6 ">
           <Link
@@ -149,7 +149,7 @@ function DashboardLayout({ children }) {
         </header>
 
         <div className="w-full overflow-x-hidden flex flex-col bg-[#F7DED0]">
-          <main className="w-full flex-grow  bg-[#F7DED0]">{children}</main>
+          <main className="w-full flex-grow  bg-white">{children}</main>
         </div>
       </div>
     </div>

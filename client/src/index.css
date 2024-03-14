@@ -12,6 +12,10 @@
   height: calc(100vh - 10px);
 }
 
+.black::placeholder {
+  color: black;
+}
+
 .nav {
   height: 8vh;
   width: 100%;

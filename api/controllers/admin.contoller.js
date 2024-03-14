@@ -36,6 +36,14 @@ export const addProduct = async (req, res) => {
     return res.status(400).json({ message: "Please fill all fields" });
   }
 
+  if (price <= 0) {
+    return res.status(400).json({ message: "Invalid price" });
+  }
+
+  if (stock <= 0) {
+    return res.status(400).json({ message: "Invalid stock" });
+  }
+
   try {
     const product = new Product({
       name,

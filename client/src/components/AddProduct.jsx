@@ -117,10 +117,10 @@ function AddNew({ setForm }) {
 
   return (
     <div
-      className="fixed inset-0 flex items-center justify-center z-50"
+      className="fixed inset-0 flex items-center justify-center z-50 overflow-hidden"
       style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
     >
-      <div className="bg-white p-8 rounded shadow-lg w-full max-w-md">
+      <div className="bg-white p-8 rounded shadow-lg max-w-3xl w-full h-full overflow-auto">
         <h1 className="text-2xl font-bold text-gray-800 mb-4">
           Add New Product
         </h1>
@@ -140,7 +140,7 @@ function AddNew({ setForm }) {
             placeholder="Product Name"
           />
         </div>
-        <div className="grid grid-cols-2 gap-4 mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
           <div>
             <label
               htmlFor="brand"
@@ -231,7 +231,7 @@ function AddNew({ setForm }) {
           />
           <button
             onClick={() => fileRef.current.click()}
-            className="w-full px-3 py-2 border rounded bg-[#FFBE98]"
+            className="w-full px-3 py-2 rounded bg-[#FFBE98] text-white"
           >
             Choose Images
           </button>

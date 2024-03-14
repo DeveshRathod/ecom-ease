@@ -47,7 +47,7 @@ const Navbar = () => {
         <input
           type="text"
           placeholder="Search....."
-          className="w-24 sm:w-36 md:w-48 shadow-inner outline-none p-2 bg-inherit rounded-md text-sm sm:text-base"
+          className="w-24 sm:w-36 md:w-48 shadow-inner outline-none p-2 bg-inherit rounded-md text-sm sm:text-base black"
         />
       </div>
       <div className="flex items-center gap-2 sm:gap-8">
