@@ -40,11 +40,11 @@ const Items = () => {
     };
 
     fetch();
-  }, []);
+  }, [setFrom, from]);
 
   const handleCategoryChange = (event) => {
-    setSelectedCategory(event.target.value);
     const category = event.target.value;
+    setSelectedCategory(category);
     const filtered = category
       ? items.filter((item) => item.category === category)
       : items;
@@ -62,67 +62,58 @@ const Items = () => {
 
   return (
     <DashboardLayout>
-      <div>
-        <div className="flex p-2 sm:p-4 justify-evenly sm:justify-between">
-          <div>
-            <div className="p-2 bg-[#FEECE2] flex gap-1 items-center rounded-md">
-              <SearchIcon />
-              <input
-                type="text"
-                className="p-1 outline-none bg-[#FEECE2] black"
-                placeholder=" Search...."
-                value={searchInput}
-                onChange={handleSearchInputChange}
-              />
-            </div>
-          </div>
-          {from && (
-            <div>
-              <AddNew setForm={setFrom} setItems={setItems} />
-            </div>
-          )}
-
-          <div>
-            <button
-              className="flex items-center rounded-md bg-[#FEECE2] p-3"
-              onClick={() => setFrom(true)}
-            >
-              <AddIcon />
-              <p className="bg-[#FEECE2]">Add New</p>
-            </button>
-          </div>
+      <div className="p-2 sm:p-4 flex justify-between">
+        <div className="p-2 bg-[#FEECE2] flex gap-1 items-center rounded-md">
+          <SearchIcon />
+          <input
+            type="text"
+            className="p-1 outline-none bg-[#FEECE2] black"
+            placeholder=" Search...."
+            value={searchInput}
+            onChange={handleSearchInputChange}
+          />
         </div>
+        {from && <AddNew setForm={setFrom} setItems={setItems} />}
+        <div>
+          <button
+            className="flex items-center rounded-md bg-[#FEECE2] p-3"
+            onClick={() => setFrom(true)}
+          >
+            <AddIcon />
+            <p className="bg-[#FEECE2]">Add New</p>
+          </button>
+        </div>
+      </div>
 
-        <div className="pl-2 pr-2 pb-2 sm:pl-4 sm:pr-4 sm:pb-4 h-[84vh] sm:h-[82vh] overflow-hidden">
-          <div className="h-full overflow-y-auto">
-            <div className="w-full bg-[#FEECE2] flex flex-col h-screen">
-              <div className="pt-4 pb-4 pl-8">
-                <select
-                  name=""
-                  id=""
-                  className="p-2 outline-none rounded-md"
-                  value={selectedCategory}
-                  onChange={handleCategoryChange}
-                >
-                  <option value="">All</option>
-                  <option value="Grocery">Grocery</option>
-                  <option value="Mobile">Mobiles</option>
-                  <option value="Fashion">Fashion</option>
-                  <option value="Electronics">Electronics</option>
-                  <option value="Travels">Travels</option>
-                  <option value="Toys">Toys</option>
-                </select>
-              </div>
-              <div className="flex justify-center gap-2 p-2 overflow-x-auto max-w-screen">
-                <div className=" flex flex-wrap w-fit p-2 overflow-x-auto justify-start gap-2">
-                  {filteredItems.length > 0 ? (
-                    filteredItems.map((item, id) => (
-                      <ItemsCard item={item} key={id} />
-                    ))
-                  ) : (
-                    <div>No data</div>
-                  )}
-                </div>
+      <div className="pl-2 pr-2 pb-2 sm:pl-4 sm:pr-4 sm:pb-4 h-[calc(84vh - 9rem)]">
+        <div className="pt-4 pb-4 pl-8 bg-[#FEECE2]">
+          <select
+            name=""
+            id=""
+            className="p-2 outline-none rounded-md"
+            value={selectedCategory}
+            onChange={handleCategoryChange}
+          >
+            <option value="">All</option>
+            <option value="Grocery">Grocery</option>
+            <option value="Mobile">Mobiles</option>
+            <option value="Fashion">Fashion</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Travels">Travels</option>
+            <option value="Toys">Toys</option>
+          </select>
+        </div>
+        <div className="h-full overflow-y-auto">
+          <div className="w-full bg-[#FEECE2] flex flex-col">
+            <div className="flex justify-center gap-2 p-2">
+              <div className="flex flex-wrap w-full p-2 justify-center md:justify-start sm:justify-start gap-2">
+                {filteredItems.length > 0 ? (
+                  filteredItems.map((item, id) => (
+                    <ItemsCard item={item} key={id} />
+                  ))
+                ) : (
+                  <div>No data</div>
+                )}
               </div>
             </div>
           </div>
