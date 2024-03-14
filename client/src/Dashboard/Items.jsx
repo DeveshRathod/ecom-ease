@@ -14,7 +14,7 @@ const Items = () => {
   const [searchInput, setSearchInput] = useState("");
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetch = async () => {
       const token = localStorage.getItem("token");
       if (token) {
         try {
@@ -26,7 +26,10 @@ const Items = () => {
               },
             }
           );
-          setItems(response.data);
+
+          const products = response.data;
+          setItems(products);
+          setFilteredItems(products);
         } catch (error) {
           console.log(error);
         }
@@ -36,42 +39,49 @@ const Items = () => {
       }
     };
 
-    fetchProducts();
+    fetch();
   }, []);
-
-  useEffect(() => {
-    // Filter items based on selected category and search input
-    let filtered = items.filter(
-      (item) =>
-        (selectedCategory === "" || item.category === selectedCategory) &&
-        (searchInput === "" ||
-          item.name.toLowerCase().includes(searchInput.toLowerCase()))
-    );
-    setFilteredItems(filtered);
-  }, [items, selectedCategory, searchInput]);
 
   const handleCategoryChange = (event) => {
     setSelectedCategory(event.target.value);
+    const category = event.target.value;
+    const filtered = category
+      ? items.filter((item) => item.category === category)
+      : items;
+    setFilteredItems(filtered);
   };
 
   const handleSearchInputChange = (event) => {
-    setSearchInput(event.target.value);
+    const inputValue = event.target.value;
+    setSearchInput(inputValue);
+    const filtered = items.filter((item) =>
+      item.name.toLowerCase().includes(inputValue.toLowerCase())
+    );
+    setFilteredItems(filtered);
   };
 
   return (
     <DashboardLayout>
       <div>
-        <div className="flex p-2 sm:p-4 justify-between">
-          <div className="p-2 bg-[#FEECE2] flex gap-1 items-center rounded-md">
-            <SearchIcon />
-            <input
-              type="text"
-              className="p-1 outline-none bg-[#FEECE2] black"
-              placeholder="Search..."
-              value={searchInput}
-              onChange={handleSearchInputChange}
-            />
+        <div className="flex p-2 sm:p-4 justify-evenly sm:justify-between">
+          <div>
+            <div className="p-2 bg-[#FEECE2] flex gap-1 items-center rounded-md">
+              <SearchIcon />
+              <input
+                type="text"
+                className="p-1 outline-none bg-[#FEECE2] black"
+                placeholder=" Search...."
+                value={searchInput}
+                onChange={handleSearchInputChange}
+              />
+            </div>
           </div>
+          {from && (
+            <div>
+              <AddNew setForm={setFrom} setItems={setItems} />
+            </div>
+          )}
+
           <div>
             <button
               className="flex items-center rounded-md bg-[#FEECE2] p-3"
@@ -103,16 +113,16 @@ const Items = () => {
                   <option value="Toys">Toys</option>
                 </select>
               </div>
-              <div className="flex flex-wrap justify-center gap-2 p-2 max-w-screen overflow-x-auto">
-                {filteredItems.length > 0 ? (
-                  filteredItems.map((item) => (
-                    <div className="self-center" key={item._id}>
-                      <ItemsCard item={item} />
-                    </div>
-                  ))
-                ) : (
-                  <div>No data</div>
-                )}
+              <div className="flex justify-center gap-2 p-2 overflow-x-auto max-w-screen">
+                <div className=" flex flex-wrap w-fit p-2 overflow-x-auto justify-start gap-2">
+                  {filteredItems.length > 0 ? (
+                    filteredItems.map((item, id) => (
+                      <ItemsCard item={item} key={id} />
+                    ))
+                  ) : (
+                    <div>No data</div>
+                  )}
+                </div>
               </div>
             </div>
           </div>

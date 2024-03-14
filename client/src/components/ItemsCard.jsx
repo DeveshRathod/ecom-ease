@@ -3,7 +3,7 @@ import InventoryIcon from "@mui/icons-material/Inventory";
 
 const ItemsCard = ({ item }) => {
   return (
-    <div className="relative flex flex-col items-center p-4 bg-white shadow-md rounded-lg w-60 h-70 overflow-hidden ">
+    <div className="flex flex-col items-center p-4 bg-white shadow-md rounded-lg w-56 h-70 overflow-hidden ">
       <img
         src={item.images[0]}
         alt={item.name}
