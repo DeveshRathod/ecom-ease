@@ -32,7 +32,7 @@ const userSchema = mongoose.Schema(
       },
     },
     mobile: {
-      type: Number,
+      type: String,
       validate: {
         validator: function (v) {
           return /^[0-9]{10}$/.test(v.toString());
