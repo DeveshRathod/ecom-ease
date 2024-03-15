@@ -1,4 +1,5 @@
 import Product from "../database/models/product.model.js";
+import User from "../database/models/user.model.js";
 
 export const addProduct = async (req, res) => {
   const userId = req.user._id;
@@ -173,5 +174,56 @@ export const getAllProduct = async (req, res) => {
     return res.status(200).json(products);
   } catch (error) {
     return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const getAllNonAdminUsers = async (req, res) => {
+  try {
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+
+    const todayEnd = new Date();
+    todayEnd.setHours(23, 59, 59, 999);
+
+    const nonAdminUsers = await User.find({ isAdmin: false });
+
+    const simplifiedUsers = nonAdminUsers.map((user) => ({
+      username: user.username,
+      email: user.email,
+      gender: user.gender,
+      mobile: user.mobile,
+      profile: user.profile,
+      birthday: user.birthday,
+      createdAt: user.createdAt,
+      createdToday: user.createdAt >= todayStart && user.createdAt <= todayEnd,
+    }));
+
+    const totalLength = simplifiedUsers.length;
+    const maleCount = simplifiedUsers.filter(
+      (user) => user.gender === "M"
+    ).length;
+    const femaleCount = simplifiedUsers.filter(
+      (user) => user.gender === "F"
+    ).length;
+
+    const todaysUsers = simplifiedUsers.filter((user) => user.createdToday);
+    todaysUsers.sort((a, b) => b.createdAt - a.createdAt);
+    const todaysUsersLength = todaysUsers.length;
+
+    const result = {
+      totalLength,
+      todaysUsersLength,
+      genderCount: {
+        male: maleCount,
+        female: femaleCount,
+      },
+      users: simplifiedUsers,
+      todaysUsers,
+    };
+
+    return res.status(200).json(result);
+  } catch (error) {
+    console.error("Error fetching non-admin users:", error);
+    return res.status(500).json({ message: "Failed to fetch non-admin users" });
   }
 };
