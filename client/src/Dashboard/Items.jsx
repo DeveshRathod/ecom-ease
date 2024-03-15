@@ -86,7 +86,7 @@ const Items = () => {
       </div>
 
       <div className="pl-2 pr-2 pb-2 sm:pl-4 sm:pr-4 sm:pb-4 h-[calc(84vh - 9rem)]">
-        <div className="pt-4 pb-4 pl-8 bg-[#FEECE2]">
+        <div className="pt-4 pb-4 pl-8 bg-[#FEECE2] rounded-t-md">
           <select
             name=""
             id=""
@@ -103,7 +103,7 @@ const Items = () => {
             <option value="Toys">Toys</option>
           </select>
         </div>
-        <div className="h-full overflow-y-auto">
+        <div className="h-full overflow-y-auto rounded-b-md">
           <div className="w-full bg-[#FEECE2] flex flex-col">
             <div className="flex justify-center gap-2 p-2">
               <div className="flex flex-wrap w-full p-2 justify-center md:justify-start sm:justify-start gap-2">

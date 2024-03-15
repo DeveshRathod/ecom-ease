@@ -40,16 +40,7 @@ const Navbar = () => {
       <Link to="/" className="text-xs sm:text-xl">
         <h1>ShopEase</h1>
       </Link>
-      <div className="bg-[#FEECE2] rounded-md flex items-center">
-        <div className="p-2">
-          <SearchIcon />
-        </div>
-        <input
-          type="text"
-          placeholder="Search....."
-          className="w-24 sm:w-36 md:w-48 shadow-inner outline-none p-2 bg-inherit rounded-md text-sm sm:text-base black"
-        />
-      </div>
+
       <div className="flex items-center gap-2 sm:gap-8">
         {token && currentUser && currentUser.isAdmin && (
           <div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import SettingsWrapper from "../components/SettingsWrapper";
+import Layout from "../components/Layout";
 import axios from "axios";
 import { setUser } from "../store/reducers/user.slice";
 import CreateIcon from "@mui/icons-material/Create";
@@ -255,7 +255,7 @@ const Settings = () => {
   };
 
   return (
-    <SettingsWrapper>
+    <Layout>
       <div className="main">
         <h1 className="pt-2 pb-2 text-2xl font-semibold">Profile Settings</h1>
         {showModal && (
@@ -529,7 +529,7 @@ const Settings = () => {
           </div>
         </div>
       </div>
-    </SettingsWrapper>
+    </Layout>
   );
 };
 

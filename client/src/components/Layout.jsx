@@ -1,15 +1,13 @@
 import React from "react";
 import Navbar from "./Navbar";
-import NavSlider from "./NavSlider";
 
-const Layout = ({ childern }) => {
+const SettingsWrapper = ({ children }) => {
   return (
-    <div>
+    <div className=" min-h-fit">
       <Navbar />
-      <NavSlider />
-      {childern}
+      {children}
     </div>
   );
 };
 
-export default Layout;
+export default SettingsWrapper;
