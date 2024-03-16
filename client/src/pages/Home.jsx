@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import CarouselComp from "../components/CarouselComp";
+import image from "../data/heroimag.jpeg";
 
 const Home = () => {
   const currentUser = useSelector((state) => state.currentUser);
@@ -44,7 +45,7 @@ const Home = () => {
           </div>
           <div className="flex-1 mt-10 sm:mt-0">
             <img
-              src="https://firebasestorage.googleapis.com/v0/b/ecom-ease.appspot.com/o/heroimage.png?alt=media&token=789fedea-06d5-432f-ab65-b65289e31b57"
+              src={image}
               alt="hero_image"
               className="w-5/6 sm:w-full h-auto md:h-full object-contain rounded-md shadow-lg"
             />

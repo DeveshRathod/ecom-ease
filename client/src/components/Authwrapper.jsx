@@ -1,11 +1,12 @@
 import React from "react";
+import image from "../data/authimage.png";
 
 const Authwrapper = ({ children }) => {
   return (
     <div className="w-screen h-screen bg-white flex flex-col md:flex-row auth">
       <div className="hidden md:flex md:flex-1 justify-center items-center">
         <img
-          src="https://firebasestorage.googleapis.com/v0/b/ecom-ease.appspot.com/o/authimage.png?alt=media&token=e3a0db60-3bd1-42f3-9815-e085cd24e7b4"
+          src={image}
           alt="hero_image"
           className="w-1/2 h-auto md:w-full md:h-full object-contain"
         />
