@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import SearchIcon from "@mui/icons-material/Search";
 import { Link, useNavigate } from "react-router-dom";
-import FavoriteIcon from "@mui/icons-material/Favorite";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
 import { useSelector } from "react-redux";
@@ -23,7 +22,6 @@ const Navbar = () => {
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const cartCount = 5;
-  const wishlistCount = 3;
 
   const logout = () => {
     localStorage.removeItem("token");
@@ -41,26 +39,9 @@ const Navbar = () => {
         <h1>ShopEase</h1>
       </Link>
 
-      <div className="flex items-center gap-2 sm:gap-8">
-        {token && currentUser && currentUser.isAdmin && (
-          <div>
-            <Link to="/dashboard">
-              <DashboardRoundedIcon sx={{ fontSize: 23 }} />
-            </Link>
-          </div>
-        )}
+      <div className="flex items-center gap-8">
         {token && currentUser && !currentUser.isAdmin && (
           <div className="flex justify-center items-center gap-2 sm:gap-8">
-            <Link>
-              <div className="relative">
-                <FavoriteIcon />
-                {wishlistCount > 0 && (
-                  <div className="absolute top-3 right-3 bg-red-500 rounded-full w-4 h-4 flex items-center justify-center text-white text-xs">
-                    {wishlistCount}
-                  </div>
-                )}
-              </div>
-            </Link>
             <Link to="/cart">
               <div className="relative">
                 <ShoppingCartIcon />
@@ -73,7 +54,19 @@ const Navbar = () => {
             </Link>
           </div>
         )}
-        <div className="relative flex">
+        <div className="relative flex gap-8">
+          <div className="flex justify-center items-center gap-2 sm:gap-8">
+            <Link>
+              <div className="relative">
+                <NotificationsIcon />
+                {cartCount > 0 && (
+                  <div className="absolute top-3 right-3 bg-red-500 rounded-full w-4 h-4 flex items-center justify-center text-white text-xs">
+                    {cartCount}
+                  </div>
+                )}
+              </div>
+            </Link>
+          </div>
           {token && currentUser ? (
             <>
               <button onClick={toggleDropdown}>
@@ -83,13 +76,24 @@ const Navbar = () => {
                   className="w-6 h-6 object-cover rounded-full self-center"
                 />
               </button>
+
               {isDropdownOpen && (
                 <div className="absolute top-full right-0 mt-1 bg-[#FEECE2] rounded-md shadow-md transition ease-in-out">
                   <ul className="p-4 flex flex-col gap-2">
                     <li
+                      className={`${!currentUser.isAdmin ? "hidden" : "block"}`}
+                    >
+                      <Link to="/dashboard">Dashboard</Link>
+                    </li>
+                    <li
                       className={`${!currentUser.isAdmin ? "block" : "hidden"}`}
                     >
                       <Link>Orders</Link>
+                    </li>
+                    <li
+                      className={`${!currentUser.isAdmin ? "block" : "hidden"}`}
+                    >
+                      <Link>Wishlist</Link>
                     </li>
                     <li>
                       <Link to={settingUrl}>Settings</Link>

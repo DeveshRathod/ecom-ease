@@ -31,13 +31,13 @@ const Dialog = ({ message, setShowModal, dialogFun, headline, showModel }) => {
                 className=" py-1 px-3 rounded-sm"
                 onClick={() => setShowModal(false)}
               >
-                Stay
+                Cancel
               </button>
               <button
-                className=" py-1 px-3 rounded-sm bg-[#FFBE98]  text-white"
+                className=" py-1 px-5 rounded-sm bg-[#FFBE98]  text-white"
                 onClick={dialogFun}
               >
-                Leave
+                Yes
               </button>
             </div>
           </div>

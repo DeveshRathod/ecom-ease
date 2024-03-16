@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import CarouselComp from "../components/CarouselComp";
+import Category from "../components/Category";
 import image from "../data/heroimag.jpeg";
 
 const Home = () => {
@@ -52,6 +53,19 @@ const Home = () => {
           </div>
         </div>
       </div>
+      <div>
+        <div className="w-full mt-10 flex justify-center items-center">
+          <div className="w-full max-w-screen-xl mx-auto p-4">
+            <div className="text-3xl mb-6 font-semibold text-center">
+              Categories you might like
+            </div>
+            <div className="bg-white rounded-md w-full h-full">
+              <Category />
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div>
         <div className=" w-full flex justify-center flex-col pt-6 pb-6 mt-20 rounded-md gap-2">
           <div className="text-3xl self-center mb-6 font-semibold">

@@ -3,13 +3,13 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Signin from "./pages/Signin";
 import Home from "./pages/Home";
 import Signup from "./pages/Signup";
-import Dashboard from "./Dashboard/Dashboard";
+import Dashboard from "./dashboard/Dashboard";
 import Cart from "./pages/Cart";
 import PrivateRoute from "./components/PrivateRoute";
 import AdminPrivateRoute from "./components/AdminPrivateRoute";
-import Users from "./Dashboard/Users";
-import Orders from "./Dashboard/Orders";
-import Items from "./Dashboard/Items";
+import Users from "./dashboard/Users";
+import Orders from "./dashboard/Orders";
+import Items from "./dashboard/Items";
 import Explore from "./pages/Explore";
 import Settings from "./pages/Settings";
 
