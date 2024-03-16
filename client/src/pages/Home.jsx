@@ -7,6 +7,7 @@ import CarouselComp from "../components/CarouselComp";
 import Category from "../components/Category";
 import image from "../data/heroimag.jpeg";
 import Latest from "../components/Latest";
+import Footer from "../components/Footer";
 
 const Home = () => {
   const currentUser = useSelector((state) => state.currentUser);
@@ -54,15 +55,14 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <div>
-        <div className="w-full mt-10 flex justify-center items-center">
-          <div className="w-full max-w-screen-xl mx-auto p-4">
-            <div className="text-xl font-bold text-gray-900 sm:text-3xl text-center mt-2 mb-5">
-              Categories you might like
-            </div>
-            <div className="bg-white rounded-md w-full h-full">
-              <Category />
-            </div>
+
+      <div className="w-full mt-10 flex justify-center items-center">
+        <div className="w-full max-w-screen-xl mx-auto p-4">
+          <div className="text-xl font-bold text-gray-900 sm:text-3xl text-center mt-2 mb-5">
+            Categories you might like
+          </div>
+          <div className="bg-white rounded-md w-full h-full">
+            <Category />
           </div>
         </div>
       </div>
@@ -78,7 +78,7 @@ const Home = () => {
       </div>
 
       <div>
-        <div className=" w-full flex justify-center flex-col pt-6 pb-6 mt-20 rounded-md gap-2">
+        <div className=" w-full flex justify-center flex-col pt-6 pb-6 mt-10 rounded-md gap-2">
           <div className="text-3xl self-center mb-6 font-semibold">
             Our Top Brands
           </div>
@@ -86,6 +86,10 @@ const Home = () => {
             <CarouselComp />
           </div>
         </div>
+      </div>
+
+      <div>
+        <Footer />
       </div>
     </div>
   );

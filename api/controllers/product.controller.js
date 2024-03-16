@@ -1,7 +1,7 @@
 import Product from "../database/models/product.model.js";
 
 export const getAllNewArrival = async (req, res) => {
-  const category = ["Mobile", "Fashion", "Electronics", "Toys"];
+  const category = ["Mobile", "Fashion", "Electronics", "Toys", "Furniture"];
   try {
     const latestEntries = await Product.aggregate([
       { $match: { category: { $in: category } } },
