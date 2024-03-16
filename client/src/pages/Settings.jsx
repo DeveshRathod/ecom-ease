@@ -278,8 +278,9 @@ const Settings = () => {
         {showModal2 && (
           <Dialog
             setShowModal={setShowModal2}
-            message={"Do You really want to delete"}
+            headline={"Do You really want to delete"}
             dialogFun={dialogFun}
+            showModel={showModal2}
           />
         )}
         <div className="flex flex-col sm:flex-row gap-4">
@@ -506,22 +507,24 @@ const Settings = () => {
               </div>
             )}
 
-            <div className="p-2">
-              <div className="flex p-2 bg-[#FEECE2] justify-between">
-                <div className="flex-3">
-                  <h1 className="text-lg">Deactivate</h1>
-                  <p className="text-xs">
-                    Once deleted order and cart details will be lost
-                  </p>
+            {currentUser && !currentUser.isAdmin && (
+              <div className="p-2">
+                <div className="flex p-2 bg-[#FEECE2] justify-between">
+                  <div className="flex-3">
+                    <h1 className="text-lg">Deactivate</h1>
+                    <p className="text-xs">
+                      Once deleted order and cart details will be lost
+                    </p>
+                  </div>
+                  <button
+                    className="p-1 rounded-md text-sm bg-[#F7DED0] py-1 px-2 text-red-500"
+                    onClick={() => setShowModal2(true)}
+                  >
+                    Delete
+                  </button>
                 </div>
-                <button
-                  className="p-1 rounded-md text-sm bg-[#F7DED0] py-1 px-2 text-red-500"
-                  onClick={() => setShowModal2(true)}
-                >
-                  Delete
-                </button>
               </div>
-            </div>
+            )}
 
             {!showAddressForm &&
               !showPasswordForm &&

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import InfoIcon from "@mui/icons-material/Info";
 
-const Dialog = ({ message, setShowModal, dialogFun, headline, showModel }) => {
+const Dialog = ({ setShowModal, dialogFun, headline, showModel }) => {
   const [progressWidth, setProgressWidth] = useState(100);
 
   useEffect(() => {

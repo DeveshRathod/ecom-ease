@@ -2,7 +2,7 @@ import GroceryImg from "./images/Grocery.avif";
 import MobileImg from "./images/Mobile.avif";
 import FashionImg from "./images/Fashion.avif";
 import ElectronicImg from "./images/Electronics.jpeg";
-import TravelsImg from "./images/Travels.avif";
+import TravelsImg from "./images/Travels.jpeg";
 import ToysImg from "./images/Toys.avif";
 
 export const data = [
@@ -11,11 +11,7 @@ export const data = [
     image: GroceryImg,
     url: "",
   },
-  {
-    name: "Mobiles",
-    image: MobileImg,
-    url: "",
-  },
+
   {
     name: "Fashion",
     image: FashionImg,
@@ -24,6 +20,11 @@ export const data = [
   {
     name: "Electronics",
     image: ElectronicImg,
+    url: "",
+  },
+  {
+    name: "Mobiles",
+    image: MobileImg,
     url: "",
   },
   {
