@@ -55,18 +55,21 @@ const Navbar = () => {
           </div>
         )}
         <div className="relative flex gap-8">
-          <div className="flex justify-center items-center gap-2 sm:gap-8">
-            <Link>
-              <div className="relative">
-                <NotificationsIcon />
-                {cartCount > 0 && (
-                  <div className="absolute top-3 right-3 bg-red-500 rounded-full w-4 h-4 flex items-center justify-center text-white text-xs">
-                    {cartCount}
-                  </div>
-                )}
-              </div>
-            </Link>
-          </div>
+          {token && currentUser && (
+            <div className="flex justify-center items-center gap-2 sm:gap-8">
+              <Link>
+                <div className="relative">
+                  <NotificationsIcon />
+                  {cartCount > 0 && (
+                    <div className="absolute top-3 right-3 bg-red-500 rounded-full w-4 h-4 flex items-center justify-center text-white text-xs">
+                      {cartCount}
+                    </div>
+                  )}
+                </div>
+              </Link>
+            </div>
+          )}
+
           {token && currentUser ? (
             <>
               <button onClick={toggleDropdown}>
@@ -116,10 +119,7 @@ const Navbar = () => {
           ) : (
             <>
               <div>
-                <Link
-                  to="/signin"
-                  className="p-2 rounded-md bg-[#FFBE98] text-md"
-                >
+                <Link to="/signin" className="p-2 rounded-md text-md">
                   Sign In
                 </Link>
               </div>
