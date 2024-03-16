@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import Error from "./Error";
+import Message from "./Message";
 import {
   getDownloadURL,
   getStorage,
@@ -180,7 +180,12 @@ function AddNew({ setForm, setItems }) {
         </div>
         <div>
           {showModal && (
-            <Error message={errorMessage} setShowModal={setShowModal} />
+            <Message
+              message={errorMessage}
+              setShowModal={setShowModal}
+              showModel={showModal}
+              isError={true}
+            />
           )}
         </div>
         <div className="mb-4">

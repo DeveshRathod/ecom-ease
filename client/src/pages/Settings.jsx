@@ -4,7 +4,7 @@ import Layout from "../components/Layout";
 import axios from "axios";
 import { setUser } from "../store/reducers/user.slice";
 import CreateIcon from "@mui/icons-material/Create";
-import Error from "../components/Error";
+import Message from "../components/Message";
 import {
   getDownloadURL,
   getStorage,
@@ -176,6 +176,7 @@ const Settings = () => {
       },
       (error) => {
         setErrorMessage("Image upload failed");
+
         setShowModal(true);
       },
       () => {
@@ -256,11 +257,24 @@ const Settings = () => {
 
   return (
     <Layout>
+      {showModal && (
+        <Message
+          message={errorMessage}
+          setShowModal={setShowModal}
+          showModel={showModal}
+          isError={true}
+        />
+      )}
+      {success && (
+        <Message
+          message={success}
+          setShowModal={setSuccess}
+          showModel={success}
+          isError={false}
+        />
+      )}
       <div className="main">
         <h1 className="pt-2 pb-2 text-2xl font-semibold">Profile Settings</h1>
-        {showModal && (
-          <Error message={errorMessage} setShowModal={setShowModal} />
-        )}
         {showModal2 && (
           <Dialog
             setShowModal={setShowModal2}
@@ -280,7 +294,6 @@ const Settings = () => {
                       className="w-28 h-28 sm:w-24 sm:h-24 object-cover shadow-md cursor-default transition-opacity duration-300 ease-in-out hover:opacity-95"
                     />
                   </div>
-                  <div className=" min-h-6">{success}</div>
                   <div className="absolute -top-2 -right-2 flex items-start justify-end opacity-0 group-hover:opacity-100">
                     <CreateIcon
                       className="text-white bg-[#FFBE98] rounded-full p-1 shadow-xl"
