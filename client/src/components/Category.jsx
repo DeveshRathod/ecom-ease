@@ -2,12 +2,12 @@ import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
-import "../styles/Swiper.css";
 import { data } from "../data/category.js";
 import { Link } from "react-router-dom";
 import { Navigation } from "swiper/modules";
 import WestIcon from "@mui/icons-material/West";
 import EastIcon from "@mui/icons-material/East";
+import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
 
 export default function Category() {
   return (
@@ -59,9 +59,12 @@ export default function Category() {
               />
               <Link
                 to="#"
-                className="absolute inset-x-20 bottom-2 bg-white p-2 text-black hover:text-white hover:bg-black rounded-full text-center text-sm transition duration-500 ease-in-out flex items-center justify-center"
+                className="absolute inset-x-20 bottom-2 bg-white p-2 text-black group rounded-full text-center text-sm ease-in-out flex items-center justify-center hover:text-white hover:bg-black"
               >
-                {category.name}
+                <div>{category.name}</div>
+                <div className="hidden group-hover:flex">
+                  <ArrowOutwardIcon sx={{ fontSize: 20 }} />
+                </div>
               </Link>
             </div>
           </SwiperSlide>

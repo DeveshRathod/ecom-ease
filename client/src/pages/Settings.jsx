@@ -297,7 +297,7 @@ const Settings = () => {
                   </div>
                   <div className="absolute -top-2 -right-2 flex items-start justify-end opacity-0 group-hover:opacity-100">
                     <CreateIcon
-                      className="text-white bg-[#FFBE98] rounded-full p-1 shadow-xl"
+                      className="text-white bg-red-500 rounded-full p-1 shadow-xl"
                       style={{ fontSize: "28px" }}
                       onClick={() => fileRef.current.click()}
                     />
@@ -320,7 +320,7 @@ const Settings = () => {
                 name="username"
                 value={formData.username}
                 onChange={handleChange}
-                className="bg-[#FEECE2] py-2 px-5 rounded-md focus:outline-none w-full"
+                className=" bg-gray-100 py-2 px-5 rounded-md focus:outline-none w-full"
               />
             </div>
             <div className="flex flex-col">
@@ -331,7 +331,7 @@ const Settings = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="bg-[#FEECE2] py-2 px-5 rounded-md focus:outline-none w-full"
+                className="bg-gray-100  py-2 px-5 rounded-md focus:outline-none w-full"
               />
             </div>
             <div className="flex flex-col">
@@ -342,7 +342,7 @@ const Settings = () => {
                 name="mobile"
                 value={formData.mobile}
                 onChange={handleChange}
-                className="bg-[#FEECE2] py-2 px-5 rounded-md focus:outline-none w-full"
+                className="bg-gray-100  py-2 px-5 rounded-md focus:outline-none w-full"
               />
             </div>
             <div className="flex flex-col">
@@ -353,7 +353,7 @@ const Settings = () => {
                 name="birthday"
                 value={formattedBirthday}
                 onChange={handleChange}
-                className="bg-[#FEECE2] py-2 px-5 rounded-md focus:outline-none w-full"
+                className="bg-gray-100  py-2 px-5 rounded-md focus:outline-none w-full"
               />
             </div>
             <div className="flex flex-col">
@@ -363,7 +363,7 @@ const Settings = () => {
                 id="gender"
                 value={formData.gender}
                 onChange={handleChange}
-                className="bg-[#FEECE2] py-3 px-5 rounded-md focus:outline-none w-full"
+                className="bg-gray-100  py-3 px-5 rounded-md focus:outline-none w-full"
               >
                 <option value="M">Male</option>
                 <option value="F">Female</option>
@@ -372,7 +372,7 @@ const Settings = () => {
             </div>
             <div>
               <button
-                className="self-end py-2 px-5 text-white rounded bg-[#FFBE98] font-semibold outline-none"
+                className="self-end py-2 px-5 text-white rounded bg-green-500 outline-none"
                 onClick={handleSubmit}
               >
                 Save Changes
@@ -382,7 +382,7 @@ const Settings = () => {
 
           <div className="flex-1 shadow-md">
             <div className="p-2">
-              <div className="flex p-2 bg-[#FEECE2] justify-between">
+              <div className="flex p-2 bg-gray-100  justify-between">
                 <div className="flex-3">
                   <h1 className="text-lg">Password</h1>
                   <p className="text-xs">Reset or Change Password</p>
@@ -392,14 +392,14 @@ const Settings = () => {
                     setShowPasswordForm(!showPasswordForm);
                     setShowAddressForm(false);
                   }}
-                  className="p-1 rounded-md text-sm bg-[#F7DED0] py-1 px-2"
+                  className="p-1 rounded-md text-sm bg-white py-1 px-2"
                 >
                   Password
                 </button>
               </div>
               {showPasswordForm && (
                 <form
-                  className="p-2 bg-[#FEECE2] flex gap-2 flex-col"
+                  className="p-2 bg-white  flex gap-2 flex-col"
                   onSubmit={handleSubmit}
                 >
                   <div className=" flex justify-between">
@@ -410,7 +410,7 @@ const Settings = () => {
                         type="password"
                         value={formData.password}
                         onChange={handleChange}
-                        className="bg-[#F7DED0] py-2 px-5 rounded-md focus:outline-none w-full"
+                        className="bg-gray-100  py-2 px-5 rounded-md focus:outline-none w-full"
                         placeholder="Password"
                       />
                     </div>
@@ -421,12 +421,12 @@ const Settings = () => {
                         type="password"
                         value={formData.confirmPassword}
                         onChange={handleChange}
-                        className="bg-[#F7DED0] py-2 px-5 rounded-md focus:outline-none w-full"
+                        className="bg-gray-100  py-2 px-5 rounded-md focus:outline-none w-full"
                         placeholder="Confirm Password"
                       />
                     </div>
                   </div>
-                  <button className="py-2 px-5  rounded-md bg-[#FFBE98]">
+                  <button className="py-2 px-5  rounded-md bg-green-500 text-white">
                     Submit
                   </button>
                 </form>
@@ -435,7 +435,7 @@ const Settings = () => {
 
             {currentUser && !currentUser.isAdmin && (
               <div className="p-2">
-                <div className="flex p-2 bg-[#FEECE2] justify-between">
+                <div className="flex p-2 bg-gray-100 justify-between">
                   <div className="flex-3">
                     <h1 className="text-lg">Address</h1>
                     <p className="text-xs">Add new address</p>
@@ -445,13 +445,13 @@ const Settings = () => {
                       setShowAddressForm(!showAddressForm);
                       setShowPasswordForm(false);
                     }}
-                    className="p-1 rounded-md text-sm bg-[#F7DED0] py-1 px-2"
+                    className="p-1 rounded-md text-sm bg-white py-1 px-2"
                   >
                     Add new
                   </button>
                 </div>
                 {showAddressForm && (
-                  <form className="p-2 bg-[#FEECE2] flex flex-col gap-2">
+                  <form className="p-2 bg-white flex flex-col gap-2">
                     <div>
                       <input
                         type="text"
@@ -459,7 +459,7 @@ const Settings = () => {
                         name="addressLine1"
                         value={addressData.addressLine1}
                         onChange={handleAddressChange}
-                        className="bg-[#F7DED0] py-2 px-5 rounded-md focus:outline-none w-full"
+                        className="bg-gray-100 py-2 px-5 rounded-md focus:outline-none w-full"
                         placeholder="Flat No,Building Name"
                       />
                     </div>
@@ -470,7 +470,7 @@ const Settings = () => {
                         name="addressLine2"
                         value={addressData.addressLine2}
                         onChange={handleAddressChange}
-                        className="bg-[#F7DED0] py-2 px-5 rounded-md focus:outline-none w-full"
+                        className="bg-gray-100 py-2 px-5 rounded-md focus:outline-none w-full"
                         placeholder="Area"
                       />
                     </div>
@@ -481,7 +481,7 @@ const Settings = () => {
                         name="addressLine3"
                         value={addressData.addressLine3}
                         onChange={handleAddressChange}
-                        className="bg-[#F7DED0] py-2 px-5 rounded-md focus:outline-none w-full"
+                        className="bg-gray-100 py-1 px-4 rounded-md focus:outline-none w-full"
                         placeholder="City"
                       />
                     </div>
@@ -492,12 +492,12 @@ const Settings = () => {
                         name="pincode"
                         value={addressData.pincode}
                         onChange={handleAddressChange}
-                        className="bg-[#F7DED0] py-2 px-5 rounded-md focus:outline-none w-full"
+                        className="bg-gray-100 py-2 px-5 rounded-md focus:outline-none w-full"
                         placeholder="Pincode"
                       />
                     </div>
                     <button
-                      className="self-end py-2 px-5 rounded bg-[#FFBE98] "
+                      className="self-end py-2 px-4 rounded bg-green-500 text-white "
                       onClick={addressSubmit}
                     >
                       New Address
@@ -509,7 +509,7 @@ const Settings = () => {
 
             {currentUser && !currentUser.isAdmin && (
               <div className="p-2">
-                <div className="flex p-2 bg-[#FEECE2] justify-between">
+                <div className="flex p-2 bg-gray-100 justify-between">
                   <div className="flex-3">
                     <h1 className="text-lg">Deactivate</h1>
                     <p className="text-xs">
@@ -517,7 +517,7 @@ const Settings = () => {
                     </p>
                   </div>
                   <button
-                    className="p-1 rounded-md text-sm bg-[#F7DED0] py-1 px-2 text-red-500"
+                    className="rounded-md text-sm bg-white py-1 px-4 text-red-500"
                     onClick={() => setShowModal2(true)}
                   >
                     Delete
@@ -532,7 +532,7 @@ const Settings = () => {
               !currentUser.isAdmin && (
                 <div className="p-2 flex flex-col">
                   <h1 className="text-lg">Addresses</h1>
-                  <div className="flex p-2 bg-[#FEECE2] flex-col h-[363px] overflow-y-scroll gap-1">
+                  <div className="flex p-2 bg-gray-100 flex-col h-[363px] overflow-y-scroll gap-1">
                     {address.map((add, index) => (
                       <Address key={index} address={add} />
                     ))}

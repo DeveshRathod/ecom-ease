@@ -265,7 +265,7 @@ function AddNew({ setForm, setItems }) {
             className="w-full px-3 py-2 border rounded focus:outline-none focus:border-[#FFBE98]"
           >
             <option value="">Select</option>
-            <option value="Grocery">Grocery</option>
+            <option value="Furniture">Furniture</option>
             <option value="Mobile">Mobiles</option>
             <option value="Fashion">Fashion</option>
             <option value="Electronics">Electronics</option>

@@ -55,7 +55,7 @@ const Signin = () => {
   return (
     <Authwrapper>
       <div className="flex items-center flex-col gap-6">
-        <h1 className="font-semibold text-3xl text-[#FFBE98]">Sign In</h1>
+        <h1 className="font-semibold text-3xl text-black">Sign In</h1>
         <form
           onSubmit={handleSubmit}
           className="flex items-center justify-center flex-col gap-4"

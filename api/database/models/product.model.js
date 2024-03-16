@@ -40,7 +40,7 @@ const productSchema = mongoose.Schema(
       required: true,
     },
     reviews: [
-      { type: mongoose.Schema.Types.ObjectId, ref: "Review", default: [] },
+      { type: mongoose.Schema.Types.ObjectId, ref: "Review", default: {} },
     ],
   },
   {

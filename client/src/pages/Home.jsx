@@ -6,6 +6,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import CarouselComp from "../components/CarouselComp";
 import Category from "../components/Category";
 import image from "../data/heroimag.jpeg";
+import Latest from "../components/Latest";
 
 const Home = () => {
   const currentUser = useSelector((state) => state.currentUser);
@@ -24,7 +25,7 @@ const Home = () => {
             <div className="flex flex-wrap justify-center sm:justify-start">
               <Link
                 to="/explore"
-                className="bg-[#FFBE98] text-white px-6 py-3 border hover:border-[#FFBE98] rounded-md shadow-lg hover:bg-white hover:text-[#FFBE98] transition duration-300 ease-in-out mr-4 mb-4 sm:mb-0 flex justify-center items-center gap-2"
+                className="bg-white text-black px-6 py-3 border border-black hover:border-black rounded-md shadow-lg hover:bg-black hover:text-white transition duration-300 ease-in-out mr-4 mb-4 sm:mb-0 flex justify-center items-center gap-2"
               >
                 <div>
                   <SearchIcon />
@@ -34,7 +35,7 @@ const Home = () => {
               {currentUser && currentUser.isAdmin && (
                 <Link
                   to="/dashboard"
-                  className=" bg-transparent border border-[#FFBE98] text-[#FFBE98] px-6 py-3 rounded-md shadow-lg hover:bg-[#FFBE98] hover:text-white transition duration-300 ease-in-out mr-4 mb-4 sm:mb-0 flex justify-center items-center gap-2"
+                  className=" bg-black border border-black text-white px-6 py-3 rounded-md shadow-lg hover:bg-white hover:text-black transition duration-300 ease-in-out mr-4 mb-4 sm:mb-0 flex justify-center items-center gap-2"
                 >
                   <div>
                     <DashboardIcon />
@@ -56,11 +57,21 @@ const Home = () => {
       <div>
         <div className="w-full mt-10 flex justify-center items-center">
           <div className="w-full max-w-screen-xl mx-auto p-4">
-            <div className="text-3xl mb-6 font-semibold text-center">
+            <div className="text-xl font-bold text-gray-900 sm:text-3xl text-center mt-2 mb-5">
               Categories you might like
             </div>
             <div className="bg-white rounded-md w-full h-full">
               <Category />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div className="w-full mt-10 flex justify-center items-center">
+          <div className="w-full max-w-screen-xl mx-auto p-4">
+            <div className="bg-white rounded-md w-full h-full">
+              <Latest />
             </div>
           </div>
         </div>

@@ -21,12 +21,12 @@ function DashboardLayout({ children }) {
   };
 
   return (
-    <div className="bg-white font-family-karla flex">
-      <aside className="relative bg-[#FFBE98] h-screen w-52 hidden sm:block shadow-xl">
+    <div className="bg-white flex">
+      <aside className="relative bg-white h-screen w-52 hidden sm:block shadow-xl">
         <div className="p-6 ">
           <Link
             to="/dashboard"
-            className="text-white text-3xl font-semibold uppercase overflow-hidden whitespace-nowrap overflow-ellipsis"
+            className="text-black text-3xl font-semibold uppercase overflow-hidden whitespace-nowrap overflow-ellipsis"
           >
             {currentUser.username}
           </Link>
@@ -81,30 +81,14 @@ function DashboardLayout({ children }) {
       </div>
 
       <div className="w-full flex flex-col h-screen overflow-y-hidden">
-        <header className="w-full items-center bg-[#FFBE98] nav pt-6 pb-6 pl-20 pr-20 hidden sm:flex">
-          <div className="w-1/2">
-            {isSidebarOpen && (
-              <div onClick={toggleSidebar} className="fixed inset-0"></div>
-            )}
-          </div>
-          <div className="relative w-1/2 flex justify-end">
-            <div
-              onClick={toggleSidebar}
-              className="relative z-10 w-6 h-6 rounded-full m-2 overflow-hidden"
-            >
-              <img src={currentUser.profile} alt="profile" />
-            </div>
-          </div>
-        </header>
-
-        <header className="w-full bg-[#FFBE98] py-2 px-3 sm:hidden">
+        <header className="w-full bg-white py-2 px-3 sm:hidden shadow-lg">
           <div className="flex items-center justify-between ">
-            <h1 className="text-white text-xl font-semibold uppercase overflow-hidden whitespace-nowrap overflow-ellipsis">
+            <h1 className="text-black text-xl font-semibold uppercase overflow-hidden whitespace-nowrap overflow-ellipsis">
               {currentUser.username}
             </h1>
             <button
               onClick={toggleSidebar}
-              className="text-white text-3xl focus:outline-none"
+              className="text-black text-3xl focus:outline-none"
             >
               <MenuIcon />
             </button>

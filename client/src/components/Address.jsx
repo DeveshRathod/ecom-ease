@@ -2,7 +2,7 @@ import React from "react";
 
 const Address = ({ address }) => {
   return (
-    <div className=" flex p-2 rounded-md bg-[#FEECE2] shadow-md">
+    <div className=" flex p-2 rounded-md bg-white shadow-md">
       <div className=" flex-1">
         <div className=" flex">
           <p>{address.addressLine1},</p>

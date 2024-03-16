@@ -1,8 +1,10 @@
 import Product from "../database/models/product.model.js";
 
 export const getAllNewArrival = async (req, res) => {
+  const category = ["Mobile", "Fashion", "Electronics", "Toys"];
   try {
     const latestEntries = await Product.aggregate([
+      { $match: { category: { $in: category } } },
       { $sort: { createdAt: -1 } },
       {
         $group: {
@@ -13,18 +15,13 @@ export const getAllNewArrival = async (req, res) => {
       { $replaceRoot: { newRoot: "$entry" } },
     ]);
 
-    const latestEntriesObject = {};
-    latestEntries.forEach((entry) => {
-      latestEntriesObject[entry.category] = entry;
-    });
+    const resultArray = category
+      .map((cat) => latestEntries.find((entry) => entry.category === cat))
+      .filter(Boolean);
 
-    const all = { data: latestEntriesObject };
-
-    return res.status(200).json(all.data);
+    return res.status(200).json(resultArray);
   } catch (error) {
     console.error("Error fetching latest entries:", error);
-    return res
-      .status(500)
-      .json({ success: false, error: "Internal Server Error" });
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };

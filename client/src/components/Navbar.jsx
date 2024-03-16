@@ -34,7 +34,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="flex nav pt-6 pb-6 pl-20 pr-20 justify-between items-center bg-[#FFBE98] sticky">
+    <div className="flex nav pt-8 pb-8 pl-20 pr-20 justify-between items-center bg-white sticky shadow-md">
       <Link to="/" className="text-xs sm:text-base">
         <h1>ShopEase</h1>
       </Link>
@@ -73,12 +73,12 @@ const Navbar = () => {
                 <img
                   src={currentUser.profile}
                   alt="profle"
-                  className="w-6 h-6 object-cover rounded-full self-center"
+                  className="w-6 h-6 object-cover rounded-full self-center shadow-md"
                 />
               </button>
 
               {isDropdownOpen && (
-                <div className="absolute top-full right-0 mt-1 bg-[#FEECE2] rounded-md shadow-md transition ease-in-out">
+                <div className="absolute top-full right-0 mt-1 bg-white shadow-md rounded-lg transition ease-in-out">
                   <ul className="p-4 flex flex-col gap-2">
                     <li
                       className={`${!currentUser.isAdmin ? "hidden" : "block"}`}

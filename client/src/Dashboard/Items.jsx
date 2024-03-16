@@ -63,11 +63,11 @@ const Items = () => {
   return (
     <DashboardLayout>
       <div className="p-4 flex justify-between">
-        <div className="bg-[#FEECE2] flex gap-1 items-center rounded-md p-2">
+        <div className="bg-gray-100 flex gap-1 items-center rounded-md p-2">
           <SearchIcon />
           <input
             type="text"
-            className="outline-none bg-[#FEECE2] black w-full"
+            className="outline-none bg-gray-100 black w-full"
             placeholder=" Search...."
             value={searchInput}
             onChange={handleSearchInputChange}
@@ -76,17 +76,17 @@ const Items = () => {
         {from && <AddNew setForm={setFrom} setItems={setItems} />}
         <div>
           <button
-            className="flex items-center justify-between rounded-md bg-[#FEECE2] py-2 px-6"
+            className="flex items-center justify-between rounded-md bg-gray-100 py-2 px-6"
             onClick={() => setFrom(true)}
           >
             <AddIcon />
-            <p className="bg-[#FEECE2]">Add</p>
+            <p>Add</p>
           </button>
         </div>
       </div>
 
-      <div className="pl-2 pr-2 pb-2 sm:pl-4 sm:pr-4 sm:pb-4 h-[calc(84vh - 9rem)]">
-        <div className="pt-4 pb-4 pl-8 bg-[#FEECE2] rounded-t-md">
+      <div className="pl-2 pr-2 pb-2 sm:pl-4 sm:pr-4 sm:pb-4 h-[calc(100vh - 9rem)]">
+        <div className="pt-4 pb-4 pl-8 bg-gray-100 rounded-t-md">
           <select
             name=""
             id=""
@@ -95,7 +95,7 @@ const Items = () => {
             onChange={handleCategoryChange}
           >
             <option value="">All</option>
-            <option value="Grocery">Grocery</option>
+            <option value="Furniture">Furniture</option>
             <option value="Mobile">Mobiles</option>
             <option value="Fashion">Fashion</option>
             <option value="Electronics">Electronics</option>
@@ -104,7 +104,7 @@ const Items = () => {
           </select>
         </div>
         <div className="h-full overflow-y-auto rounded-b-md">
-          <div className="w-full bg-[#FEECE2] flex flex-col">
+          <div className="w-full bg-gray-100 flex flex-col">
             <div className="flex justify-center gap-2 pb-10">
               <div className="flex flex-wrap w-full p-2 justify-center  gap-2">
                 {filteredItems.length > 0 ? (
