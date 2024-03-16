@@ -1,27 +1,59 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import InfoIcon from "@mui/icons-material/Info";
 
-const Dialog = ({ message, setShowModal, dialogFun, headline }) => {
+const Dialog = ({ message, setShowModal, dialogFun, headline, showModel }) => {
+  const [progressWidth, setProgressWidth] = useState(100);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowModal(false);
+    }, 3000);
+
+    const interval = setInterval(() => {
+      setProgressWidth((prevWidth) => prevWidth - (100 / 3000) * 100);
+    }, 100);
+
+    return () => {
+      clearTimeout(timer);
+      clearInterval(interval);
+    };
+  }, [setShowModal]);
+
   return (
-    <div className="rounded-lg bg-white p-8 shadow-2xl fixed top-4 right-4 z-20">
-      <h2 className="text-lg font-bold">{headline}</h2>
-      <p className="mt-2 text-sm text-gray-500">{message}</p>
-      <div className="mt-4 flex gap-2 justify-between">
-        <button
-          type="button"
-          className="rounded px-4 py-2 text-sm font-medium text-black"
-          onClick={() => setShowModal(false)}
-        >
-          Cancel
-        </button>
-        <button
-          type="button"
-          className="rounded bg-green-500 px-6 py-2 text-sm font-medium text-white"
-          onClick={dialogFun}
-        >
-          Ok
-        </button>
-      </div>
-    </div>
+    <>
+      {showModel && (
+        <div className="bg-white shadow-2xl fixed top-4 right-4 z-20 flex flex-col">
+          <div className="p-4 flex flex-col justify-between items-center">
+            <p>{headline}</p>
+
+            <div className=" flex justify-between w-full mt-5">
+              <button
+                className=" py-1 px-3 rounded-sm"
+                onClick={() => setShowModal(false)}
+              >
+                Stay
+              </button>
+              <button
+                className=" py-1 px-3 rounded-sm bg-[#FFBE98]  text-white"
+                onClick={dialogFun}
+              >
+                Leave
+              </button>
+            </div>
+          </div>
+
+          <div className="relative h-2 bg-gray-200 rounded mt-auto w-full">
+            <div
+              className="absolute bottom-0 left-0 h-full bg-[#FFBE98]"
+              style={{
+                width: `${progressWidth}%`,
+                transition: "width 0.1s ease-out",
+              }}
+            />
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

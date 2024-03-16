@@ -36,8 +36,8 @@ const Navbar = () => {
   };
 
   return (
-    <div className="nav flex p-4 sm:p-8 justify-between items-center bg-[#FFBE98] sticky">
-      <Link to="/" className="text-xs sm:text-xl">
+    <div className="flex nav pt-6 pb-6 pl-20 pr-20 justify-between items-center bg-[#FFBE98] sticky">
+      <Link to="/" className="text-xs sm:text-base">
         <h1>ShopEase</h1>
       </Link>
 
@@ -45,7 +45,7 @@ const Navbar = () => {
         {token && currentUser && currentUser.isAdmin && (
           <div>
             <Link to="/dashboard">
-              <DashboardRoundedIcon />
+              <DashboardRoundedIcon sx={{ fontSize: 23 }} />
             </Link>
           </div>
         )}
@@ -80,7 +80,7 @@ const Navbar = () => {
                 <img
                   src={currentUser.profile}
                   alt="profle"
-                  className="w-8 h-8 object-cover rounded-full self-center"
+                  className="w-6 h-6 object-cover rounded-full self-center"
                 />
               </button>
               {isDropdownOpen && (

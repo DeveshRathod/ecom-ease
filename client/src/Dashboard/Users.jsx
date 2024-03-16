@@ -67,8 +67,8 @@ const Users = () => {
 
   return (
     <DashboardLayout>
-      <div className="p-2 sm:p-4 flex justify-between">
-        <div className="p-2 bg-[#FEECE2] w-full md:w-1/2 lg:w-1/3 md:mr-2 flex gap-1 items-center rounded-md">
+      <div className="p-3 flex justify-between">
+        <div className="p-1 bg-[#FEECE2] w-full md:w-1/2 lg:w-1/3 md:mr-2 flex gap-1 items-center rounded-md">
           <SearchIcon />
           <input
             type="text"

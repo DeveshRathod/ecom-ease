@@ -62,12 +62,12 @@ const Items = () => {
 
   return (
     <DashboardLayout>
-      <div className="p-2 sm:p-4 flex justify-between">
-        <div className="p-2 bg-[#FEECE2] flex gap-1 items-center rounded-md">
+      <div className="p-4 flex justify-between">
+        <div className="bg-[#FEECE2] flex gap-1 items-center rounded-md p-2">
           <SearchIcon />
           <input
             type="text"
-            className="p-1 outline-none bg-[#FEECE2] black"
+            className="outline-none bg-[#FEECE2] black w-full"
             placeholder=" Search...."
             value={searchInput}
             onChange={handleSearchInputChange}
@@ -76,11 +76,11 @@ const Items = () => {
         {from && <AddNew setForm={setFrom} setItems={setItems} />}
         <div>
           <button
-            className="flex items-center rounded-md bg-[#FEECE2] p-3"
+            className="flex items-center justify-between rounded-md bg-[#FEECE2] py-2 px-6"
             onClick={() => setFrom(true)}
           >
             <AddIcon />
-            <p className="bg-[#FEECE2]">Add New</p>
+            <p className="bg-[#FEECE2]">Add</p>
           </button>
         </div>
       </div>
@@ -105,8 +105,8 @@ const Items = () => {
         </div>
         <div className="h-full overflow-y-auto rounded-b-md">
           <div className="w-full bg-[#FEECE2] flex flex-col">
-            <div className="flex justify-center gap-2 p-2">
-              <div className="flex flex-wrap w-full p-2 justify-center md:justify-start sm:justify-start gap-2">
+            <div className="flex justify-center gap-2 pb-10">
+              <div className="flex flex-wrap w-full p-2 justify-center  gap-2">
                 {filteredItems.length > 0 ? (
                   filteredItems.map((item, id) => (
                     <ItemsCard item={item} key={id} />

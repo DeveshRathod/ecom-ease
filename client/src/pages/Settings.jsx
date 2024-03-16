@@ -274,7 +274,7 @@ const Settings = () => {
         />
       )}
       <div className="main">
-        <h1 className="pt-2 pb-2 text-2xl font-semibold">Profile Settings</h1>
+        <h1 className="pt-4 pb-4 text-2xl font-semibold">Profile Settings</h1>
         {showModal2 && (
           <Dialog
             setShowModal={setShowModal2}

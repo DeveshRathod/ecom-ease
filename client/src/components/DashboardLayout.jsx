@@ -22,7 +22,7 @@ function DashboardLayout({ children }) {
 
   return (
     <div className="bg-white font-family-karla flex">
-      <aside className="relative bg-[#FFBE98] h-screen w-64 hidden sm:block shadow-xl">
+      <aside className="relative bg-[#FFBE98] h-screen w-52 hidden sm:block shadow-xl">
         <div className="p-6 ">
           <Link
             to="/dashboard"
@@ -72,14 +72,16 @@ function DashboardLayout({ children }) {
         {showModal && (
           <Dialog
             setShowModal={handleModalClose}
+            headline={"Are you sure you want to exit?"}
             message={"All unsaved data will be lost"}
             dialogFun={dialogFun}
+            showModel={showModal}
           />
         )}
       </div>
 
       <div className="w-full flex flex-col h-screen overflow-y-hidden">
-        <header className="w-full items-center bg-[#FFBE98] py-2 px-6 hidden sm:flex">
+        <header className="w-full items-center bg-[#FFBE98] nav pt-6 pb-6 pl-20 pr-20 hidden sm:flex">
           <div className="w-1/2">
             {isSidebarOpen && (
               <div onClick={toggleSidebar} className="fixed inset-0"></div>
@@ -88,16 +90,16 @@ function DashboardLayout({ children }) {
           <div className="relative w-1/2 flex justify-end">
             <div
               onClick={toggleSidebar}
-              className="relative z-10 w-8 h-8 rounded-full m-2 overflow-hidden"
+              className="relative z-10 w-6 h-6 rounded-full m-2 overflow-hidden"
             >
               <img src={currentUser.profile} alt="profile" />
             </div>
           </div>
         </header>
 
-        <header className="w-full bg-[#FFBE98] py-5 px-6 sm:hidden">
+        <header className="w-full bg-[#FFBE98] py-2 px-3 sm:hidden">
           <div className="flex items-center justify-between ">
-            <h1 className="text-white text-3xl font-semibold uppercase overflow-hidden whitespace-nowrap overflow-ellipsis">
+            <h1 className="text-white text-xl font-semibold uppercase overflow-hidden whitespace-nowrap overflow-ellipsis">
               {currentUser.username}
             </h1>
             <button
