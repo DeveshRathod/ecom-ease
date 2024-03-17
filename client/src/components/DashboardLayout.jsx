@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useSelector } from "react-redux";
@@ -7,9 +7,21 @@ import Dialog from "./Dialog";
 function DashboardLayout({ children }) {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
-  const currentUser = useSelector((state) => state.currentUser);
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const currentPath = location.pathname;
+
+  useEffect(() => {
+    const handleBackButton = () => {
+      navigate(currentPath);
+    };
+
+    window.addEventListener("popstate", handleBackButton);
+    return () => {
+      setShowModal(true);
+    };
+  }, []);
 
   const dialogFun = () => {
     setShowModal(false);
@@ -62,7 +74,7 @@ function DashboardLayout({ children }) {
           </NavLink>
         </nav>
         <button
-          className="flex items-center text-red-500 py-4 pl-6"
+          className="flex items-center text-red-500 py-4 pl-6 w-full"
           onClick={() => setShowModal(true)}
         >
           Exit

@@ -34,7 +34,7 @@ const Dialog = ({ setShowModal, dialogFun, headline, showModel }) => {
                 Cancel
               </button>
               <button
-                className=" py-1 px-5 rounded-sm bg-[#FFBE98]  text-white"
+                className=" py-1 px-5 rounded-sm bg-red-500  text-white"
                 onClick={dialogFun}
               >
                 Yes
@@ -44,7 +44,7 @@ const Dialog = ({ setShowModal, dialogFun, headline, showModel }) => {
 
           <div className="relative h-2 bg-gray-200 rounded mt-auto w-full">
             <div
-              className="absolute bottom-0 left-0 h-full bg-[#FFBE98]"
+              className="absolute bottom-0 left-0 h-full bg-red-500"
               style={{
                 width: `${progressWidth}%`,
                 transition: "width 0.1s ease-out",
