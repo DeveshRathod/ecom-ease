@@ -230,8 +230,8 @@ export const getAllProduct = async (req, res) => {
 // };
 
 export const getAllNonAdminUsers = async (req, res) => {
-  let { searchquery, page } = req.query;
-  let limit = 10;
+  let { searchquery, page, sortField, sortOrder } = req.query;
+  let limit = 11;
   let filter = { isAdmin: false };
 
   try {
@@ -242,9 +242,18 @@ export const getAllNonAdminUsers = async (req, res) => {
       skip = (parseInt(page) - 1) * limit;
     }
 
+    let sortOptions = {};
+    if (sortField && sortOrder) {
+      sortOptions[sortField] = sortOrder === "asc" ? 1 : -1;
+    } else {
+      sortOptions["createdAt"] = 1;
+    }
+
     if (!searchquery || searchquery.trim() === "") {
-      // If searchquery is empty or whitespace, return all non-admin users
-      nonAdminUsers = await User.find(filter).skip(skip).limit(limit);
+      nonAdminUsers = await User.find(filter)
+        .sort(sortOptions)
+        .skip(skip)
+        .limit(limit);
     } else {
       const searchString = searchquery.toString();
       nonAdminUsers = await User.find({
@@ -259,6 +268,7 @@ export const getAllNonAdminUsers = async (req, res) => {
           },
         ],
       })
+        .sort(sortOptions)
         .skip(skip)
         .limit(limit);
     }

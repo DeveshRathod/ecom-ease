@@ -40,7 +40,7 @@ const Users = () => {
   }, [searchQuery, currentPage]);
 
   const getDate = (date) => {
-    return date.slice(0, 10);
+    return date.slice(0, 11);
   };
 
   const handleDeleteUser = (userId) => {
@@ -55,7 +55,7 @@ const Users = () => {
 
   const goToNextPage = () => {
     if (users.length === 0) return;
-    if (users.length < 10) return;
+    if (users.length < 11) return;
 
     setCurrentPage((prevPage) => prevPage + 1);
   };
@@ -72,7 +72,7 @@ const Users = () => {
           <SearchIcon />
           <input
             type="text"
-            className="outline-none bg-gray-100 black w-full"
+            className="outline-none bg-gray-100 w-full"
             placeholder="Search By Name/Email/Phone"
             value={searchQuery}
             onChange={handleSearchChange}
@@ -80,7 +80,7 @@ const Users = () => {
         </div>
       </div>
 
-      <div className="overflow-x-auto w-full min-h-[650px]">
+      <div className="overflow-x-auto w-full min-h-[700px]">
         <table className="min-w-full divide-gray-200">
           <thead className="bg-gray-100">
             <tr>
@@ -147,19 +147,19 @@ const Users = () => {
         </table>
       </div>
 
-      <div className="flex justify-center items-center mb-4 gap-2">
+      <div className="flex justify-center items-center gap-2">
         <button
           onClick={goToPrevPage}
-          className="p-2 bg-gray-300 w-10 text-white rounded-full flex justify-center"
+          className="p-2  w-10 text-black flex justify-center"
         >
           <ChevronLeftIcon />
         </button>
-        <div className="p-2 bg-gray-300 w-10 text-white rounded-full flex justify-center">
+        <div className="p-2  w-10 text-black flex justify-center">
           <p className="self-center">{currentPage}</p>
         </div>
         <button
           onClick={goToNextPage}
-          className="p-2 bg-gray-300 w-10 text-white rounded-full flex justify-center"
+          className="p-2  w-10 text-black flex justify-center"
         >
           <ChevronRightIcon />
         </button>

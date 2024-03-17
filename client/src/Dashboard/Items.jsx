@@ -67,7 +67,7 @@ const Items = () => {
           <SearchIcon />
           <input
             type="text"
-            className="outline-none bg-gray-100 black w-full"
+            className="outline-none bg-gray-100 w-full"
             placeholder=" Search...."
             value={searchInput}
             onChange={handleSearchInputChange}
