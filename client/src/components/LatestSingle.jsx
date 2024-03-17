@@ -48,7 +48,7 @@ const LatestSingle = () => {
 
                   <a
                     href="#"
-                    className="bg-white text-black w-full px-8 py-3 border border-black hover:border-black rounded-md  hover:bg-black hover:text-white transition duration-300 ease-in-out mt-8 flex justify-center items-center gap-2"
+                    className="bg-black text-white w-full px-8 py-3 border border-black hover:border-black rounded-md  hover:bg-white hover:text-black transition duration-300 ease-in-out mt-8 flex justify-center items-center gap-2"
                   >
                     Shop All
                   </a>

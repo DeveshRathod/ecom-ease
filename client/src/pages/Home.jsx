@@ -15,9 +15,11 @@ const Home = () => {
 
   return (
     <div>
+      {/* Header */}
+
       <div>
         <div className="h-full flex flex-col sm:flex-row items-center justify-center mt-20">
-          <div className="flex-1 flex flex-col justify-center items-center text-center sm:text-left px-6 sm:px-0 ml-0 sm:ml-8">
+          <div className="flex-1 flex flex-col justify-center items-center text-center sm:text-left px-6 sm:px-0 ml-0 sm:ml-7">
             <div>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold mb-4 lg:mb-6 text-gray-800">
                 Welcome to ShopEase
@@ -59,6 +61,8 @@ const Home = () => {
         </div>
       </div>
 
+      {/* Categories Section */}
+
       <div className="w-full mt-10 flex justify-center items-center">
         <div className="w-full max-w-screen-xl mx-auto px-6 md:px-12 sm:px-0 py-4">
           <div className="text-xl font-bold text-gray-900 sm:text-3xl text-center mt-2 mb-5">
@@ -70,6 +74,8 @@ const Home = () => {
         </div>
       </div>
 
+      {/* New Arrivals */}
+
       <div className="w-full mt-10 flex justify-center items-center">
         <div className="w-full max-w-screen-xl mx-auto px-6 md:px-12 sm:px-0 py-4">
           <div className="bg-white w-full h-full">
@@ -77,6 +83,8 @@ const Home = () => {
           </div>
         </div>
       </div>
+
+      {/* New Launched */}
 
       <div className="w-full mt-10 flex justify-center items-center">
         <div className="w-full max-w-screen-xl mx-auto px-6 md:px-12 sm:px-0 py-4">
@@ -86,16 +94,18 @@ const Home = () => {
         </div>
       </div>
 
-      <div>
-        <div className=" w-full flex justify-center flex-col pt-6 pb-6 mt-10 rounded-md gap-2">
-          <div className="text-3xl self-center mb-6 font-semibold">
-            Our Top Brands
-          </div>
-          <div className="h-fit min-w-screen bg-white self-center">
-            <Carousel />
-          </div>
+      {/* Brands */}
+
+      <div className=" w-full flex justify-center flex-col pt-6 pb-6 mt-10 rounded-md gap-2">
+        <div className="text-3xl self-center mb-6 font-semibold">
+          Our Top Brands
+        </div>
+        <div className="h-fit min-w-screen bg-white self-center">
+          <Carousel />
         </div>
       </div>
+
+      {/* Footer */}
 
       <div>
         <Footer />

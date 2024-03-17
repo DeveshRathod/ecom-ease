@@ -59,12 +59,12 @@ export default function Category() {
               />
               <Link
                 to="#"
-                className="absolute inset-x-24 shadow-lg md:inset-x-10 sm:inset-x-16 bottom-4 bg-white px-3 py-3 text-black group rounded-full text-center text-sm ease-in-out flex items-center justify-center  transition-all group-hover:end-4"
+                className="absolute inset-x-24 shadow-lg md:inset-x-10 sm:inset-x-16 bottom-4 bg-white px-3 py-3 text-black group rounded-full text-center text-sm ease-in-out flex items-center justify-center  transition-all duration-300"
               >
-                <div className="transition-all group-hover:me-2">
+                <div className="transition-all ease-in-out group-hover:me-2 duration-300">
                   {category.name}
                 </div>
-                <div className="hidden group-hover:flex">
+                <div className="hidden group-hover:flex transition-all ease-in-out">
                   <ArrowOutwardIcon sx={{ fontSize: 18 }} />
                 </div>
               </Link>
