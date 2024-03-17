@@ -23,10 +23,10 @@ const Latest = () => {
   }, []);
 
   return (
-    <section>
+    <section className="  p-2 sm:p-0 md:p-2">
       {latest.length !== 0 && (
         <div>
-          <header>
+          <header className=" p-2 sm:p-0">
             <h2 className="text-xl font-bold text-gray-900 sm:text-3xl">
               Latest In Collection
             </h2>
@@ -66,7 +66,7 @@ const Latest = () => {
       )}
       {latest.length >= 5 && (
         <div className="w-full mt-10 flex justify-center items-center">
-          <div className="w-full max-w-screen-xl mx-auto p-4">
+          <div className="w-full max-w-screen-xl mx-auto">
             <div className="bg-white rounded-md w-full h-full">
               <LatestSingle product={latest[4]} />
             </div>

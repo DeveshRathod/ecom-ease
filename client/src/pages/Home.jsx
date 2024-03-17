@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import CarouselComp from "../components/CarouselComp";
+import Carousel from "../components/Carousel";
 import Category from "../components/Category";
 import image from "../data/heroimag.jpeg";
 import Latest from "../components/Latest";
@@ -59,7 +59,7 @@ const Home = () => {
       </div>
 
       <div className="w-full mt-10 flex justify-center items-center">
-        <div className="w-full max-w-screen-xl mx-auto p-4">
+        <div className="w-full max-w-screen-xl mx-auto px-2 md:px-2 sm:px-0 py-4">
           <div className="text-xl font-bold text-gray-900 sm:text-3xl text-center mt-2 mb-5">
             Categories you might like
           </div>
@@ -71,7 +71,7 @@ const Home = () => {
 
       <div>
         <div className="w-full mt-10 flex justify-center items-center">
-          <div className="w-full max-w-screen-xl mx-auto p-4">
+          <div className="w-full max-w-screen-xl">
             <div className="bg-white rounded-md w-full h-full">
               <Latest />
             </div>
@@ -85,7 +85,7 @@ const Home = () => {
             Our Top Brands
           </div>
           <div className="h-fit min-w-screen bg-white self-center">
-            <CarouselComp />
+            <Carousel />
           </div>
         </div>
       </div>

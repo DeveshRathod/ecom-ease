@@ -10,7 +10,7 @@ const LatestSingle = ({ product }) => {
         </h2>
       </header>
 
-      <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+      <div className="mx-auto max-w-screen-xl py-6 px-4 sm:px-0">
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:items-stretch">
           <div className="grid place-content-center rounded bg-gray-100 p-6 sm:p-8">
             <div className="mx-auto max-w-md text-center lg:text-left">
