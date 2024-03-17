@@ -64,15 +64,6 @@ const Latest = () => {
           </ul>
         </div>
       )}
-      {latest.length >= 5 && (
-        <div className="w-full mt-10 flex justify-center items-center">
-          <div className="w-full max-w-screen-xl mx-auto">
-            <div className="bg-white rounded-md w-full h-full">
-              <LatestSingle product={latest[4]} />
-            </div>
-          </div>
-        </div>
-      )}
     </section>
   );
 };

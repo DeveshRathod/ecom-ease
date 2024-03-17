@@ -8,6 +8,7 @@ import Category from "../components/Category";
 import image from "../data/heroimag.jpeg";
 import Latest from "../components/Latest";
 import Footer from "../components/Footer";
+import LatestSingle from "../components/LatestSingle";
 
 const Home = () => {
   const currentUser = useSelector((state) => state.currentUser);
@@ -27,7 +28,7 @@ const Home = () => {
               <div className="flex flex-wrap justify-center sm:justify-start">
                 <Link
                   to="/explore"
-                  className="bg-white text-black px-6 py-3 border border-black hover:border-black rounded-md shadow-lg hover:bg-black hover:text-white transition duration-300 ease-in-out mr-4 mb-4 sm:mb-0 flex justify-center items-center gap-2"
+                  className="bg-white text-black px-8 py-3 border border-black hover:border-black rounded-md  hover:bg-black hover:text-white transition duration-300 ease-in-out mr-4 mb-4 sm:mb-0 flex justify-center items-center gap-1"
                 >
                   <div>
                     <SearchIcon />
@@ -37,7 +38,7 @@ const Home = () => {
                 {currentUser && currentUser.isAdmin && (
                   <Link
                     to="/dashboard"
-                    className=" bg-black border border-black text-white px-6 py-3 rounded-md shadow-lg hover:bg-white hover:text-black transition duration-300 ease-in-out mr-4 mb-4 sm:mb-0 flex justify-center items-center gap-2"
+                    className=" bg-black border border-black text-white px-8 py-3 rounded-md hover:bg-white hover:text-black transition duration-300 ease-in-out mr-4 mb-4 sm:mb-0 flex justify-center items-center gap-2"
                   >
                     <div>
                       <DashboardIcon />
@@ -59,22 +60,28 @@ const Home = () => {
       </div>
 
       <div className="w-full mt-10 flex justify-center items-center">
-        <div className="w-full max-w-screen-xl mx-auto px-2 md:px-2 sm:px-0 py-4">
+        <div className="w-full max-w-screen-xl mx-auto px-6 md:px-12 sm:px-0 py-4">
           <div className="text-xl font-bold text-gray-900 sm:text-3xl text-center mt-2 mb-5">
             Categories you might like
           </div>
-          <div className="bg-white rounded-md w-full h-full">
+          <div className="bg-white w-full h-full">
             <Category />
           </div>
         </div>
       </div>
 
-      <div>
-        <div className="w-full mt-10 flex justify-center items-center">
-          <div className="w-full max-w-screen-xl">
-            <div className="bg-white rounded-md w-full h-full">
-              <Latest />
-            </div>
+      <div className="w-full mt-10 flex justify-center items-center">
+        <div className="w-full max-w-screen-xl mx-auto px-6 md:px-12 sm:px-0 py-4">
+          <div className="bg-white w-full h-full">
+            <Latest />
+          </div>
+        </div>
+      </div>
+
+      <div className="w-full mt-10 flex justify-center items-center">
+        <div className="w-full max-w-screen-xl mx-auto px-6 md:px-12 sm:px-0 py-4">
+          <div className="bg-white w-full h-full">
+            <LatestSingle />
           </div>
         </div>
       </div>
