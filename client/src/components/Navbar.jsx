@@ -34,7 +34,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="flex nav pt-8 pb-8 pl-20 pr-20 justify-between items-center bg-white sticky shadow-md">
+    <div className="flex nav pt-8 pb-8 pl-20 pr-20 justify-between items-center bg-white sticky top-0 z-50 shadow-md">
       <Link to="/" className="text-xs sm:text-base">
         <h1>ShopEase</h1>
       </Link>

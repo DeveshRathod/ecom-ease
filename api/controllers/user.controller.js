@@ -25,12 +25,16 @@ export const me = async (req, res) => {
     const currentUser = {
       _id: user._id,
       username: user.username,
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
       birthday: user.birthday,
       gender: user.gender,
       mobile: user.mobile,
       profile: user.profile,
       isAdmin: user.isAdmin,
+      background: user.background,
+      createdAt: user.createdAt,
     };
     res.status(200).json({ currentUser });
   } catch (error) {
@@ -42,22 +46,18 @@ export const me = async (req, res) => {
 };
 
 export const signup = async (req, res) => {
-  const { username, email, password, confirmPassword } = req.body;
+  const { firstName, lastName, email, password, confirmPassword } = req.body;
 
   if (confirmPassword !== password) {
     return res.status(400).json({ message: "Passwords do not match" });
   }
 
-  if (!username || !email || !password || !confirmPassword) {
+  if (!firstName || !lastName || !email || !password || !confirmPassword) {
     return res.status(400).json({ message: "Please fill all fields" });
   }
 
   if (!isValidEmail(email)) {
     return res.status(400).json({ message: "Invalid email" });
-  }
-
-  if (!isValidUsername(username)) {
-    return res.status(400).json({ message: "Invalid username" });
   }
 
   const exists = await User.findOne({ email: email });
@@ -69,7 +69,9 @@ export const signup = async (req, res) => {
   const hashedPassword = bcryptjs.hashSync(password, 8);
   try {
     const user = new User({
-      username: username,
+      firstName: firstName,
+      lastName: lastName,
+
       email: email,
       password: hashedPassword,
     });
@@ -83,12 +85,16 @@ export const signup = async (req, res) => {
     const currentUser = {
       _id: user._id,
       username: user.username,
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
       birthday: user.birthday,
       gender: user.gender,
       mobile: user.mobile,
       profile: user.profile,
       isAdmin: user.isAdmin,
+      background: user.background,
+      createdAt: user.createdAt,
     };
 
     return res.status(201).json({ token: token, currentUser });
@@ -127,12 +133,16 @@ export const signin = async (req, res) => {
     const currentUser = {
       _id: user._id,
       username: user.username,
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
       birthday: user.birthday,
       gender: user.gender,
       mobile: user.mobile,
       profile: user.profile,
       isAdmin: user.isAdmin,
+      background: user.background,
+      createdAt: user.createdAt,
     };
 
     return res.status(200).json({ token: token, currentUser });

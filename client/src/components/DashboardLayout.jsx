@@ -28,7 +28,7 @@ function DashboardLayout({ children }) {
             to="/dashboard"
             className="text-black text-3xl font-semibold uppercase overflow-hidden whitespace-nowrap overflow-ellipsis"
           >
-            {currentUser.username}
+            Admin
           </Link>
         </div>
         <nav className=" text-base font-semibold pt-3">
@@ -84,7 +84,7 @@ function DashboardLayout({ children }) {
         <header className="w-full bg-white py-2 px-3 sm:hidden shadow-lg">
           <div className="flex items-center justify-between ">
             <h1 className="text-black text-xl font-semibold uppercase overflow-hidden whitespace-nowrap overflow-ellipsis">
-              {currentUser.username}
+              Admin
             </h1>
             <button
               onClick={toggleSidebar}

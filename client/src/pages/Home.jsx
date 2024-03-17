@@ -5,7 +5,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import Carousel from "../components/Carousel";
 import Category from "../components/Category";
-import image from "../data/heroimag.jpeg";
+import image from "../data/images/heroimag.jpeg";
 import Latest from "../components/Latest";
 import Footer from "../components/Footer";
 import LatestSingle from "../components/LatestSingle";
@@ -29,7 +29,7 @@ const Home = () => {
               </p>
               <div className="flex flex-wrap justify-center sm:justify-start">
                 <Link
-                  to="/explore"
+                  to="/explore/all"
                   className="bg-white text-black px-8 py-3 border border-black hover:border-black rounded-md  hover:bg-black hover:text-white transition duration-300 ease-in-out mr-4 mb-4 sm:mb-0 flex justify-center items-center gap-1"
                 >
                   <div>

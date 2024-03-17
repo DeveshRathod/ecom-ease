@@ -23,7 +23,7 @@ const Message = ({ message, setShowModal, showModel, isError }) => {
   return (
     <>
       {showModel && (
-        <div className="bg-white shadow-2xl fixed top-4 right-4 z-20 flex flex-col">
+        <div className="bg-white shadow-md fixed top-4 right-4 z-20 flex flex-col">
           <div className="p-4 flex justify-between items-center">
             <div className="flex items-center">
               {isError ? (
@@ -35,7 +35,7 @@ const Message = ({ message, setShowModal, showModel, isError }) => {
             </div>
           </div>
 
-          <div className="relative h-2 bg-gray-200 rounded mt-auto w-full">
+          <div className="relative h-2 bg-gray-200  mt-auto w-full">
             <div
               className={`absolute bottom-0 left-0 h-full ${
                 isError ? "bg-red-500" : "bg-green-500"

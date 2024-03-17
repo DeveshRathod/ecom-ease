@@ -5,7 +5,8 @@ import { useDispatch } from "react-redux";
 import { setUser } from "../store/reducers/user.slice";
 
 const Signup = () => {
-  const [username, setUsername] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -13,8 +14,12 @@ const Signup = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const handleUsernameChange = (event) => {
-    setUsername(event.target.value);
+  const handleFirstChange = (event) => {
+    setFirstName(event.target.value);
+  };
+
+  const handleLastChange = (event) => {
+    setLastName(event.target.value);
   };
 
   const handleEmailChange = (event) => {
@@ -34,7 +39,8 @@ const Signup = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username: username,
+          firstName: firstName,
+          lastName: lastName,
           email: email,
           password: password,
           confirmPassword: confirmPassword,
@@ -49,16 +55,19 @@ const Signup = () => {
       const user = JSON.stringify(data.currentUser);
       localStorage.setItem("currentUser", user);
       dispatch(setUser(data.currentUser));
-      setUsername("");
+      setFirstName("");
+      setLastName("");
       setEmail("");
       setPassword("");
       setConfirmPassword("");
       navigate("/");
     } catch (error) {
       setError("Cannot sign up");
-      setUsername("");
+      setFirstName("");
+      setLastName("");
       setEmail("");
       setPassword("");
+      setConfirmPassword("");
       console.log(error.message);
       return;
     }
@@ -75,11 +84,22 @@ const Signup = () => {
           <div className="relative">
             <input
               type="text"
-              id="username"
-              value={username}
-              onChange={handleUsernameChange}
+              id="firstName"
+              value={firstName}
+              onChange={handleFirstChange}
               className="w-full md:w-96 px-4 py-3 rounded-md outline-none shadow-inner"
-              placeholder="Username"
+              placeholder="First Name"
+            />
+          </div>
+
+          <div className="relative">
+            <input
+              type="text"
+              id="lastName"
+              value={lastName}
+              onChange={handleLastChange}
+              className="w-full md:w-96 px-4 py-3 rounded-md outline-none shadow-inner"
+              placeholder="Last Name"
             />
           </div>
 

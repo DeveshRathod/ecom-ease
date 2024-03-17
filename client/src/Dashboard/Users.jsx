@@ -40,7 +40,7 @@ const Users = () => {
   }, [searchQuery, currentPage]);
 
   const getDate = (date) => {
-    return date.slice(0, 11);
+    return date.slice(0, 10);
   };
 
   const handleDeleteUser = (userId) => {

@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import Review from "./review.model.js";
+import Brand from "./brands.model.js";
 
 const productSchema = mongoose.Schema(
   {
@@ -32,10 +33,18 @@ const productSchema = mongoose.Schema(
       default: 0,
     },
     brand: {
-      type: String,
-      required: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Brand",
     },
     stock: {
+      type: Number,
+      required: true,
+    },
+    sold: {
+      type: Number,
+      default: 0,
+    },
+    discount: {
       type: Number,
       required: true,
     },

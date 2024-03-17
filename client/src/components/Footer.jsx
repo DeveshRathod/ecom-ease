@@ -14,7 +14,7 @@ const Footer = () => {
   };
 
   return (
-    <footer className="min-w-screen min-h-fit mt-24 bg-white shadow-lg  shadow-black">
+    <footer className="min-w-screen min-h-fit mt-24 bg-white shadow-lg shadow-black">
       <div className="relative mx-auto max-w-screen-xl lg:pt-24 px-12 md:px-12 sm:px-0 py-4">
         <div className="absolute end-4 top-4 sm:end-6 sm:top-6 lg:end-8 lg:top-8">
           <button

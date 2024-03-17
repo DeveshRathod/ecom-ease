@@ -58,7 +58,7 @@ export default function Category() {
                 className="w-76 h-80 object-cover transition duration-500 transform hover:scale-110"
               />
               <Link
-                to="#"
+                to={`/explore/${category.name.toLowerCase()}`}
                 className="absolute inset-x-24 shadow-lg md:inset-x-10 sm:inset-x-16 bottom-4 bg-white px-3 py-3 text-black group rounded-full text-center text-sm ease-in-out flex items-center justify-center  transition-all duration-300"
               >
                 <div className="transition-all ease-in-out group-hover:me-2 duration-300">
