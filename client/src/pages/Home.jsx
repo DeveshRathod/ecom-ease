@@ -16,34 +16,36 @@ const Home = () => {
     <div>
       <div>
         <div className="h-full flex flex-col sm:flex-row items-center justify-center mt-20">
-          <div className="flex-1 flex flex-col justify-center items-center sm:items-start text-center sm:text-left px-6 sm:px-0 ml-7">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold mb-4 lg:mb-6 text-gray-800">
-              Welcome to ShopEase
-            </h1>
-            <p className="text-lg mb-6 text-gray-600">
-              Find everything you need with ease on ShopEase.
-            </p>
-            <div className="flex flex-wrap justify-center sm:justify-start">
-              <Link
-                to="/explore"
-                className="bg-white text-black px-6 py-3 border border-black hover:border-black rounded-md shadow-lg hover:bg-black hover:text-white transition duration-300 ease-in-out mr-4 mb-4 sm:mb-0 flex justify-center items-center gap-2"
-              >
-                <div>
-                  <SearchIcon />
-                </div>
-                <p>Explore</p>
-              </Link>
-              {currentUser && currentUser.isAdmin && (
+          <div className="flex-1 flex flex-col justify-center items-center text-center sm:text-left px-6 sm:px-0 ml-0 sm:ml-8">
+            <div>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold mb-4 lg:mb-6 text-gray-800">
+                Welcome to ShopEase
+              </h1>
+              <p className="text-lg mb-6 text-gray-600">
+                Find everything you need with ease on ShopEase.
+              </p>
+              <div className="flex flex-wrap justify-center sm:justify-start">
                 <Link
-                  to="/dashboard"
-                  className=" bg-black border border-black text-white px-6 py-3 rounded-md shadow-lg hover:bg-white hover:text-black transition duration-300 ease-in-out mr-4 mb-4 sm:mb-0 flex justify-center items-center gap-2"
+                  to="/explore"
+                  className="bg-white text-black px-6 py-3 border border-black hover:border-black rounded-md shadow-lg hover:bg-black hover:text-white transition duration-300 ease-in-out mr-4 mb-4 sm:mb-0 flex justify-center items-center gap-2"
                 >
                   <div>
-                    <DashboardIcon />
+                    <SearchIcon />
                   </div>
-                  <p>Dashboard</p>
+                  <p>Explore</p>
                 </Link>
-              )}
+                {currentUser && currentUser.isAdmin && (
+                  <Link
+                    to="/dashboard"
+                    className=" bg-black border border-black text-white px-6 py-3 rounded-md shadow-lg hover:bg-white hover:text-black transition duration-300 ease-in-out mr-4 mb-4 sm:mb-0 flex justify-center items-center gap-2"
+                  >
+                    <div>
+                      <DashboardIcon />
+                    </div>
+                    <p>Dashboard</p>
+                  </Link>
+                )}
+              </div>
             </div>
           </div>
           <div className="flex-1 mt-10 sm:mt-0">
