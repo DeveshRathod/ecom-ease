@@ -14,7 +14,7 @@ const Footer = () => {
   };
 
   return (
-    <footer className="min-w-screen min-h-fit mt-24 bg-white shadow-lg shadow-black">
+    <footer className="min-w-screen min-h-fit mt-24 bg-white">
       <div className="relative mx-auto max-w-screen-xl lg:pt-24 px-12 md:px-12 sm:px-0 py-4">
         <div className="absolute end-4 top-4 sm:end-6 sm:top-6 lg:end-8 lg:top-8">
           <button
@@ -32,7 +32,7 @@ const Footer = () => {
               <h1 className="text-3xl">ShopEase</h1>
             </div>
 
-            <p className="mx-auto mt-6 leading-relaxed text-gray-500 text-left">
+            <p className="mx-auto mt-6 leading-relaxed text-gray-500 text-left text-base">
               ShopEase is your one-stop destination for all your shopping needs.
               From the latest fashion trends to cutting-edge gadgets, we've got
               you covered. Our mission is to provide an unparalleled shopping

@@ -9,6 +9,7 @@ import image from "../data/images/heroimag.jpeg";
 import Latest from "../components/Latest";
 import Footer from "../components/Footer";
 import LatestSingle from "../components/LatestSingle";
+import Fashion from "../components/Fashion";
 
 const Home = () => {
   const currentUser = useSelector((state) => state.currentUser);
@@ -24,7 +25,7 @@ const Home = () => {
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold mb-4 lg:mb-6 text-gray-800">
                 Welcome to ShopEase
               </h1>
-              <p className="text-lg mb-6 text-gray-600">
+              <p className="text-baseg mb-6 text-gray-600">
                 Find everything you need with ease on ShopEase.
               </p>
               <div className="flex flex-wrap justify-center sm:justify-start">
@@ -73,6 +74,14 @@ const Home = () => {
           </div>
         </div>
       </div>
+
+      {/* <div className="w-full mt-10 flex justify-center items-center">
+        <div className="w-full max-w-screen-xl mx-auto px-6 md:px-12 sm:px-0 py-4">
+          <div className="bg-white w-full h-full">
+            <Fashion />
+          </div>
+        </div>
+      </div> */}
 
       {/* New Arrivals */}
 

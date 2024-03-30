@@ -9,7 +9,8 @@ import PrivateRoute from "./components/PrivateRoute";
 import AdminPrivateRoute from "./components/AdminPrivateRoute";
 import Users from "./dashboard/Users";
 import Orders from "./dashboard/Orders";
-import Items from "./dashboard/Items";
+import Products from "./dashboard/Products";
+import AddProduct from "./dashboard/AddProduct";
 import Explore from "./pages/Explore";
 import Settings from "./pages/Settings";
 
@@ -30,7 +31,8 @@ const App = () => {
           <Route path="/adminsetting" element={<Settings />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/users" element={<Users />} />
-          <Route path="/items" element={<Items />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/addproduct" element={<AddProduct />} />
         </Route>
       </Routes>
     </BrowserRouter>

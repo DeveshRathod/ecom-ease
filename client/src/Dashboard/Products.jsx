@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from "react";
 import DashboardLayout from "../components/DashboardLayout";
 import SearchIcon from "@mui/icons-material/Search";
-import AddIcon from "@mui/icons-material/Add";
-import AddNew from "../components/AddProduct";
 import axios from "axios";
-import ItemsCard from "../components/ItemsCard";
 
-const Items = () => {
-  const [from, setFrom] = useState(false);
+const Products = () => {
   const [items, setItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -40,7 +36,7 @@ const Items = () => {
     };
 
     fetch();
-  }, [setFrom, from]);
+  }, []);
 
   const handleCategoryChange = (event) => {
     const category = event.target.value;
@@ -62,26 +58,16 @@ const Items = () => {
 
   return (
     <DashboardLayout>
-      <div className="p-4 flex justify-between">
-        <div className="bg-gray-100 flex gap-1 items-center rounded-md p-2">
+      <div className="p-3 flex justify-between">
+        <div className="p-2 bg-gray-100 w-full md:w-1/2 lg:w-1/3 md:mr-2 flex gap-1 items-center rounded-md">
           <SearchIcon />
           <input
             type="text"
             className="outline-none bg-gray-100 w-full"
-            placeholder=" Search...."
+            placeholder="Search....."
             value={searchInput}
             onChange={handleSearchInputChange}
           />
-        </div>
-        {from && <AddNew setForm={setFrom} setItems={setItems} />}
-        <div>
-          <button
-            className="flex items-center justify-between rounded-md bg-gray-100 py-2 px-6"
-            onClick={() => setFrom(true)}
-          >
-            <AddIcon />
-            <p>Add</p>
-          </button>
         </div>
       </div>
 
@@ -95,12 +81,12 @@ const Items = () => {
             onChange={handleCategoryChange}
           >
             <option value="">All</option>
-            <option value="Furniture">Furniture</option>
-            <option value="Mobile">Mobiles</option>
-            <option value="Fashion">Fashion</option>
-            <option value="Electronics">Electronics</option>
-            <option value="Travels">Travels</option>
-            <option value="Toys">Toys</option>
+            <option value="furniture">Furniture</option>
+            <option value="mobile">Mobiles</option>
+            <option value="fashion">Fashion</option>
+            <option value="electronics">Electronics</option>
+            <option value="travels">Travels</option>
+            <option value="toys">Toys</option>
           </select>
         </div>
         <div className="h-full overflow-y-auto rounded-b-md">
@@ -108,9 +94,7 @@ const Items = () => {
             <div className="flex justify-center gap-2 pb-10">
               <div className="flex flex-wrap w-full p-2 justify-center  gap-2">
                 {filteredItems.length > 0 ? (
-                  filteredItems.map((item, id) => (
-                    <ItemsCard item={item} key={id} />
-                  ))
+                  filteredItems.map((item, id) => console.log(item))
                 ) : (
                   <div>No data</div>
                 )}
@@ -123,4 +107,4 @@ const Items = () => {
   );
 };
 
-export default Items;
+export default Products;

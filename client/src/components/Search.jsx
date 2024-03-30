@@ -62,7 +62,7 @@ const Search = ({ searchQuery, setSearchQuery }) => {
             className="outline-none bg-transparent w-full py-2 px-4"
           />
         </div>
-        {searchQuery && suggestions.length > 0 && (
+        {/* {searchQuery && suggestions.length > 0 && (
           <div className="absolute bg-white border border-gray-300 mt-1 w-full z-10 shadow-xl rounded-b-md rounded-t-md">
             {suggestions.map((suggestion, index) => (
               <div
@@ -76,7 +76,7 @@ const Search = ({ searchQuery, setSearchQuery }) => {
               </div>
             ))}
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );

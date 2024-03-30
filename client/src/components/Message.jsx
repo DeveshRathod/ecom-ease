@@ -23,7 +23,7 @@ const Message = ({ message, setShowModal, showModel, isError }) => {
   return (
     <>
       {showModel && (
-        <div className="bg-white shadow-md fixed top-4 right-4 z-20 flex flex-col">
+        <div className="bg-white shadow-md fixed top-4 right-4 z-50 flex flex-col">
           <div className="p-4 flex justify-between items-center">
             <div className="flex items-center">
               {isError ? (

@@ -34,8 +34,8 @@ const Navbar = () => {
   };
 
   return (
-    <div className="flex nav pt-8 pb-8 pl-20 pr-20 justify-between items-center bg-white sticky top-0 z-50 shadow-md">
-      <Link to="/" className="text-xs sm:text-base">
+    <div className="flex nav pt-8 pb-8 sm:pl-20 pl-10 pr-10 sm:pr-20 justify-between items-center bg-white sticky top-0 z-30 shadow-md">
+      <Link to="/" className="text-md sm:text-base">
         <h1>ShopEase</h1>
       </Link>
 
@@ -44,7 +44,7 @@ const Navbar = () => {
           <div className="flex justify-center items-center gap-2 sm:gap-8">
             <Link to="/cart">
               <div className="relative">
-                <ShoppingCartIcon />
+                <ShoppingCartIcon sx={{ fontSize: 20 }} />
                 {cartCount > 0 && (
                   <div className="absolute top-3 right-3 bg-red-500 rounded-full w-4 h-4 flex items-center justify-center text-white text-xs">
                     {cartCount}
@@ -59,7 +59,7 @@ const Navbar = () => {
             <div className="flex justify-center items-center gap-2 sm:gap-8">
               <Link>
                 <div className="relative">
-                  <NotificationsIcon />
+                  <NotificationsIcon sx={{ fontSize: 20 }} />
                   {cartCount > 0 && (
                     <div className="absolute top-3 right-3 bg-red-500 rounded-full w-4 h-4 flex items-center justify-center text-white text-xs">
                       {cartCount}
@@ -107,7 +107,7 @@ const Navbar = () => {
                         onClick={logout}
                       >
                         <div>
-                          <LogoutIcon />
+                          <LogoutIcon sx={{ fontSize: 20 }} />
                         </div>
                         <div>Logout</div>
                       </button>

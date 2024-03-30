@@ -153,20 +153,16 @@ export const signin = async (req, res) => {
 };
 
 export const updateUser = async (req, res) => {
-  let userData = req.body;
   const userId = req.user._id;
+  const userData = req.body;
 
   try {
-    if (userData.email) {
-      if (!isValidEmail(userData.email)) {
-        return res.status(400).json({ message: "Invalid email format" });
-      }
+    if (userData.email && !isValidEmail(userData.email)) {
+      return res.status(400).json({ message: "Invalid email format" });
     }
 
-    if (userData.username) {
-      if (!isValidUsername(userData.username)) {
-        return res.status(400).json({ message: "Invalid username format" });
-      }
+    if (userData.username && !isValidUsername(userData.username)) {
+      return res.status(400).json({ message: "Invalid username format" });
     }
 
     if (userData.password) {
@@ -179,19 +175,32 @@ export const updateUser = async (req, res) => {
         return res.status(400).json({ message: "Passwords do not match" });
       }
     }
-    const hashedPassword = bcryptjs.hashSync(userData.password, 8);
 
-    userData = {
-      ...(userData.username && { username: userData.username }),
-      ...(userData.email && { email: userData.email }),
-      ...(userData.password && { password: hashedPassword }),
-      ...(userData.birthday && { birthday: userData.birthday }),
-      ...(userData.gender && { gender: userData.gender }),
-      ...(userData.mobile && { mobile: userData.mobile }),
-      ...(userData.profile && { profile: userData.profile }),
+    if (userData.password) {
+      userData.password = await bcryptjs.hash(userData.password, 8);
+    }
+
+    const updateFields = {
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      background: userData.background,
+      username: userData.username,
+      email: userData.email,
+      birthday: userData.birthday,
+      gender: userData.gender,
+      mobile: userData.mobile,
+      profile: userData.profile,
     };
 
-    const updatedUser = await User.findByIdAndUpdate(userId, userData, {
+    Object.keys(updateFields).forEach(
+      (key) =>
+        (updateFields[key] === undefined ||
+          updateFields[key] === "" ||
+          updateFields[key] === null) &&
+        delete updateFields[key]
+    );
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updateFields, {
       new: true,
     });
 
@@ -199,19 +208,9 @@ export const updateUser = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const currentUser = {
-      _id: updatedUser._id,
-      username: updatedUser.username,
-      email: updatedUser.email,
-      birthday: updatedUser.birthday,
-      gender: updatedUser.gender,
-      mobile: updatedUser.mobile,
-      profile: updatedUser.profile,
-      isAdmin: updatedUser.isAdmin,
-    };
-
-    return res.status(200).json(currentUser);
+    return res.status(200).json(updatedUser);
   } catch (error) {
+    console.error(error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -250,14 +249,33 @@ export const getAddress = async (req, res) => {
 };
 
 export const addAddress = async (req, res) => {
-  const { addressLine1, addressLine2, addressLine3, pincode } = req.body;
+  const {
+    type,
+    name,
+    mobile,
+    addressLine1,
+    addressLine2,
+    addressLine3,
+    pincode,
+  } = req.body;
   const userId = req.user._id;
 
-  if (!addressLine1 || !addressLine2 || !addressLine3 || !pincode) {
+  if (
+    !addressLine1 ||
+    !addressLine2 ||
+    !addressLine3 ||
+    !pincode ||
+    !type ||
+    !name ||
+    !mobile
+  ) {
     return res.status(400).json({ message: "Please fill all fields" });
   }
   try {
     const newAddress = await Address.create({
+      type,
+      name,
+      mobile,
       addressLine1,
       addressLine2,
       addressLine3,

@@ -43,6 +43,7 @@ const Signin = () => {
       setEmail("");
       setPassword("");
       dispatch(setUser(data.currentUser));
+      console.log(data);
       navigate("/");
     } catch (error) {
       setError("Cannot sign in");

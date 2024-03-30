@@ -1,27 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
-import { useSelector } from "react-redux";
 import Dialog from "./Dialog";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 function DashboardLayout({ children }) {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
-  const currentPath = location.pathname;
-
-  useEffect(() => {
-    const handleBackButton = () => {
-      navigate(currentPath);
-    };
-
-    window.addEventListener("popstate", handleBackButton);
-    return () => {
-      setShowModal(true);
-    };
-  }, []);
+  const [showProductsSubMenu, setShowProductsSubMenu] = useState(false);
 
   const dialogFun = () => {
     setShowModal(false);
@@ -34,7 +22,7 @@ function DashboardLayout({ children }) {
 
   return (
     <div className="bg-white flex">
-      <aside className="relative bg-white h-screen w-52 hidden sm:block shadow-xl">
+      <aside className="relative bg-white h-screen w-52 hidden sm:block shadow-xl p-2">
         <div className="p-6 ">
           <Link
             to="/dashboard"
@@ -43,38 +31,62 @@ function DashboardLayout({ children }) {
             Admin
           </Link>
         </div>
-        <nav className=" text-base font-semibold pt-3">
+        <nav className="text-base font-semibold pt-3">
           <NavLink
             to="/dashboard"
-            className="flex items-center py-4 pl-6 nav-item"
+            className="flex items-center py-3 pl-6 nav-item"
             activeclassname="active"
           >
-            Home
+            Dashboard
           </NavLink>
-          <NavLink
-            to="/items"
-            className="flex items-center text-black opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
-            activeclassname="active"
-          >
-            Items
-          </NavLink>
+          <div className="flex flex-col ">
+            <div
+              className="flex items-center py-3 pl-6 nav-item cursor-pointer"
+              onClick={() => setShowProductsSubMenu((prevState) => !prevState)}
+            >
+              <span className="flex items-center justify-between w-full">
+                <div>Products</div>
+                <div className=" mr-4">
+                  <ExpandMoreIcon />
+                </div>
+              </span>
+            </div>
+            {showProductsSubMenu && (
+              <>
+                <NavLink
+                  to="/products"
+                  className="flex items-center text-gray-600 opacity-75 hover:opacity-100 py-2 pl-12 nav-subitem"
+                  activeclassname="active"
+                >
+                  All
+                </NavLink>
+                <NavLink
+                  to="/addproduct"
+                  className="flex items-center text-gray-600 opacity-75 hover:opacity-100 py-2 pl-12 nav-subitem"
+                  activeclassname="active"
+                >
+                  Create
+                </NavLink>
+              </>
+            )}
+          </div>
           <NavLink
             to="/users"
-            className="flex items-center text-black opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
+            className="flex items-center py-3 pl-6 nav-item"
             activeclassname="active"
           >
             Users
           </NavLink>
           <NavLink
             to="/orders"
-            className="flex items-center text-black opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
+            className="flex items-center py-3 pl-6 nav-item"
             activeclassname="active"
           >
             Orders
           </NavLink>
         </nav>
         <button
-          className="flex items-center text-red-500 py-4 pl-6 w-full"
+          className="flex items-center text-red-500 py-3 pl-6 w-full"
           onClick={() => setShowModal(true)}
         >
           Exit
@@ -112,15 +124,41 @@ function DashboardLayout({ children }) {
               className="flex items-center text-black py-2 pl-4 nav-item"
               activeclassname="active"
             >
-              Home
+              Dashboard
             </NavLink>
-            <NavLink
-              to="/items"
-              className="flex items-center text-black opacity-75 hover:opacity-100 py-2 pl-4 nav-item"
-              activeclassname="active"
-            >
-              Items
-            </NavLink>
+            <div className="flex flex-col ">
+              <div
+                className="flex items-center py-3 pl-4 nav-item cursor-pointer"
+                onClick={() =>
+                  setShowProductsSubMenu((prevState) => !prevState)
+                }
+              >
+                <span className="flex items-center justify-between w-full">
+                  <div>Products</div>
+                  <div className=" mr-4">
+                    <ExpandMoreIcon />
+                  </div>
+                </span>
+              </div>
+              {showProductsSubMenu && (
+                <>
+                  <NavLink
+                    to="/products"
+                    className="flex items-center text-gray-600 opacity-75 hover:opacity-100 py-2 pl-12 nav-subitem"
+                    activeclassname="active"
+                  >
+                    All
+                  </NavLink>
+                  <NavLink
+                    to="/addproduct"
+                    className="flex items-center text-gray-600 opacity-75 hover:opacity-100 py-2 pl-12 nav-subitem"
+                    activeclassname="active"
+                  >
+                    Create
+                  </NavLink>
+                </>
+              )}
+            </div>
 
             <NavLink
               to="/users"

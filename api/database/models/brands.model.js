@@ -6,6 +6,7 @@ const brandSchema = mongoose.Schema(
     name: {
       type: String,
       required: true,
+      unique: true,
     },
     description: {
       type: String,
@@ -19,12 +20,6 @@ const brandSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    products: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Product",
-      },
-    ],
   },
   {
     timestamps: true,

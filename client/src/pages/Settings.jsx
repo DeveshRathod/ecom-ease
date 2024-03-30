@@ -1,135 +1,61 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Layout from "../components/Layout";
-import axios from "axios";
-import { setUser } from "../store/reducers/user.slice";
-import CreateIcon from "@mui/icons-material/Create";
-import Message from "../components/Message";
+import { setUser } from "../store/reducers/user.slice.js";
 import {
   getDownloadURL,
   getStorage,
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
-import { app } from "../firebase/firebase";
-import Address from "../components/Address";
-import Dialog from "../components/Dialog";
-import { useNavigate } from "react-router-dom";
+import { app } from "../firebase/firebase.js";
+import Layout from "../components/Layout";
+import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
+import axios from "axios";
+import Message from "../components/Message.jsx";
 
 const Settings = () => {
   const currentUser = useSelector((state) => state.currentUser);
-  const dispatch = useDispatch();
-  const fileRef = useRef(null);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [backgroundData, setBackgroundData] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showModal2, setShowModal2] = useState(false);
   const [success, setSuccess] = useState("");
-  const [file, setFile] = useState(undefined);
-  const [filePerc, setFilePerc] = useState(null);
-  const [showAddressForm, setShowAddressForm] = useState(false);
-  const [showPasswordForm, setShowPasswordForm] = useState(false);
-  const [address, setAddress] = useState(false);
-  const navigate = useNavigate();
-
+  const dispatch = useDispatch();
+  const fileInputRef = useRef(null);
+  const fileInputRefIcon = useRef(null);
   const [formData, setFormData] = useState({
     username: currentUser.username,
     email: currentUser.email,
     profile: currentUser.profile,
-    birthday: currentUser.birthday,
+    background: currentUser.background,
     gender: currentUser.gender,
+    birthday: currentUser.birthday,
     mobile: currentUser.mobile,
+    createdAt: currentUser.createdAt,
+    firstName: currentUser.firstName,
+    lastName: currentUser.lastName,
     password: "",
     confirmPassword: "",
   });
-
   const [addressData, setAddressData] = useState({
+    type: "",
+    name: "",
+    mobile: currentUser.mobile,
     addressLine1: "",
     addressLine2: "",
     addressLine3: "",
     pincode: "",
   });
 
-  const resetAddress = () => {
-    setAddressData({
-      addressLine1: "",
-      addressLine2: "",
-      addressLine3: "",
-      pincode: "",
-    });
-  };
-
-  const addressSubmit = async (e) => {
-    e.preventDefault();
-    const token = localStorage.getItem("token");
-
-    if (token) {
-      try {
-        const response = await axios.post(
-          "http://localhost:4000/api/user/addAddress",
-          addressData,
-          {
-            headers: {
-              authorization: `${token}`,
-            },
-          }
-        );
-
-        setSuccess("Successfully added address");
-        resetAddress();
-      } catch (error) {
-        setErrorMessage(error.response.data.message);
-        setShowModal(true);
-        resetAddress();
-      }
-    } else {
-      setShowModal(true);
-      setErrorMessage("Invalid token signin again");
-      navigate("/signin");
-      localStorage.setItem("currentUser", null);
-    }
-  };
-
-  const handleAddressChange = (e) => {
-    const { name, value } = e.target;
-    setSuccess("");
-    setAddressData({
-      ...addressData,
-      [name]: value,
-    });
-  };
-
-  const formattedBirthday = formData.birthday
-    ? formData.birthday.split("T")[0]
-    : "";
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    let formattedValue = value;
-
-    if (name === "birthday") {
-      if (value) {
-        const date = new Date(value);
-        if (!isNaN(date.getTime())) {
-          const year = date.getFullYear();
-          const month = String(date.getMonth() + 1).padStart(2, "0");
-          const day = String(date.getDate()).padStart(2, "0");
-          formattedValue = `${year}-${month}-${day}`;
-        }
-      }
-    }
-
-    setSuccess("");
-    setFormData({
-      ...formData,
-      [name]: formattedValue,
-    });
-  };
+  const [addresses, setAddresses] = useState({});
 
   useEffect(() => {
-    const fetchAddress = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (token) {
+    const fetchAddresses = async () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
           const response = await axios.get(
             "http://localhost:4000/api/user/getAddress",
             {
@@ -138,413 +64,378 @@ const Settings = () => {
               },
             }
           );
-
-          const addresses = await response.data;
-          setAddress(addresses);
-        } else {
-          navigate("/signin");
-          setErrorMessage("Invalid token signin again");
+          setAddresses(response.data);
+        } catch (error) {
+          console.log(error);
         }
-      } catch (error) {
-        setShowModal(true);
-        setErrorMessage(error.message);
       }
     };
 
-    fetchAddress();
-  }, [addressSubmit]);
+    fetchAddresses();
+  }, []);
 
-  useEffect(() => {
-    if (file) {
-      handleFileUpload(file);
-    }
-  }, [file]);
+  function getDate(dateString) {
+    const date = new Date(dateString);
+    const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
 
-  const handleFileUpload = (file) => {
-    const storage = getStorage(app);
-    const fileName = new Date().getTime() + file.name;
-    const storageRef = ref(storage, fileName);
-    const uploadTask = uploadBytesResumable(storageRef, file);
-    setSuccess("");
+    const dayOfWeek = days[date.getDay()];
+    const dayOfMonth = date.getDate();
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
 
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setFilePerc(Math.round(progress));
-      },
-      (error) => {
-        setErrorMessage("Image upload failed");
+    return `${dayOfWeek}, ${dayOfMonth} ${month} ${year}`;
+  }
 
-        setShowModal(true);
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
-          setFormData({ ...formData, profile: downloadURL })
-        );
-      }
-    );
-  };
+  const handleFileUploadToFirebase = (type, image) => {
+    return new Promise((resolve, reject) => {
+      const storage = getStorage(app);
 
-  const dialogFun = async () => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      try {
-        const response = await axios.delete(
-          "http://localhost:4000/api/user/delete",
-          {
-            headers: {
-              authorization: `${token}`,
-            },
-          }
-        );
+      const storageRef = ref(
+        storage,
+        `/${type}/${new Date().getTime()}_${image.name}`
+      );
+      const uploadTask = uploadBytesResumable(storageRef, image);
 
-        if (response.status === 200) {
-          localStorage.setItem("token", "");
-          localStorage.setItem("currentUser", null);
-          dispatch(setUser(null));
-          navigate("/");
-          setSuccess("Account deleted successfully");
-        } else {
-          setShowModal(true);
-          setErrorMessage("Account deletion failed");
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {},
+        (error) => {
+          reject(error.message);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref)
+            .then((downloadURL) => {
+              resolve(downloadURL);
+            })
+            .catch((error) => {
+              reject(error.message);
+            });
         }
-      } catch (error) {
-        setShowModal(true);
-        setErrorMessage(error.message);
-      }
-    }
+      );
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem("token");
 
-    if (token) {
-      try {
+    try {
+      let profileUrl = "";
+      let backgroundUrl = "";
+      if (selectedFile) {
+        profileUrl = await handleFileUploadToFirebase("profile", selectedFile);
+      }
+
+      if (backgroundData) {
+        backgroundUrl = await handleFileUploadToFirebase(
+          "background",
+          backgroundData
+        );
+      }
+
+      const token = localStorage.getItem("token");
+      if (token) {
+        const newBackground = backgroundData
+          ? backgroundUrl
+          : formData.background;
+        const newProfile = selectedFile ? profileUrl : formData.profile;
         const response = await axios.put(
           "http://localhost:4000/api/user/update",
-          formData,
+          { ...formData, profile: newProfile, background: newBackground },
           {
             headers: {
               authorization: `${token}`,
             },
           }
         );
-
-        dispatch(setUser(response.data));
         const user = JSON.stringify(response.data);
         localStorage.setItem("currentUser", user);
-        setFilePerc(null);
+        dispatch(setUser(response.data));
         setSuccess("User updated successfully");
-      } catch (error) {
+      } else {
         setErrorMessage(error.response.data.message);
         setShowModal(true);
       }
-    } else {
+    } catch (error) {
       setShowModal(true);
-      setErrorMessage("Invalid token signin again");
-      navigate("/signin");
-      localStorage.setItem("currentUser", null);
+      setErrorMessage(error.response.data.message);
     }
   };
 
-  const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
-    setFile(selectedFile);
+  const handleChange = (e) => {
+    setSelectedFile(e.target.files[0]);
+  };
+
+  const handleBackgroundChange = (e) => {
+    setBackgroundData(e.target.files[0]);
+  };
+
+  const handleClick = () => {
+    if (fileInputRef.current && fileInputRef.current.click) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleIconClick = () => {
+    if (fileInputRefIcon.current && fileInputRefIcon.current.click) {
+      fileInputRefIcon.current.click();
+    }
   };
 
   return (
     <Layout>
-      {showModal && (
-        <Message
-          message={errorMessage}
-          setShowModal={setShowModal}
-          showModel={showModal}
-          isError={true}
-        />
-      )}
-      {success && (
-        <Message
-          message={success}
-          setShowModal={setSuccess}
-          showModel={success}
-          isError={false}
-        />
-      )}
-      <div className="main">
-        <h1 className="pt-4 pb-4 text-2xl font-semibold">Profile Settings</h1>
-        {showModal2 && (
-          <Dialog
-            setShowModal={setShowModal2}
-            headline={"Do You really want to delete"}
-            dialogFun={dialogFun}
-            showModel={showModal2}
-          />
-        )}
-        <div className="flex flex-col sm:flex-row gap-4">
-          <div className="flex-1 flex flex-col gap-4 p-2 shadow-md">
-            <div className="flex justify-start relative">
-              <label className="cursor-pointer">
-                <div className="relative group">
-                  <div className="flex w-full justify-normal">
-                    <img
-                      src={formData.profile || currentUser.profile}
-                      alt="profile"
-                      className="w-28 h-28 sm:w-24 sm:h-24 object-cover shadow-md cursor-default transition-opacity duration-300 ease-in-out hover:opacity-95"
-                    />
-                  </div>
-                  <div className="absolute -top-2 -right-2 flex items-start justify-end opacity-0 group-hover:opacity-100">
-                    <CreateIcon
-                      className="text-white bg-red-500 rounded-full p-1 shadow-xl"
-                      style={{ fontSize: "28px" }}
-                      onClick={() => fileRef.current.click()}
-                    />
-                  </div>
-                </div>
-              </label>
+      <div className="min-w-screen min-h-fit mt-10 bg-white">
+        <div className="relative mx-auto max-w-screen-lg pl-8 pr-8 sm:pl-0 sm:pr-0 md:pl-8 lg:pl-0 lg:pr-0 md:pr-8">
+          <div className="bg-white shadow border rounded-lg">
+            <div className="w-full h-fit relative">
+              <img
+                src={
+                  backgroundData
+                    ? URL.createObjectURL(backgroundData)
+                    : currentUser.background
+                }
+                alt="background"
+                className="h-[210px] w-full object-cover rounded-t-lg"
+              />
+              <div onClick={handleIconClick}>
+                <EditIcon className="absolute top-2 right-2 mt-2 mr-2 w-8 h-8 text-gray-300 cursor-pointer " />
+              </div>
+
               <input
-                onChange={handleFileChange}
                 type="file"
-                ref={fileRef}
-                hidden
+                ref={fileInputRefIcon}
+                onChange={handleBackgroundChange}
                 accept="image/*"
+                className="hidden"
               />
-            </div>
-            <div className="flex flex-col">
-              <label className="mb-1 text-lg">Username</label>
-              <input
-                type="text"
-                id="username"
-                name="username"
-                value={formData.username}
-                onChange={handleChange}
-                className=" bg-gray-100 py-2 px-5 rounded-md focus:outline-none w-full"
-              />
-            </div>
-            <div className="flex flex-col">
-              <label className="mb-1 text-lg">Email</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="bg-gray-100  py-2 px-5 rounded-md focus:outline-none w-full"
-              />
-            </div>
-            <div className="flex flex-col">
-              <label className="mb-1 text-lg">Contact</label>
-              <input
-                type="mobile"
-                id="mobile"
-                name="mobile"
-                value={formData.mobile}
-                onChange={handleChange}
-                className="bg-gray-100  py-2 px-5 rounded-md focus:outline-none w-full"
-              />
-            </div>
-            <div className="flex flex-col">
-              <label className="mb-1 text-lg">Birthday</label>
-              <input
-                type="date"
-                id="birthday"
-                name="birthday"
-                value={formattedBirthday}
-                onChange={handleChange}
-                className="bg-gray-100  py-2 px-5 rounded-md focus:outline-none w-full"
-              />
-            </div>
-            <div className="flex flex-col">
-              <label className="mb-1 text-lg">Gender</label>
-              <select
-                name="gender"
-                id="gender"
-                value={formData.gender}
-                onChange={handleChange}
-                className="bg-gray-100  py-3 px-5 rounded-md focus:outline-none w-full"
-              >
-                <option value="M">Male</option>
-                <option value="F">Female</option>
-                <option value="O">Other</option>
-              </select>
-            </div>
-            <div>
-              <button
-                className="self-end py-2 px-5 text-white rounded bg-green-500 outline-none"
-                onClick={handleSubmit}
-              >
-                Save Changes
-              </button>
-            </div>
-          </div>
-
-          <div className="flex-1 shadow-md">
-            <div className="p-2">
-              <div className="flex p-2 bg-gray-100  justify-between">
-                <div className="flex-3">
-                  <h1 className="text-lg">Password</h1>
-                  <p className="text-xs">Reset or Change Password</p>
-                </div>
-                <button
-                  onClick={() => {
-                    setShowPasswordForm(!showPasswordForm);
-                    setShowAddressForm(false);
-                  }}
-                  className="p-1 rounded-md text-sm bg-white py-1 px-2"
-                >
-                  Password
-                </button>
-              </div>
-              {showPasswordForm && (
-                <form
-                  className="p-2 bg-white  flex gap-2 flex-col"
-                  onSubmit={handleSubmit}
-                >
-                  <div className=" flex justify-between">
-                    <div>
-                      <input
-                        id="password"
-                        name="password"
-                        type="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        className="bg-gray-100  py-2 px-5 rounded-md focus:outline-none w-full"
-                        placeholder="Password"
-                      />
-                    </div>
-                    <div>
-                      <input
-                        id="confirmPassword"
-                        name="confirmPassword"
-                        type="password"
-                        value={formData.confirmPassword}
-                        onChange={handleChange}
-                        className="bg-gray-100  py-2 px-5 rounded-md focus:outline-none w-full"
-                        placeholder="Confirm Password"
-                      />
-                    </div>
-                  </div>
-                  <button className="py-2 px-5  rounded-md bg-green-500 text-white">
-                    Submit
-                  </button>
-                </form>
-              )}
             </div>
 
-            {currentUser && !currentUser.isAdmin && (
-              <div className="p-2">
-                <div className="flex p-2 bg-gray-100 justify-between">
-                  <div className="flex-3">
-                    <h1 className="text-lg">Address</h1>
-                    <p className="text-xs">Add new address</p>
-                  </div>
-                  <button
-                    onClick={() => {
-                      setShowAddressForm(!showAddressForm);
-                      setShowPasswordForm(false);
-                    }}
-                    className="p-1 rounded-md text-sm bg-white py-1 px-2"
-                  >
-                    Add new
-                  </button>
-                </div>
-                {showAddressForm && (
-                  <form className="p-2 bg-white flex flex-col gap-2">
-                    <div>
-                      <input
-                        type="text"
-                        id="addressLine1"
-                        name="addressLine1"
-                        value={addressData.addressLine1}
-                        onChange={handleAddressChange}
-                        className="bg-gray-100 py-2 px-5 rounded-md focus:outline-none w-full"
-                        placeholder="Flat No,Building Name"
-                      />
-                    </div>
-                    <div>
-                      <input
-                        type="text"
-                        id="addressLine2"
-                        name="addressLine2"
-                        value={addressData.addressLine2}
-                        onChange={handleAddressChange}
-                        className="bg-gray-100 py-2 px-5 rounded-md focus:outline-none w-full"
-                        placeholder="Area"
-                      />
-                    </div>
-                    <div>
-                      <input
-                        type="text"
-                        id="addressLine3"
-                        name="addressLine3"
-                        value={addressData.addressLine3}
-                        onChange={handleAddressChange}
-                        className="bg-gray-100 py-1 px-4 rounded-md focus:outline-none w-full"
-                        placeholder="City"
-                      />
-                    </div>
-                    <div>
-                      <input
-                        type="text"
-                        id="pincode"
-                        name="pincode"
-                        value={addressData.pincode}
-                        onChange={handleAddressChange}
-                        className="bg-gray-100 py-2 px-5 rounded-md focus:outline-none w-full"
-                        placeholder="Pincode"
-                      />
-                    </div>
-                    <button
-                      className="self-end py-2 px-4 rounded bg-green-500 text-white "
-                      onClick={addressSubmit}
-                    >
-                      New Address
-                    </button>
-                  </form>
-                )}
-              </div>
+            {showModal && (
+              <Message
+                message={errorMessage}
+                setShowModal={setShowModal}
+                showModel={showModal}
+                isError={true}
+              />
             )}
 
-            {currentUser && !currentUser.isAdmin && (
-              <div className="p-2">
-                <div className="flex p-2 bg-gray-100 justify-between">
-                  <div className="flex-3">
-                    <h1 className="text-lg">Deactivate</h1>
-                    <p className="text-xs">
-                      Once deleted order and cart details will be lost
-                    </p>
-                  </div>
-                  <button
-                    className="rounded-md text-sm bg-white py-1 px-4 text-red-500"
-                    onClick={() => setShowModal2(true)}
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
+            {success && (
+              <Message
+                message={success}
+                setShowModal={setSuccess}
+                showModel={success}
+                isError={false}
+              />
             )}
 
-            {!showAddressForm &&
-              !showPasswordForm &&
-              address &&
-              !currentUser.isAdmin && (
-                <div className="p-2 flex flex-col">
-                  <h1 className="text-lg">Addresses</h1>
-                  <div className="flex p-2 bg-gray-100 flex-col h-[363px] overflow-y-scroll gap-1">
-                    {address.map((add, index) => (
-                      <Address key={index} address={add} />
-                    ))}
-                    {address.length === 0 && (
-                      <p className="text-gray-500">No Address Added</p>
-                    )}
-                  </div>
-                </div>
-              )}
+            {showModal2 && (
+              <Dialog
+                setShowModal={setShowModal2}
+                headline={"Do You really want to delete"}
+                dialogFun={dialogFun}
+                showModel={showModal2}
+              />
+            )}
+
+            <div className="flex flex-col items-center -mt-40 p-20 relative justify-center">
+              <div onClick={handleClick} className="cursor-pointer w-40 h-40">
+                <img
+                  src={
+                    selectedFile
+                      ? URL.createObjectURL(selectedFile)
+                      : currentUser.profile
+                  }
+                  className=" w-full h-full rounded-full object-cover cursor-pointer shadow-lg"
+                  alt="profile"
+                />
+              </div>
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleChange}
+                accept="image/*"
+                className="hidden"
+              />
+              <p className="text-gray-700 text-2xl mt-4">
+                {currentUser.username}
+              </p>
+              <p className="text-sm text-gray-500 mt-2">
+                {getDate(currentUser.createdAt)}
+              </p>
+            </div>
           </div>
         </div>
       </div>
+
+      <div className="min-w-screen min-h-fit mt-10 bg-white">
+        <div className="relative mx-auto max-w-screen-lg pl-8 pr-8 sm:pl-0 sm:pr-0 md:pl-8 lg:pl-0 lg:pr-0 md:pr-8">
+          <div className="p-6 bg-white shadow border rounded-lg">
+            <h1 className=" text-xl sm:text-3xl font-bold mb-4">
+              Personal Information
+            </h1>
+            <form
+              onSubmit={handleSubmit}
+              className="grid grid-cols-1 gap-4 md:gap-6 lg:gap-8 md:grid-cols-2 lg:grid-cols-3"
+            >
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  First Name
+                </label>
+                <input
+                  type="text"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={(e) =>
+                    setFormData({ ...formData, firstName: e.target.value })
+                  }
+                  className=" w-full p-2 outline-none rounded-md shadow-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Last Name
+                </label>
+                <input
+                  type="text"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={(e) =>
+                    setFormData({ ...formData, lastName: e.target.value })
+                  }
+                  className=" w-full p-2 outline-none rounded-md shadow-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Email
+                </label>
+                <input
+                  type="text"
+                  name="email"
+                  value={formData.email}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
+                  className=" w-full p-2 outline-none rounded-md shadow-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Mobile
+                </label>
+                <input
+                  type="text"
+                  name="mobile"
+                  value={formData.mobile}
+                  onChange={(e) =>
+                    setFormData({ ...formData, mobile: e.target.value })
+                  }
+                  className=" w-full p-2 outline-none rounded-md shadow-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Birthday
+                </label>
+                <input
+                  type="date"
+                  name="birthday"
+                  value={
+                    formData.birthday ? formData.birthday.slice(0, 10) : ""
+                  }
+                  onChange={(e) =>
+                    setFormData({ ...formData, birthday: e.target.value })
+                  }
+                  className=" w-full p-2 outline-none rounded-md shadow-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Gender
+                </label>
+                <select
+                  name="gender"
+                  value={formData.gender}
+                  onChange={(e) =>
+                    setFormData({ ...formData, gender: e.target.value })
+                  }
+                  className=" w-full p-2 outline-none rounded-md shadow-sm"
+                >
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
+              </div>
+              <div className="col-span-full md:col-span-2 lg:col-span-3">
+                <button
+                  type="submit"
+                  className=" p-3 rounded-md bg-green-500 text-white"
+                >
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      {!currentUser.isAdmin && (
+        <div className="min-w-screen min-h-fit mt-10 bg-white">
+          <div className="relative mx-auto max-w-screen-lg pl-8 pr-8 sm:pl-0 sm:pr-0 md:pl-8 lg:pl-0 lg:pr-0 md:pr-8">
+            <div className="p-6 bg-white shadow  border rounded-lg">
+              <h1 className="text-xl sm:text-3xl font-bold mb-4">Addresses</h1>
+              <button className="flex p-2 gap-2 border w-full rounded-md">
+                <AddIcon />
+                <p className=" uppercase">New address</p>
+              </button>
+
+              <div className="flex flex-wrap mt-4">
+                {addresses.length > 0 ? (
+                  addresses.map((address, index) => (
+                    <div key={index} className="w-full">
+                      <div className="border p-4 rounded-md flex flex-col justify-between">
+                        <div>
+                          <button className="px-3 py-1 bg-gray-200 text-gray-600 rounded-sm mb-2">
+                            {address.type}
+                          </button>
+                          <div className="flex justify-start">
+                            <div className=" flex justify-center items-center gap-5">
+                              <h1 className="text-lg font-semibold">
+                                {address.name}
+                              </h1>
+                              <p>{address.mobile}</p>
+                            </div>
+                          </div>
+                          <div className="pb-2">
+                            <p>
+                              {address.addressLine1}, {address.addressLine2},{" "}
+                              {address.addressLine3} - {address.pincode}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="w-full text-center">No addresses found.</div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </Layout>
   );
 };

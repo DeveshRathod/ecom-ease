@@ -1,11 +1,11 @@
 import Product from "../database/models/product.model.js";
 
 export const getAllNewArrival = async (req, res) => {
-  const category = ["Mobile", "Fashion", "Electronics", "Toys", "Furniture"];
+  const category = ["mobiles", "fashion", "electronics", "toys", "furniture"];
   try {
     const latestEntries = await Product.aggregate([
       { $match: { category: { $in: category } } },
-      { $sort: { createdAt: -1 } },
+      { $sort: { "entry.createdAt": -1 } },
       {
         $group: {
           _id: "$category",
@@ -22,6 +22,46 @@ export const getAllNewArrival = async (req, res) => {
     return res.status(200).json(resultArray);
   } catch (error) {
     console.error("Error fetching latest entries:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const exploreProducts = async (req, res) => {
+  const { category, searchQuery, type, page } = req.query;
+  const limit = 8;
+  const skip = (page - 1) * limit;
+
+  try {
+    let matchStage = {};
+    if (category && category.toLowerCase() !== "all") {
+      matchStage.category = category;
+    }
+
+    if (type && type.toLowerCase() !== "all") {
+      matchStage.type = type;
+    }
+
+    if (searchQuery) {
+      matchStage.$or = [
+        { name: { $regex: new RegExp(searchQuery, "i") } },
+        { brand: { $regex: new RegExp(searchQuery, "i") } },
+      ];
+    }
+
+    const count = await Product.countDocuments(matchStage);
+
+    const products = await Product.find(matchStage)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    return res.status(200).json({
+      products,
+      currentPage: page,
+      totalPages: Math.ceil(count / limit),
+    });
+  } catch (error) {
+    console.error("Error exploring products:", error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };

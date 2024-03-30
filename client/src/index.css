@@ -35,19 +35,9 @@
   flex-direction: column;
 }
 
-.hide-scrollbar {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
 .active {
   color: white;
   background-color: black;
-  padding: 10px;
 }
 
 .overflow-scroll {

@@ -1,6 +1,7 @@
 import express from "express";
 import verifyUser from "../utils/verifyUser.js";
 import {
+  addBrand,
   addProduct,
   deleteProduct,
   getAllNonAdminUsers,
@@ -11,6 +12,7 @@ import {
 
 const router = express.Router();
 
+router.post("/addBrand", verifyUser, addBrand);
 router.post("/addProduct", verifyUser, addProduct);
 router.delete("/deleteProduct/:productId", verifyUser, deleteProduct);
 router.get("/getProduct/:productId", verifyUser, getProduct);

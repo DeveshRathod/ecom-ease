@@ -20,8 +20,6 @@ const LatestSingle = () => {
     fetchLatest();
   }, []);
 
-  console.log(product[4]);
-
   return (
     <section>
       {product.length >= 5 && (
@@ -60,7 +58,7 @@ const LatestSingle = () => {
                   <li>
                     <a href="#" className="group block">
                       <img
-                        src={product[4].images[0]}
+                        src={product[4].images[0].images[0].url}
                         alt=""
                         className="aspect-square w-full rounded object-cover"
                       />
@@ -70,7 +68,7 @@ const LatestSingle = () => {
                   <li>
                     <a href="#" className="group block">
                       <img
-                        src={product[4].images[1]}
+                        src={product[4].images[0].images[1].url}
                         alt=""
                         className="aspect-square w-full rounded object-cover"
                       />

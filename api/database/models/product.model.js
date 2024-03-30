@@ -1,6 +1,28 @@
 import mongoose from "mongoose";
 import Review from "./review.model.js";
 import Brand from "./brands.model.js";
+const imageSchema = mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  color: {
+    type: String,
+    required: true,
+  },
+  images: [
+    {
+      id: {
+        type: String,
+        required: true,
+      },
+      url: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
+});
 
 const productSchema = mongoose.Schema(
   {
@@ -16,12 +38,16 @@ const productSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    specification: {
+    specifications: {
       type: String,
       required: true,
     },
     images: {
-      type: Array,
+      type: [imageSchema],
+      default: [],
+    },
+    sizes: {
+      type: [String],
       required: true,
     },
     category: {
@@ -33,8 +59,8 @@ const productSchema = mongoose.Schema(
       default: 0,
     },
     brand: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Brand",
+      type: String,
+      required: true,
     },
     stock: {
       type: Number,
@@ -44,13 +70,13 @@ const productSchema = mongoose.Schema(
       type: Number,
       default: 0,
     },
-    discount: {
-      type: Number,
-      required: true,
-    },
     reviews: [
       { type: mongoose.Schema.Types.ObjectId, ref: "Review", default: {} },
     ],
+    type: {
+      type: String,
+      default: "all",
+    },
   },
   {
     timestamps: true,

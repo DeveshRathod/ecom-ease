@@ -22,6 +22,8 @@ const Latest = () => {
     fetchLatest();
   }, []);
 
+  console.log(latest);
+
   return (
     <section className="  p-2 sm:p-0 md:p-2">
       {latest.length !== 0 && (
@@ -41,7 +43,7 @@ const Latest = () => {
               <li key={product._id} className="shadow-md rounded-lg">
                 <Link className="group block overflow-hidden w-full">
                   <img
-                    src={product.images[0]}
+                    src={product.images[0].images[0].url}
                     alt={product.name}
                     className="h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[270px]"
                   />

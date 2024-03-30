@@ -22,7 +22,7 @@ const Dialog = ({ setShowModal, dialogFun, headline, showModel }) => {
   return (
     <>
       {showModel && (
-        <div className="bg-white shadow-2xl fixed top-4 right-4 z-20 flex flex-col">
+        <div className="bg-white shadow-2xl fixed top-4 right-4 z-50 flex flex-col">
           <div className="p-4 flex flex-col justify-between items-center">
             <p>{headline}</p>
 
