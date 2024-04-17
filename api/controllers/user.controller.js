@@ -321,10 +321,68 @@ export const deleteAddress = async (req, res) => {
   }
 };
 
-export const addWishlist = (req, res) => {};
+export const getcartandnotificationcount = async (req, res) => {
+  const userId = req.user._id;
 
-export const deleteWishlist = (req, res) => {};
+  try {
+    const user = await User.findById(userId);
 
-export const addCart = (req, res) => {};
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json({
+      cart: user.cart.length,
+      notification: user.notifications.length,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const addCart = async (req, res) => {
+  const userId = req.user._id;
+  const productId = req.body.product;
+
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    user.cart.push(productId);
+
+    await user.save();
+
+    return res
+      .status(200)
+      .json({ message: "Product added to cart successfully" });
+  } catch (error) {
+    console.error("Error adding product to cart:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const getCartItems = async (req, res) => {
+  const userId = req.user._id;
+
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const productIds = user.cart;
+
+    const cartItems = await Product.find({ _id: { $in: productIds } });
+
+    return res.status(200).json({ cartItems });
+  } catch (error) {
+    console.error("Error retrieving cart items:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
 
 export const deleteCart = (req, res) => {};

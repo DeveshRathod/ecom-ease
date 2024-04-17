@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
+import axios from "axios";
 import { useSelector } from "react-redux";
 import LogoutIcon from "@mui/icons-material/Logout";
 
-const Navbar = () => {
+const Navbar = ({ cartCount, notificationCount }) => {
   const currentUser = useSelector((state) => state.currentUser);
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
@@ -21,7 +21,6 @@ const Navbar = () => {
   }
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const cartCount = 5;
 
   const logout = () => {
     localStorage.removeItem("token");
@@ -45,11 +44,9 @@ const Navbar = () => {
             <Link to="/cart">
               <div className="relative">
                 <ShoppingCartIcon sx={{ fontSize: 20 }} />
-                {cartCount > 0 && (
-                  <div className="absolute top-3 right-3 bg-red-500 rounded-full w-4 h-4 flex items-center justify-center text-white text-xs">
-                    {cartCount}
-                  </div>
-                )}
+                <div className="absolute top-3 right-3 bg-red-500 rounded-full w-4 h-4 flex items-center justify-center text-white text-xs">
+                  {cartCount}
+                </div>
               </div>
             </Link>
           </div>
@@ -60,11 +57,9 @@ const Navbar = () => {
               <Link>
                 <div className="relative">
                   <NotificationsIcon sx={{ fontSize: 20 }} />
-                  {cartCount > 0 && (
-                    <div className="absolute top-3 right-3 bg-red-500 rounded-full w-4 h-4 flex items-center justify-center text-white text-xs">
-                      {cartCount}
-                    </div>
-                  )}
+                  <div className="absolute top-3 right-3 bg-red-500 rounded-full w-4 h-4 flex items-center justify-center text-white text-xs">
+                    {notificationCount}
+                  </div>
                 </div>
               </Link>
             </div>

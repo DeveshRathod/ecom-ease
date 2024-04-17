@@ -2,7 +2,7 @@ import React from "react";
 import Layout from "../components/Layout";
 
 const Cart = () => {
-  return <div>Cart</div>;
+  return <div></div>;
 };
 
 export default Cart;
