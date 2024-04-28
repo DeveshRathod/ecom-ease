@@ -22,8 +22,6 @@ const Latest = () => {
     fetchLatest();
   }, []);
 
-  console.log(latest);
-
   return (
     <section className="  p-2 sm:p-0 md:p-2">
       {latest.length !== 0 && (

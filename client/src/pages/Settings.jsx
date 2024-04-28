@@ -15,7 +15,7 @@ import axios from "axios";
 import Message from "../components/Message.jsx";
 
 const Settings = () => {
-  const currentUser = useSelector((state) => state.currentUser);
+  const currentUser = useSelector((state) => state.user.currentUser);
   const [selectedFile, setSelectedFile] = useState(null);
   const [backgroundData, setBackgroundData] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);

@@ -22,7 +22,7 @@ const ProductCard = ({ product }) => {
         <div
           className="w-42 h-80 overflow-hidden rounded-md"
           onMouseEnter={() =>
-            setHoverTimeout(setTimeout(() => setIsHovered(true), 500))
+            setHoverTimeout(setTimeout(() => setIsHovered(true), 700))
           }
           onMouseLeave={() => {
             clearTimeout(hoverTimeout);
@@ -36,6 +36,7 @@ const ProductCard = ({ product }) => {
                 ? product.images[selectedImageIndex].images[1].url
                 : product.images[selectedImageIndex].images[0].url
             }
+            loading="lazy"
             alt={product.name}
             className="w-full h-full object-contain transition duration-1000 transform hover:scale-105"
           />

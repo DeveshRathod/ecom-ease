@@ -12,7 +12,7 @@ import LatestSingle from "../components/LatestSingle";
 import Fashion from "../components/Fashion";
 
 const Home = () => {
-  const currentUser = useSelector((state) => state.currentUser);
+  const currentUser = useSelector((state) => state.user.currentUser);
 
   return (
     <div>

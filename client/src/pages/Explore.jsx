@@ -3,10 +3,12 @@ import Layout from "../components/Layout";
 import Search from "../components/Search";
 import axios from "axios";
 import ProductCard from "../components/ProductCard";
+import { useParams } from "react-router-dom";
 
 const Explore = () => {
+  const { Category } = useParams();
   const [searchQuery, setSearchQuery] = useState("");
-  const [category, setCategory] = useState("all");
+  const [category, setCategory] = useState(Category);
   const [type, setType] = useState("all");
   const [page, setPage] = useState(1);
   const [products, setProducts] = useState([]);
@@ -29,6 +31,14 @@ const Explore = () => {
 
     fetchProducts();
   }, [category, type, searchQuery, page]);
+
+  useEffect(() => {
+    const scroll = () => {
+      window.scrollTo(0, 0);
+    };
+
+    scroll();
+  }, []);
 
   const handleSearchChange = (value) => {
     setSearchQuery(value);

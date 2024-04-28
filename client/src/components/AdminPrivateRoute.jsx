@@ -5,7 +5,7 @@ import axios from "axios";
 import { setUser } from "../store/reducers/user.slice";
 
 const AdminPrivateRoute = () => {
-  const currentUser = useSelector((state) => state.currentUser);
+  const currentUser = useSelector((state) => state.user.currentUser);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

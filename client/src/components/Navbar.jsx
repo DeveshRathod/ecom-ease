@@ -3,13 +3,38 @@ import { Link, useNavigate } from "react-router-dom";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import LogoutIcon from "@mui/icons-material/Logout";
+import { setCart } from "../store/reducers/cart.slice";
 
-const Navbar = ({ cartCount, notificationCount }) => {
-  const currentUser = useSelector((state) => state.currentUser);
+const Navbar = () => {
+  const currentUser = useSelector((state) => state.user.currentUser);
+  const cart = useSelector((state) => state.current.cart);
+  const dispatch = useDispatch();
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchCart = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:4000/api/products/getcart",
+          {
+            headers: {
+              authorization: `${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        dispatch(setCart(response.data));
+      } catch (error) {
+        console.error("Error fetching cart:", error);
+      }
+    };
+
+    if (currentUser) {
+      fetchCart();
+    }
+  }, [setCart]);
 
   let settingUrl = "";
   if (currentUser && currentUser.isAdmin) {
@@ -45,7 +70,7 @@ const Navbar = ({ cartCount, notificationCount }) => {
               <div className="relative">
                 <ShoppingCartIcon sx={{ fontSize: 20 }} />
                 <div className="absolute top-3 right-3 bg-red-500 rounded-full w-4 h-4 flex items-center justify-center text-white text-xs">
-                  {cartCount}
+                  {cart.length}
                 </div>
               </div>
             </Link>
@@ -58,7 +83,7 @@ const Navbar = ({ cartCount, notificationCount }) => {
                 <div className="relative">
                   <NotificationsIcon sx={{ fontSize: 20 }} />
                   <div className="absolute top-3 right-3 bg-red-500 rounded-full w-4 h-4 flex items-center justify-center text-white text-xs">
-                    {notificationCount}
+                    {0}
                   </div>
                 </div>
               </Link>
@@ -88,11 +113,7 @@ const Navbar = ({ cartCount, notificationCount }) => {
                     >
                       <Link>Orders</Link>
                     </li>
-                    <li
-                      className={`${!currentUser.isAdmin ? "block" : "hidden"}`}
-                    >
-                      <Link>Wishlist</Link>
-                    </li>
+
                     <li>
                       <Link to={settingUrl}>Settings</Link>
                     </li>
