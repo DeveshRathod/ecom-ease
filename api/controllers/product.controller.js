@@ -67,33 +67,6 @@ export const exploreProducts = async (req, res) => {
   }
 };
 
-export const getCartItems = async (req, res) => {
-  const userId = req.user._id;
-
-  try {
-    const user = await User.findById(userId);
-
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
-    const productIds = user.cart;
-
-    const products = [];
-    for (const productId of productIds) {
-      const product = await Product.findById(productId);
-      if (product) {
-        products.push(product);
-      }
-    }
-
-    return res.status(200).json(products);
-  } catch (error) {
-    console.error("Error retrieving cart items:", error);
-    return res.status(500).json({ error: "Internal server error" });
-  }
-};
-
 export const getCurrentProduct = async (req, res) => {
   const { productId } = req.body;
 
@@ -110,9 +83,8 @@ export const getCurrentProduct = async (req, res) => {
   }
 };
 
-export const addCart = async (req, res) => {
+export const getCartItems = async (req, res) => {
   const userId = req.user._id;
-  const productId = req.body.product;
 
   try {
     const user = await User.findById(userId);
@@ -121,18 +93,47 @@ export const addCart = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    user.cart.push(productId);
-    await user.save();
+    const products = user.cart;
 
-    const cartItems = [];
-    for (const productId of user.cart) {
-      const product = await Product.findById(productId);
-      if (product) {
-        cartItems.push(product);
-      }
+    return res.status(200).json(products);
+  } catch (error) {
+    console.error("Error retrieving cart items:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const addCart = async (req, res) => {
+  const userId = req.user._id;
+  const { productId, colorIndex } = req.body;
+
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
     }
 
-    return res.status(200).json(cartItems);
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    user.cart.push({
+      productId: productId,
+      name: product.name,
+      image: product.images[colorIndex].images[0].url,
+      colorName: product.images[colorIndex].name,
+      colorIndex: colorIndex,
+      price: product.price,
+      brand: product.brand,
+      discount: product.discount,
+      stock: product.stock,
+      sold: product.sold,
+    });
+
+    await user.save();
+
+    return res.status(200).json(user.cart);
   } catch (error) {
     console.error("Error adding product to cart:", error);
     return res.status(500).json({ error: "Internal server error" });
@@ -141,7 +142,7 @@ export const addCart = async (req, res) => {
 
 export const deleteCart = async (req, res) => {
   const userId = req.user._id;
-  const productIdToDelete = req.body.product;
+  const { productId, colorIndex } = req.body;
 
   try {
     const user = await User.findById(userId);
@@ -150,24 +151,24 @@ export const deleteCart = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    const indexToDelete = user.cart.findIndex(
-      (productId) => productId === productIdToDelete
-    );
+    let indexToDelete = -1;
+    for (let i = 0; i < user.cart.length; i++) {
+      const product = user.cart[i];
+      if (
+        product.productId === productId &&
+        product.colorIndex === colorIndex
+      ) {
+        indexToDelete = i;
+        break;
+      }
+    }
 
     if (indexToDelete !== -1) {
       user.cart.splice(indexToDelete, 1);
       await user.save();
     }
 
-    const cartItems = [];
-    for (const productId of user.cart) {
-      const product = await Product.findById(productId);
-      if (product) {
-        cartItems.push(product);
-      }
-    }
-
-    return res.status(200).json(cartItems);
+    return res.status(200).json(user.cart);
   } catch (error) {
     console.error("Error deleting product from cart:", error);
     return res.status(500).json({ error: "Internal server error" });

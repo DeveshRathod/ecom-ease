@@ -4,6 +4,7 @@ import axios from "axios";
 import Layout from "../components/Layout";
 import { useDispatch, useSelector } from "react-redux";
 import { setCart } from "../store/reducers/cart.slice";
+import CheckIcon from "@mui/icons-material/Check";
 
 const Product = () => {
   const { id, colorIndex } = useParams();
@@ -16,7 +17,7 @@ const Product = () => {
 
   useEffect(() => {
     if (Array.isArray(cart)) {
-      const quantity = cart.filter((item) => item._id === id).length;
+      const quantity = cart.filter((item) => item.productId === id).length;
 
       setQuantity(quantity);
     }
@@ -51,7 +52,6 @@ const Product = () => {
   };
 
   const addToCart = async () => {
-    console.log("add");
     try {
       const token = localStorage.getItem("token");
       if (!token) {
@@ -62,7 +62,8 @@ const Product = () => {
       const response = await axios.post(
         "http://localhost:4000/api/products/addToCart",
         {
-          product: id,
+          productId: id,
+          colorIndex: color * 1,
         },
         {
           headers: {
@@ -72,7 +73,6 @@ const Product = () => {
       );
 
       dispatch(setCart(response.data));
-      console.log(response.data.length);
       setQuantity(quantity + 1);
     } catch (error) {
       console.error("Error adding product to cart:", error);
@@ -85,9 +85,10 @@ const Product = () => {
       const token = localStorage.getItem("token");
 
       const response = await axios.post(
-        "http://localhost:4000/api/products/deleteProduct",
+        "http://localhost:4000/api/products/deleteCart",
         {
-          product: id,
+          colorIndex: color * 1,
+          productId: id,
         },
         {
           headers: {
@@ -109,7 +110,6 @@ const Product = () => {
         <div className="sm:pl-20 pl-10 pr-10 pt-10 sm:pr-20 flex flex-col sm:flex-row md:flex-row w-full">
           <div className="flex-1 w-full flex flex-col sm:flex-row gap-4">
             <div className="flex flex-row justify-start items-start sm:flex-col w-fit p-1 sm:p-2 gap-2 overflow-x-scroll">
-              {/* Render left images */}
               {product.images[color].images.map((image, index) => (
                 <img
                   key={image._id}
@@ -163,10 +163,18 @@ const Product = () => {
               {product.images.map((colorData, index) => (
                 <div
                   key={index}
-                  className="w-8 h-8 rounded-full mx-1 cursor-pointer"
-                  style={{ backgroundColor: colorData.color }}
+                  className="relative w-8 h-8 rounded-full mx-1 cursor-pointer"
+                  style={{
+                    backgroundColor: colorData.color,
+                  }}
                   onClick={() => handleColorChange(index)}
-                ></div>
+                >
+                  {color === index && (
+                    <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-transparent rounded-full">
+                      <CheckIcon style={{ color: "white", fontSize: "16px" }} />
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
             <div className="flex pr-2 pb-2 gap-2 mt-4 pt-2">
@@ -177,10 +185,10 @@ const Product = () => {
                       Quantity
                     </label>
 
-                    <div className="flex items-center rounded border border-gray-200">
+                    <div className="flex items-center rounded border border-black">
                       <button
                         type="button"
-                        className="size-10 leading-10 text-gray-600 transition hover:opacity-75"
+                        className="size-10 leading-10 text-black transition hover:opacity-75"
                         onClick={removeCart}
                       >
                         -
@@ -190,13 +198,13 @@ const Product = () => {
                         type="number"
                         id="Quantity"
                         value={quantity}
-                        className="h-10 w-8 border-transparent text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
+                        className="h-10 w-6 border-transparent text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 outline-none [&::-webkit-outer-spin-button]:appearance-none"
                         readOnly
                       />
 
                       <button
                         type="button"
-                        className="size-10 leading-10 text-gray-600 transition hover:opacity-75"
+                        className="size-10 leading-10 text-black transition hover:opacity-75"
                         onClick={addToCart}
                       >
                         +

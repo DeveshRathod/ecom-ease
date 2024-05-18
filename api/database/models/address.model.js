@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const addressSchema = mongoose.Schema({
+export const addressSchema = mongoose.Schema({
   type: {
     type: String,
     required: true,
@@ -31,7 +31,4 @@ const addressSchema = mongoose.Schema({
   },
 });
 
-// Compile Address model
-const Address = mongoose.model("Address", addressSchema);
-
-export default Address;
+export const Address = mongoose.model("Address", addressSchema);

@@ -1,7 +1,8 @@
 import User from "../database/models/user.model.js";
 import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
-import Address from "../database/models/address.model.js";
+import { Address } from "../database/models/address.model.js";
+import Order from "../database/models/order.model.js";
 
 function isValidEmail(email) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -321,4 +322,30 @@ export const deleteAddress = async (req, res) => {
   }
 };
 
+export const order = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { products, total, address } = req.body;
 
+    const order = new Order({
+      userId: userId,
+      products: products,
+      total: total,
+      address: address,
+    });
+    await order.save();
+
+    await User.findByIdAndUpdate(
+      userId,
+      { $push: { orders: order._id } },
+      { new: true }
+    );
+
+    res
+      .status(201)
+      .json({ message: "Order placed successfully", order: order });
+  } catch (error) {
+    console.error("Error placing order:", error);
+    res.status(500).json({ message: "Failed to place order" });
+  }
+};

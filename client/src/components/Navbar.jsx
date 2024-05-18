@@ -19,6 +19,7 @@ const Navbar = () => {
       try {
         const response = await axios.get(
           "http://localhost:4000/api/products/getcart",
+
           {
             headers: {
               authorization: `${localStorage.getItem("token")}`,
