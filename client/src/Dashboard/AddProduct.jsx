@@ -1,8 +1,15 @@
 import React, { useState } from "react";
 import DashboardLayout from "../components/DashboardLayout";
 import AddImage from "../components/AddImage";
+import Message from "../components/Message";
+import { useNavigate } from "react-router-dom";
 
 const AddProduct = () => {
+  const [error, setError] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [success, setSuccess] = useState("");
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: "",
     price: 0,
@@ -15,6 +22,10 @@ const AddProduct = () => {
     images: [],
     type: "all",
     sizes: "",
+    returnable: false,
+    refundable: false,
+    openbox: false,
+    warranty: 0,
   });
 
   const [colorImage, setColorImage] = useState({
@@ -27,10 +38,10 @@ const AddProduct = () => {
   const [allImages, setAllImages] = useState([]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
-      [name]: value,
+      [name]: type === "checkbox" ? checked : value,
     });
   };
 
@@ -39,7 +50,6 @@ const AddProduct = () => {
 
     const updatedForm = { ...formData, images: allImages };
 
-    console.log(updatedForm);
     const token = localStorage.getItem("token");
     if (token) {
       try {
@@ -55,14 +65,25 @@ const AddProduct = () => {
           }
         );
         const data = await response.json();
-        console.log(data);
-        // Add logic to handle response from backend, e.g., show success message
+        if (!data.message) {
+          console.log(data);
+          setShowModal(true);
+          setError(null);
+          setSuccess("New Product added successfully");
+          navigate("/dashboard");
+        } else {
+          setShowModal(true);
+          setError("Error creating new product");
+          setSuccess(null);
+        }
       } catch (error) {
+        setError("Error creating new product");
+        setSuccess(null);
+        setShowModal(true);
         console.error("Error uploading images:", error);
-        // Add logic to handle errors, e.g., show error message to user
       }
     } else {
-      alert("Please login first");
+      navigate("/signin");
     }
   };
 
@@ -101,6 +122,24 @@ const AddProduct = () => {
             <p className="mt-1 text-sm leading-6 text-gray-600">
               Add product details
             </p>
+
+            {showModal && success && (
+              <Message
+                message={success}
+                setShowModal={setShowModal}
+                showModel={showModal}
+                isError={false}
+              />
+            )}
+
+            {showModal && error && (
+              <Message
+                message={error}
+                setShowModal={setShowModal}
+                showModel={showModal}
+                isError={true}
+              />
+            )}
 
             <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
               <div className="sm:col-span-3">
@@ -277,7 +316,7 @@ const AddProduct = () => {
                 </div>
               </div>
 
-              <div className="sm:col-span-2">
+              <div className="sm:col-span-3">
                 <label
                   htmlFor="postal-code"
                   className="block text-sm font-medium leading-6 text-gray-900"
@@ -296,7 +335,7 @@ const AddProduct = () => {
                 </div>
               </div>
 
-              <div className="sm:col-span-2">
+              <div className="sm:col-span-3">
                 <label
                   htmlFor="postal-code"
                   className="block text-sm font-medium leading-6 text-gray-900"
@@ -313,6 +352,61 @@ const AddProduct = () => {
                     className="block w-full rounded-md border-0 px-1.5 py-1.5 text-gray-900 shadow-sm outline-none placeholder:text-gray-400 sm:text-sm sm:leading-6"
                   />
                 </div>
+              </div>
+
+              <div className="sm:col-span-2">
+                <label className="block text-sm font-medium leading-6 text-gray-900">
+                  Warranty (In months)
+                </label>
+                <div className="mt-2">
+                  <input
+                    type="number"
+                    name="warranty"
+                    id="warranty"
+                    value={formData.warranty}
+                    onChange={handleChange}
+                    autoComplete="family-name"
+                    className="block w-full rounded-md border-0 px-1.5  py-1.5 text-gray-900 shadow-sm outline-none placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                  />
+                </div>
+              </div>
+
+              <div className="sm:col-span-1">
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    name="openbox"
+                    checked={formData.openbox}
+                    onChange={handleChange}
+                    className="mr-2"
+                  />
+                  Open Box
+                </label>
+              </div>
+
+              <div className="sm:col-span-1">
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    name="returnable"
+                    checked={formData.returnable}
+                    onChange={handleChange}
+                    className="mr-2"
+                  />
+                  Returnable
+                </label>
+              </div>
+              <div className="sm:col-span-1">
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    name="refundable"
+                    checked={formData.refundable}
+                    onChange={handleChange}
+                    className="mr-2"
+                  />
+                  Refundable
+                </label>
               </div>
             </div>
           </div>

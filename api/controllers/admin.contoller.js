@@ -57,7 +57,17 @@ export const addProduct = async (req, res) => {
     sizes,
     stock,
     type,
+    returnable,
+    refundable,
+    openbox,
+    warranty,
   } = req.body;
+
+  if (!returnable && refundable) {
+    return res
+      .status(400)
+      .json({ message: "Non returnable canonot be refundable" });
+  }
 
   if (price <= 0) {
     return res.status(400).json({ message: "Price must be greater than 0" });
@@ -79,6 +89,10 @@ export const addProduct = async (req, res) => {
       stock,
       type,
       sizes,
+      returnable,
+      refundable,
+      openbox,
+      warranty,
     });
     await product.save();
     return res.status(201).json(product);
@@ -165,6 +179,10 @@ export const updateProduct = async (req, res) => {
     category,
     brand,
     stock,
+    returnable,
+    refundable,
+    openbox,
+    warranty,
   } = req.body;
 
   try {
@@ -179,6 +197,10 @@ export const updateProduct = async (req, res) => {
         category,
         brand,
         stock,
+        returnable,
+        refundable,
+        openbox,
+        warranty,
       },
       { new: true }
     );

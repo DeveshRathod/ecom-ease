@@ -5,6 +5,10 @@ import Layout from "../components/Layout";
 import { useDispatch, useSelector } from "react-redux";
 import { setCart } from "../store/reducers/cart.slice";
 import CheckIcon from "@mui/icons-material/Check";
+import refund from "../data/images/refund.png";
+import returnable from "../data/images/returnable.png";
+import openbox from "../data/images/openbox.png";
+import warranty from "../data/images/warranty.png";
 
 const Product = () => {
   const { id, colorIndex } = useParams();
@@ -18,7 +22,6 @@ const Product = () => {
   useEffect(() => {
     if (Array.isArray(cart)) {
       const quantity = cart.filter((item) => item.productId === id).length;
-
       setQuantity(quantity);
     }
   }, [cart, id]);
@@ -28,11 +31,8 @@ const Product = () => {
       try {
         const response = await axios.post(
           "http://localhost:4000/api/products/getProduct",
-          {
-            productId: id,
-          }
+          { productId: id }
         );
-
         setProduct(response.data);
       } catch (error) {
         console.error("Error fetching product:", error);
@@ -61,15 +61,8 @@ const Product = () => {
 
       const response = await axios.post(
         "http://localhost:4000/api/products/addToCart",
-        {
-          productId: id,
-          colorIndex: color * 1,
-        },
-        {
-          headers: {
-            authorization: token,
-          },
-        }
+        { productId: id, colorIndex: color * 1 },
+        { headers: { authorization: token } }
       );
 
       dispatch(setCart(response.data));
@@ -86,15 +79,8 @@ const Product = () => {
 
       const response = await axios.post(
         "http://localhost:4000/api/products/deleteCart",
-        {
-          colorIndex: color * 1,
-          productId: id,
-        },
-        {
-          headers: {
-            authorization: token,
-          },
-        }
+        { colorIndex: color * 1, productId: id },
+        { headers: { authorization: token } }
       );
 
       dispatch(setCart(response.data));
@@ -121,7 +107,7 @@ const Product = () => {
                 />
               ))}
             </div>
-            <div className="flex-3 p-1 sm:p-2 flex items-center justify-center  flex-col">
+            <div className="flex-3 p-1 sm:p-2 flex items-center justify-start flex-col">
               <div className="min-w-[300px] min-h-[300px] md:min-h-[150px] md:min-w-[150px] sm:min-w-[400px] sm:min-h-[400px]">
                 <img
                   src={product.images[color].images[selectedImageIndex].url}
@@ -164,9 +150,7 @@ const Product = () => {
                 <div
                   key={index}
                   className="relative w-8 h-8 rounded-full mx-1 cursor-pointer"
-                  style={{
-                    backgroundColor: colorData.color,
-                  }}
+                  style={{ backgroundColor: colorData.color }}
                   onClick={() => handleColorChange(index)}
                 >
                   {color === index && (
@@ -184,7 +168,6 @@ const Product = () => {
                     <label htmlFor="Quantity" className="sr-only">
                       Quantity
                     </label>
-
                     <div className="flex items-center rounded border border-black">
                       <button
                         type="button"
@@ -193,7 +176,6 @@ const Product = () => {
                       >
                         -
                       </button>
-
                       <input
                         type="number"
                         id="Quantity"
@@ -201,7 +183,6 @@ const Product = () => {
                         className="h-10 w-6 border-transparent text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 outline-none [&::-webkit-outer-spin-button]:appearance-none"
                         readOnly
                       />
-
                       <button
                         type="button"
                         className="size-10 leading-10 text-black transition hover:opacity-75"
@@ -222,10 +203,79 @@ const Product = () => {
                   </button>
                 </>
               )}
-
               <button className="px-3 py-2 rounded-md text-black border border-black hover:text-white hover:bg-black transition-all ease-in-out delay-75">
                 Buy Now
               </button>
+            </div>
+            <div className="mt-4">
+              <h2 className="text-lg font-semibold mb-2">Specifications:</h2>
+              <ul className="list-disc pl-5">
+                {product.specifications.split(",").map((spec, index) => (
+                  <li key={index} className="text-gray-600">
+                    {spec.trim()}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="mt-4 flex flex-wrap overflow-x-auto justify-start items-center">
+              {product.openbox && (
+                <div
+                  className="flex flex-col items-center mb-4 mr-4 p-4"
+                  style={{ minWidth: "100px" }}
+                >
+                  <img
+                    src={openbox}
+                    alt="Open Box"
+                    className="w-16 h-16"
+                    style={{ width: "64px", height: "64px" }}
+                  />
+                  <span className="text-gray-600 mt-2">Open Box</span>
+                </div>
+              )}
+              {product.warranty > 0 && (
+                <div
+                  className="flex flex-col items-center mb-4 mr-4 p-4"
+                  style={{ minWidth: "100px" }}
+                >
+                  <img
+                    src={warranty}
+                    alt="Warranty"
+                    className="w-16 h-16"
+                    style={{ width: "64px", height: "64px" }}
+                  />
+                  <span className="text-gray-600 mt-2">
+                    {(product.warranty / 12).toFixed(0)} Year Warranty
+                  </span>
+                </div>
+              )}
+              {product.returnable && (
+                <div
+                  className="flex flex-col items-center mb-4 mr-4 p-4"
+                  style={{ minWidth: "100px" }}
+                >
+                  <img
+                    src={returnable}
+                    alt="Returnable"
+                    className="w-16 h-16"
+                    style={{ width: "64px", height: "64px" }}
+                  />
+                  <span className="text-gray-600 mt-2">Returnable</span>
+                </div>
+              )}
+              {product.refundable && (
+                <div
+                  className="flex flex-col items-center mb-4 mr-4 p-4"
+                  style={{ minWidth: "100px" }}
+                >
+                  <img
+                    src={refund}
+                    alt="Refundable"
+                    className="w-16 h-16"
+                    style={{ width: "64px", height: "64px" }}
+                  />
+                  <span className="text-gray-600 mt-2">Refundable</span>
+                </div>
+              )}
             </div>
           </div>
         </div>

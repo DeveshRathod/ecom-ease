@@ -5,7 +5,7 @@ const firebaseConfig = {
   authDomain: "ecom-ease.firebaseapp.com",
   projectId: "ecom-ease",
   storageBucket: "ecom-ease.appspot.com",
-  messagingSenderId: "676615339241",
+  messagingSenderId: import.meta.env.FIREBASE_ID,
   appId: import.meta.env.FIREBASE_APPID,
 };
 

@@ -3,17 +3,18 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Signin from "./pages/Signin";
 import Home from "./pages/Home";
 import Signup from "./pages/Signup";
-import Dashboard from "./dashboard/Dashboard";
+import Dashboard from "./Dashboard/Dashboard";
 import Cart from "./pages/Cart";
 import PrivateRoute from "./components/PrivateRoute";
 import AdminPrivateRoute from "./components/AdminPrivateRoute";
-import Users from "./dashboard/Users";
-import Orders from "./dashboard/Orders";
-import Products from "./dashboard/Products";
-import AddProduct from "./dashboard/AddProduct";
+import Users from "./Dashboard/Users";
+import Orders from "./Dashboard/Orders";
+import Products from "./Dashboard/Products";
+import AddProduct from "./Dashboard/AddProduct";
 import Explore from "./pages/Explore";
 import Settings from "./pages/Settings";
 import Product from "./pages/Product";
+import Order from "./pages/Order";
 
 const App = () => {
   return (
@@ -27,6 +28,7 @@ const App = () => {
         <Route element={<PrivateRoute />}>
           <Route path="/cart" element={<Cart />} />
           <Route path="/setting" element={<Settings />} />
+          <Route path="/order" element={<Order />} />
         </Route>
         <Route element={<AdminPrivateRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />

@@ -60,6 +60,14 @@ const orderSchema = mongoose.Schema(
       type: String,
       default: "Placed",
     },
+    typeOfPayment: {
+      type: String,
+      required: true,
+    },
+    details: {
+      type: Array,
+      required: true,
+    },
   },
   {
     timestamps: true,

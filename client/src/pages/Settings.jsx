@@ -13,6 +13,7 @@ import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import axios from "axios";
 import Message from "../components/Message.jsx";
+import { useNavigate } from "react-router-dom";
 
 const Settings = () => {
   const currentUser = useSelector((state) => state.user.currentUser);
@@ -24,6 +25,7 @@ const Settings = () => {
   const [success, setSuccess] = useState("");
   const dispatch = useDispatch();
   const fileInputRef = useRef(null);
+  const navigate = useNavigate();
   const fileInputRefIcon = useRef(null);
   const [formData, setFormData] = useState({
     username: currentUser.username,
@@ -68,6 +70,8 @@ const Settings = () => {
         } catch (error) {
           console.log(error);
         }
+      } else {
+        navigate("/signin");
       }
     };
 

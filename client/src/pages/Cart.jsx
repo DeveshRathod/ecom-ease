@@ -124,9 +124,12 @@ const Cart = () => {
                   </p>
                 </div>
               </div>
-              <button className="bg-black text-white hover:bg-white hover:border hover:text-black border-black ease-in-out transition-all py-2 px-4 rounded self-end">
+              <Link
+                to="/order"
+                className="bg-black text-white hover:bg-white hover:border hover:text-black border-black ease-in-out transition-all py-2 px-4 rounded self-end"
+              >
                 Proceed to Checkout
-              </button>
+              </Link>
             </div>
           </div>
         </div>

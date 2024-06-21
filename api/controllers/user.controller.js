@@ -325,13 +325,15 @@ export const deleteAddress = async (req, res) => {
 export const order = async (req, res) => {
   try {
     const userId = req.user._id;
-    const { products, total, address } = req.body;
+    const { products, total, address, typeOfPayment, details } = req.body;
 
     const order = new Order({
       userId: userId,
       products: products,
       total: total,
       address: address,
+      typeOfPayment: typeOfPayment,
+      details: details,
     });
     await order.save();
 

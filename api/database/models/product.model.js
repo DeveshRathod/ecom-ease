@@ -77,6 +77,22 @@ const productSchema = mongoose.Schema(
       type: String,
       default: "all",
     },
+    returnable: {
+      type: Boolean,
+      default: false,
+    },
+    refundable: {
+      type: Boolean,
+      default: false,
+    },
+    openbox: {
+      type: Boolean,
+      default: false,
+    },
+    warranty: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,
