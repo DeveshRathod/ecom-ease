@@ -134,12 +134,6 @@ const Users = () => {
                   <button onClick={() => handleDeleteUser(user._id)}>
                     <DeleteIcon sx={{ fontSize: 20 }} />
                   </button>
-                  <button
-                    onClick={() => handleDeleteUser(user._id)}
-                    className=" ml-2"
-                  >
-                    <ZoomInIcon sx={{ fontSize: 20 }} />
-                  </button>
                 </td>
               </tr>
             ))}

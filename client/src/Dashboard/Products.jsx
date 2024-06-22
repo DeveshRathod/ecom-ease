@@ -2,15 +2,60 @@ import React, { useEffect, useState } from "react";
 import DashboardLayout from "../components/DashboardLayout";
 import SearchIcon from "@mui/icons-material/Search";
 import axios from "axios";
+import ItemsCard from "../components/ItemsCard";
+import Undo from "../components/Undo";
 
 const Products = () => {
   const [items, setItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [searchInput, setSearchInput] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [undoData, setUndoData] = useState({});
+  const token = localStorage.getItem("token");
+
+  const axiosInstance = axios.create({
+    baseURL: "http://localhost:4000/api/admin",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: token ? `${token}` : "",
+    },
+  });
+
+  const func = async (item) => {
+    console.log(item);
+
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/admin/addProduct",
+        item,
+        {
+          headers: {
+            authorization: `${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("Product added successfully:", response.data);
+      setShowModal(false);
+      setUndoData({});
+    } catch (error) {
+      console.error("Error adding product:", error);
+    }
+  };
+
+  const dialogFun = async (item) => {
+    setUndoData(item);
+    setShowModal(true);
+    try {
+      const response = await axiosInstance.delete(`/deleteProduct/${item._id}`);
+    } catch (err) {}
+  };
 
   useEffect(() => {
-    const fetch = async () => {
+    const fetchProducts = async () => {
       const token = localStorage.getItem("token");
       if (token) {
         try {
@@ -20,84 +65,93 @@ const Products = () => {
               headers: {
                 authorization: `${token}`,
               },
+              params: {
+                searchQuery: searchInput,
+                category: selectedCategory,
+              },
             }
           );
-
           const products = response.data;
           setItems(products);
           setFilteredItems(products);
         } catch (error) {
-          console.log(error);
+          console.error("Error fetching products:", error);
         }
       } else {
         localStorage.setItem("token", "");
-        window.location.reload();
       }
     };
 
-    fetch();
-  }, []);
+    fetchProducts();
+  }, [searchInput, selectedCategory, showModal, undoData]);
 
   const handleCategoryChange = (event) => {
-    const category = event.target.value;
-    setSelectedCategory(category);
-    const filtered = category
-      ? items.filter((item) => item.category === category)
-      : items;
-    setFilteredItems(filtered);
+    setSelectedCategory(event.target.value);
   };
 
   const handleSearchInputChange = (event) => {
-    const inputValue = event.target.value;
-    setSearchInput(inputValue);
-    const filtered = items.filter((item) =>
-      item.name.toLowerCase().includes(inputValue.toLowerCase())
-    );
-    setFilteredItems(filtered);
+    setSearchInput(event.target.value.trim());
   };
 
   return (
     <DashboardLayout>
-      <div className="p-3 flex justify-between">
-        <div className="p-2 bg-gray-100 w-full md:w-1/2 lg:w-1/3 md:mr-2 flex gap-1 items-center rounded-md">
-          <SearchIcon />
-          <input
-            type="text"
-            className="outline-none bg-gray-100 w-full"
-            placeholder="Search....."
-            value={searchInput}
-            onChange={handleSearchInputChange}
-          />
+      <div>
+        <div className="flex p-2 sm:p-4 justify-evenly sm:justify-between">
+          <div className="p-1 flex justify-between">
+            <div className="p-2 bg-gray-100 w-full flex gap-1 items-center rounded-md">
+              <SearchIcon />
+              <input
+                type="text"
+                className="outline-none bg-gray-100 w-full"
+                placeholder="Search..."
+                value={searchInput}
+                onChange={handleSearchInputChange}
+              />
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div className="pl-2 pr-2 pb-2 sm:pl-4 sm:pr-4 sm:pb-4 h-[calc(100vh - 9rem)]">
-        <div className="pt-4 pb-4 pl-8 bg-gray-100 rounded-t-md">
-          <select
-            name=""
-            id=""
-            className="p-2 outline-none rounded-md"
-            value={selectedCategory}
-            onChange={handleCategoryChange}
-          >
-            <option value="">All</option>
-            <option value="furniture">Furniture</option>
-            <option value="mobile">Mobiles</option>
-            <option value="fashion">Fashion</option>
-            <option value="electronics">Electronics</option>
-            <option value="travels">Travels</option>
-            <option value="toys">Toys</option>
-          </select>
+        <div>
+          {showModal && (
+            <Undo
+              setShowModal={setShowModal}
+              func={func}
+              showModel={showModal}
+              data={undoData}
+            />
+          )}
         </div>
-        <div className="h-full overflow-y-auto rounded-b-md">
-          <div className="w-full bg-gray-100 flex flex-col">
-            <div className="flex justify-center gap-2 pb-10">
-              <div className="flex flex-wrap w-full p-2 justify-center  gap-2">
-                {filteredItems.length > 0 ? (
-                  filteredItems.map((item, id) => console.log(item))
-                ) : (
-                  <div>No data</div>
-                )}
+
+        <div className="pl-2 pr-2 pb-2 sm:pl-4 sm:pr-4 sm:pb-4 h-[calc(84vh - 9rem)]">
+          <div className="pt-4 pb-4 pl-8 bg-gray-100">
+            <select
+              name=""
+              id=""
+              className="p-2 outline-none rounded-md"
+              value={selectedCategory}
+              onChange={handleCategoryChange}
+            >
+              <option value="">Category</option>
+              <option value="furniture">Furniture</option>
+              <option value="mobiles">Mobiles</option>
+              <option value="fashion">Fashion</option>
+              <option value="electronics">Electronics</option>
+              <option value="travels">Travels</option>
+              <option value="toys">Toys</option>
+            </select>
+          </div>
+          <div className="h-full overflow-y-auto">
+            <div className="w-full bg-gray-100 flex flex-col">
+              <div className="flex justify-center gap-2 p-2">
+                <div className="flex flex-wrap w-full p-2 justify-center md:justify-start sm:justify-start gap-4">
+                  {filteredItems.length > 0 ? (
+                    filteredItems.map((item, id) => (
+                      <ItemsCard item={item} key={id} dialogFun={dialogFun} />
+                    ))
+                  ) : (
+                    <div>No data....</div>
+                  )}
+                </div>
               </div>
             </div>
           </div>

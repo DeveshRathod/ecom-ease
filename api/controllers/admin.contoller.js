@@ -1,6 +1,7 @@
 import Brand from "../database/models/brands.model.js";
 import Product from "../database/models/product.model.js";
 import User from "../database/models/user.model.js";
+import Order from "../database/models/order.model.js";
 
 export const addBrand = async (req, res) => {
   const { name, description, image, category } = req.body;
@@ -217,27 +218,25 @@ export const updateProduct = async (req, res) => {
 
 export const getAllProduct = async (req, res) => {
   try {
-    const { searchQuery, category, page, limit } = req.query;
+    const { searchQuery, category } = req.query;
     const query = {};
 
     if (searchQuery) {
-      query.$text = { $search: searchQuery };
+      query.$or = [
+        { name: { $regex: searchQuery, $options: "i" } },
+        { brand: { $regex: searchQuery, $options: "i" } },
+      ];
     }
 
     if (category) {
       query.category = category;
     }
 
-    const pageSize = parseInt(limit) || 10;
-    const pageNumber = parseInt(page) || 1;
-
-    const products = await Product.find(query)
-      .select("name images category brand stock type createdAt price")
-      .skip((pageNumber - 1) * pageSize)
-      .limit(pageSize);
+    const products = await Product.find(query);
 
     return res.status(200).json(products);
   } catch (error) {
+    console.error("Error fetching products:", error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -301,5 +300,66 @@ export const getAllNonAdminUsers = async (req, res) => {
   } catch (error) {
     console.error("Error fetching non-admin users:", error);
     return res.status(500).json({ message: "Failed to fetch non-admin users" });
+  }
+};
+
+export const getDashboard = async (req, res) => {
+  const userId = req.user._id;
+  const isAdmin = req.user.isAdmin;
+
+  if (!userId) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  if (!isAdmin) {
+    return res.status(403).json({ message: "Not an Admin" });
+  }
+
+  try {
+    const userCount = await User.countDocuments({ isAdmin: false });
+
+    const productCount = await Product.countDocuments();
+
+    const pendingOrdersCount = await Order.countDocuments({
+      status: "pending",
+    });
+
+    const completedOrdersCount = await Order.countDocuments({
+      status: "completed",
+    });
+
+    return res.status(200).json({
+      userCount,
+      productCount,
+      pendingOrdersCount: pendingOrdersCount || 0,
+      completedOrdersCount: completedOrdersCount || 0,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const deleteUser = async (req, res) => {
+  const isAdmin = req.user.isAdmin;
+  const userId = req.body.userId;
+
+  try {
+    if (!isAdmin) {
+      return res
+        .status(403)
+        .json({ message: "Not authorized, admin access required" });
+    }
+
+    const deletedUser = await User.findByIdAndDelete(userId);
+
+    if (!deletedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json({ deletedUser });
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };

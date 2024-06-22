@@ -4,8 +4,10 @@ import {
   addBrand,
   addProduct,
   deleteProduct,
+  deleteUser,
   getAllNonAdminUsers,
   getAllProduct,
+  getDashboard,
   getProduct,
   updateProduct,
 } from "../controllers/admin.contoller.js";
@@ -19,5 +21,7 @@ router.get("/getProduct/:productId", verifyUser, getProduct);
 router.get("/getAllProduct", verifyUser, getAllProduct);
 router.put("/updateProduct/:productId", verifyUser, updateProduct);
 router.get("/getUsers", verifyUser, getAllNonAdminUsers);
+router.get("/getDashboardDetails", verifyUser, getDashboard);
+router.delete("/deleteUser", verifyUser, deleteUser);
 
 export default router;

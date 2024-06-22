@@ -59,7 +59,7 @@ const AddProduct = () => {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Authorization: token,
+              authorization: token,
             },
             body: JSON.stringify(updatedForm),
           }
