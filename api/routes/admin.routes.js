@@ -3,6 +3,7 @@ import verifyUser from "../utils/verifyUser.js";
 import {
   addBrand,
   addProduct,
+  addUser,
   deleteProduct,
   deleteUser,
   getAllNonAdminUsers,
@@ -23,5 +24,6 @@ router.put("/updateProduct/:productId", verifyUser, updateProduct);
 router.get("/getUsers", verifyUser, getAllNonAdminUsers);
 router.get("/getDashboardDetails", verifyUser, getDashboard);
 router.delete("/deleteUser", verifyUser, deleteUser);
+router.post("/addUser", verifyUser, addUser);
 
 export default router;

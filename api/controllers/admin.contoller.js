@@ -285,17 +285,7 @@ export const getAllNonAdminUsers = async (req, res) => {
         .limit(limit);
     }
 
-    const simplifiedUsers = nonAdminUsers.map((user) => ({
-      _id: user._id,
-      username: user.username,
-      email: user.email,
-      gender: user.gender,
-      mobile: user.mobile,
-      profile: user.profile,
-      birthday: user.birthday,
-      createdAt: user.createdAt,
-    }));
-
+    const simplifiedUsers = nonAdminUsers;
     return res.status(200).json(simplifiedUsers);
   } catch (error) {
     console.error("Error fetching non-admin users:", error);
@@ -360,6 +350,27 @@ export const deleteUser = async (req, res) => {
     return res.status(200).json({ deletedUser });
   } catch (error) {
     console.error("Error deleting user:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const addUser = async (req, res) => {
+  const isAdmin = req.user.isAdmin;
+
+  try {
+    if (!isAdmin) {
+      return res
+        .status(403)
+        .json({ message: "Not authorized, admin access required" });
+    }
+
+    const user = new User(req.body);
+
+    await user.save();
+
+    return res.status(201).json(user);
+  } catch (error) {
+    console.error("Error adding user:", error);
     return res.status(500).json({ message: "Internal server error" });
   }
 };

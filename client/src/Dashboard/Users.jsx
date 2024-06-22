@@ -5,12 +5,14 @@ import axios from "axios";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import DeleteIcon from "@mui/icons-material/Delete";
-import ZoomInIcon from "@mui/icons-material/ZoomIn";
+import Undo from "../components/Undo";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [undoData, setUndoData] = useState({});
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -37,14 +39,10 @@ const Users = () => {
     };
 
     fetchUsers();
-  }, [searchQuery, currentPage]);
+  }, [searchQuery, currentPage, showModal, undoData]);
 
   const getDate = (date) => {
     return date.slice(0, 10);
-  };
-
-  const handleDeleteUser = (userId) => {
-    console.log("Deleting user with ID:", userId);
   };
 
   const goToPrevPage = () => {
@@ -65,6 +63,49 @@ const Users = () => {
     setCurrentPage(1);
   };
 
+  const dialogFun = async (item) => {
+    setUndoData(item);
+    setShowModal(true);
+
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await axios.delete(
+        `http://localhost:4000/api/admin/deleteUser`,
+        {
+          data: { userId: item._id },
+          headers: {
+            authorization: `${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    } catch (err) {
+      console.error("Error deleting user:", err);
+    }
+  };
+
+  const func = async (user) => {
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/admin/addUser",
+        user,
+        {
+          headers: {
+            authorization: `${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      setShowModal(false);
+      setUndoData({});
+    } catch (error) {
+      console.error("Error adding user:", error);
+    }
+  };
+
   return (
     <DashboardLayout>
       <div className="p-3 flex justify-between">
@@ -78,6 +119,17 @@ const Users = () => {
             onChange={handleSearchChange}
           />
         </div>
+      </div>
+
+      <div>
+        {showModal && (
+          <Undo
+            setShowModal={setShowModal}
+            func={func}
+            showModel={showModal}
+            data={undoData}
+          />
+        )}
       </div>
 
       <div className="overflow-x-auto w-full min-h-[700px]">
@@ -131,7 +183,7 @@ const Users = () => {
                   {getDate(user.createdAt)}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <button onClick={() => handleDeleteUser(user._id)}>
+                  <button onClick={() => dialogFun(user)}>
                     <DeleteIcon sx={{ fontSize: 20 }} />
                   </button>
                 </td>
