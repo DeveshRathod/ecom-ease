@@ -295,7 +295,9 @@ export const addAddress = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    return res.status(200).json({ message: "Address Added" });
+    return res
+      .status(200)
+      .json({ message: "Address Added", address: newAddress });
   } catch (error) {
     return res.status(500).json({ message: "Internal Server Error" });
   }
@@ -306,17 +308,33 @@ export const deleteAddress = async (req, res) => {
   const userId = req.user._id;
 
   try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const addressExists = user.address.includes(addressId);
+
+    if (!addressExists) {
+      return res
+        .status(404)
+        .json({ message: "Address not found in user's address list" });
+    }
+
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       { $pull: { address: addressId } },
       { new: true }
     );
 
-    if (!updatedUser) {
-      return res.status(404).json({ message: "User not found" });
+    const deletedAddress = await Address.findByIdAndDelete(addressId);
+
+    if (!deletedAddress) {
+      return res.status(404).json({ message: "Address document not found" });
     }
 
-    return res.status(200).json({ message: "Address Deleted" });
+    return res.status(200).json({ message: "Address deleted" });
   } catch (error) {
     return res.status(500).json({ message: "Internal Server Error" });
   }

@@ -9,11 +9,11 @@ import {
 } from "firebase/storage";
 import { app } from "../firebase/firebase.js";
 import Layout from "../components/Layout";
-import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import axios from "axios";
 import Message from "../components/Message.jsx";
 import { useNavigate } from "react-router-dom";
+import Address from "../components/Address.jsx";
 
 const Settings = () => {
   const currentUser = useSelector((state) => state.user.currentUser);
@@ -41,6 +41,7 @@ const Settings = () => {
     password: "",
     confirmPassword: "",
   });
+
   const [addressData, setAddressData] = useState({
     type: "",
     name: "",
@@ -50,33 +51,6 @@ const Settings = () => {
     addressLine3: "",
     pincode: "",
   });
-
-  const [addresses, setAddresses] = useState({});
-
-  useEffect(() => {
-    const fetchAddresses = async () => {
-      const token = localStorage.getItem("token");
-      if (token) {
-        try {
-          const response = await axios.get(
-            "http://localhost:4000/api/user/getAddress",
-            {
-              headers: {
-                authorization: `${token}`,
-              },
-            }
-          );
-          setAddresses(response.data);
-        } catch (error) {
-          console.log(error);
-        }
-      } else {
-        navigate("/signin");
-      }
-    };
-
-    fetchAddresses();
-  }, []);
 
   function getDate(dateString) {
     const date = new Date(dateString);
@@ -394,52 +368,7 @@ const Settings = () => {
           </div>
         </div>
       </div>
-
-      {!currentUser.isAdmin && (
-        <div className="min-w-screen min-h-fit mt-10 bg-white">
-          <div className="relative mx-auto max-w-screen-lg pl-8 pr-8 sm:pl-0 sm:pr-0 md:pl-8 lg:pl-0 lg:pr-0 md:pr-8">
-            <div className="p-6 bg-white shadow  border rounded-lg">
-              <h1 className="text-xl sm:text-3xl font-bold mb-4">Addresses</h1>
-              <button className="flex p-2 gap-2 border w-full rounded-md">
-                <AddIcon />
-                <p className=" uppercase">New address</p>
-              </button>
-
-              <div className="flex flex-wrap mt-4">
-                {addresses.length > 0 ? (
-                  addresses.map((address, index) => (
-                    <div key={index} className="w-full">
-                      <div className="border p-4 rounded-md flex flex-col justify-between">
-                        <div>
-                          <button className="px-3 py-1 bg-gray-200 text-gray-600 rounded-sm mb-2">
-                            {address.type}
-                          </button>
-                          <div className="flex justify-start">
-                            <div className=" flex justify-center items-center gap-5">
-                              <h1 className="text-lg font-semibold">
-                                {address.name}
-                              </h1>
-                              <p>{address.mobile}</p>
-                            </div>
-                          </div>
-                          <div className="pb-2">
-                            <p>
-                              {address.addressLine1}, {address.addressLine2},{" "}
-                              {address.addressLine3} - {address.pincode}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="w-full text-center">No addresses found.</div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <Address />
     </Layout>
   );
 };
