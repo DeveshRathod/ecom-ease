@@ -3,28 +3,68 @@ import Layout from "../components/Layout";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import CartImage from "../data/images/cart.svg";
+import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
+import { setCart } from "../store/reducers/cart.slice";
 
 const Cart = () => {
   const cart = useSelector((state) => state.current.cart);
   const dispatch = useDispatch();
 
-  const handleRemoveFromCart = (productId) => {};
+  const handleRemoveFromCart = async (productId, colorIndex) => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch(
+        `http://localhost:4000/api/products/deleteCart`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `${token}`,
+          },
+          body: JSON.stringify({ productId, colorIndex }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to remove item from cart");
+      }
+      const itemIndex = cart.findIndex(
+        (item) => item.productId === productId && item.colorIndex === colorIndex
+      );
+
+      if (itemIndex !== -1) {
+        const updatedCart = [...cart];
+        updatedCart.splice(itemIndex, 1);
+        dispatch(setCart(updatedCart));
+      }
+    } catch (error) {
+      console.error("Error removing item from cart:", error.message);
+    }
+  };
 
   const cartItems = Array.isArray(cart) ? cart : [];
-
-  console.log(cartItems);
 
   let totalPrice = 0;
   if (cartItems.length > 0) {
     totalPrice = cartItems.reduce((acc, item) => acc + item.price, 0);
   }
-  let discountedTotalAmount = 0;
+
+  let totalDiscount = 0;
   if (cartItems.length > 0) {
-    discountedTotalAmount = cartItems.reduce(
-      (acc, item) => acc + (item.price - (item.price * item.discount) / 100),
+    totalDiscount = cartItems.reduce(
+      (acc, item) => acc + (item.price * item.discount) / 100,
       0
     );
   }
+  const discountedPrice = (price, discount) => {
+    return (price - (price * discount) / 100).toFixed(2);
+  };
+
+  let discountedTotalAmount = totalPrice - totalDiscount;
+
+  let deliveryCharges = discountedTotalAmount >= 500 ? 0 : 40;
+
+  let totalAmount = discountedTotalAmount + deliveryCharges;
 
   return (
     <Layout>
@@ -35,11 +75,15 @@ const Cart = () => {
             <h2 className="text-lg font-semibold mb-4">Your Cart</h2>
             <div className="flex flex-col">
               {cartItems.map((item, index) => (
-                <div
-                  to={`/product/${item.productId}/${item.colorIndex}`}
-                  key={index}
-                  className="flex items-start mb-4 p-2"
-                >
+                <div key={index} className="flex items-start mb-4 p-2 relative">
+                  <div
+                    className="absolute top-0 left-0 cursor-pointer"
+                    onClick={() =>
+                      handleRemoveFromCart(item.productId, item.colorIndex)
+                    }
+                  >
+                    <RemoveCircleIcon />
+                  </div>
                   <Link to={`/product/${item.productId}/${item.colorIndex}`}>
                     <img
                       src={item.image}
@@ -47,29 +91,27 @@ const Cart = () => {
                       className="w-20 h-20 mr-4"
                     />
                   </Link>
-                  <div className=" flex justify-between items-start w-full gap-4 sm:gap-2">
-                    <div className=" flex flex-col">
+                  <div className="flex justify-between items-start w-full gap-4 sm:gap-2">
+                    <div className="flex flex-col">
                       <Link
                         to={`/product/${item.productId}/${item.colorIndex}`}
                         className="font-semibold text-xs sm:text-lg"
                       >
                         {item.name} ({item.colorName})
                       </Link>
-                      <p className=" text-gray-600 text-xs">
-                        form {item.brand}
-                      </p>
+                      <p className="text-gray-600 text-xs">by {item.brand}</p>
                       {item.stock - item.sold <= 5 && (
-                        <p className=" text-red-500 text-xs">
+                        <p className="text-red-500 text-xs">
                           Only {item.stock - item.sold} left
                         </p>
                       )}
                     </div>
 
                     <div>
-                      <p className=" text-xs sm:text-lg">
+                      <p className="text-xs sm:text-lg">
                         {item.price - (item.price * item.discount) / 100}
                       </p>
-                      {item.discount != 0 && (
+                      {item.discount !== 0 && (
                         <p className="text-gray-500 line-through text-xs">
                           {item.price}
                         </p>
@@ -92,36 +134,25 @@ const Cart = () => {
                 </div>
                 <div className="flex justify-between items-center mb-2">
                   <p>Discount</p>
-                  <p className="text-green-600">
-                    - {totalPrice - discountedTotalAmount}
-                  </p>
+                  <p className="text-green-600">- {totalDiscount}</p>
                 </div>
                 {cart.length >= 5 && (
                   <div className="flex justify-between items-center mb-2">
                     <p>Buy more & save more</p>
                     <p className="text-green-600">
-                      - {(discountedTotalAmount * 5) / 100}
+                      - {(totalDiscount * 5) / 100}
                     </p>
                   </div>
                 )}
 
                 <div className="flex justify-between items-center mb-2">
                   <p>Delivery Charges</p>
-                  <p className="">
-                    + {discountedTotalAmount >= 500 ? <>0</> : <>40</>}
-                  </p>
+                  <p>{deliveryCharges}</p>
                 </div>
                 <hr className="border-t my-2" />
                 <div className="flex justify-between items-center">
                   <p>Total</p>
-                  <p>
-                    {cart.length >= 5
-                      ? discountedTotalAmount -
-                        (discountedTotalAmount * 5) / 100
-                      : discountedTotalAmount && discountedTotalAmount >= 500
-                      ? discountedTotalAmount
-                      : discountedTotalAmount + 40}
-                  </p>
+                  <p>{totalAmount}</p>
                 </div>
               </div>
               <Link
@@ -135,16 +166,16 @@ const Cart = () => {
         </div>
       ) : (
         <div className="sm:pl-20 pl-10 pr-10 pt-10 sm:pr-20 flex flex-col sm:flex-row md:flex-row w-full justify-center">
-          <div className=" w-full h-fit flex justify-center items-center flex-col gap-5 border bg-gray-50 pt-6 pb-10 rounded-md">
+          <div className="w-full h-fit flex justify-center items-center flex-col gap-5 border bg-gray-50 pt-6 pb-10 rounded-md">
             <img
               src={CartImage}
               alt="empty_cart"
-              className=" w-full h-full md:w-full md:h-full lg:w-1/3 lg:h-1/3 sm:w-1/3 sm:h-1/3 p-5"
+              className="w-full h-full md:w-full md:h-full lg:w-1/3 lg:h-1/3 sm:w-1/3 sm:h-1/3 p-5"
             />
-            <p className=" text-2xl sm:text-3xl mt-10">Your cart is empty!</p>
+            <p className="text-2xl sm:text-3xl mt-10">Your cart is empty!</p>
             <Link
               to="/explore/all"
-              className=" px-6 py-2 bg-black text-white rounded-md"
+              className="px-6 py-2 bg-black text-white rounded-md"
             >
               Explore
             </Link>

@@ -13,6 +13,10 @@ const ProductCard = ({ product }) => {
     e.stopPropagation();
   };
 
+  const discountedPrice = (price, discount) => {
+    return (price - (price * discount) / 100).toFixed(2);
+  };
+
   return (
     <div key={product._id} className="relative">
       <Link
@@ -45,13 +49,31 @@ const ProductCard = ({ product }) => {
           <h2 className="text-base mb-2">
             {product.name} ({product.images[selectedImageIndex].name})
           </h2>
-          <p className="text-gray-700 text-base">
-            ₹{product.price.toLocaleString("en-IN")}
-          </p>
+          {product.discount !== 0 ? (
+            <div className="flex items-center">
+              <p className="text-base text-red-500 mr-2">
+                ₹
+                {discountedPrice(
+                  product.price,
+                  product.discount
+                ).toLocaleString("en-IN")}
+              </p>
+              <p className="text-sm text-gray-500 line-through">
+                ₹{product.price.toLocaleString("en-IN")}
+              </p>
+              <p className="text-sm text-green-500 ml-2">
+                -{product.discount}% off
+              </p>
+            </div>
+          ) : (
+            <p className="text-gray-700 text-base">
+              ₹{product.price.toLocaleString("en-IN")}
+            </p>
+          )}
         </div>
       </Link>
-      <div className=" flex">
-        <div className=" flex justify-start pl-4 gap-2 w-full">
+      <div className="flex">
+        <div className="flex justify-start pl-4 gap-2 w-full">
           {product.images.map((image, index) => (
             <button
               key={index}

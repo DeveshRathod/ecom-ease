@@ -4,6 +4,7 @@ import Search from "../components/Search";
 import axios from "axios";
 import ProductCard from "../components/ProductCard";
 import { useParams } from "react-router-dom";
+import NothingToSell from "../components/NothingToSell";
 
 const Explore = () => {
   const { Category } = useParams();
@@ -11,6 +12,8 @@ const Explore = () => {
   const [category, setCategory] = useState(Category);
   const [type, setType] = useState("all");
   const [page, setPage] = useState(1);
+  const [isEmpty, setIsEmpty] = useState(false);
+
   const [products, setProducts] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
 
@@ -24,7 +27,13 @@ const Explore = () => {
         const { products, totalPages } = response.data;
         setProducts(products);
         setTotalPages(totalPages);
+        if (products.length === 0) {
+          setIsEmpty(true);
+        } else {
+          setIsEmpty(false);
+        }
       } catch (error) {
+        setIsEmpty(true);
         console.error("Error fetching products:", error);
       }
     };
@@ -61,7 +70,7 @@ const Explore = () => {
 
   return (
     <Layout>
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-fit flex flex-col">
         <div className="flex-grow pl-2 pr-2">
           <div className="min-w-screen p-3 flex justify-center">
             <Search
@@ -102,14 +111,19 @@ const Explore = () => {
           </div>
         </div>
 
-        <div className="min-h-screen flex pr-2 pl-2 justify-center items-start mt-2 sm:mt-10">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {products.map((product, index) => (
-              <ProductCard product={product} key={index} />
-            ))}
-          </div>
-        </div>
+        {console.log(products.length)}
 
+        {isEmpty ? (
+          <NothingToSell />
+        ) : (
+          <div className="min-h-screen flex pr-2 pl-2 justify-center items-start mt-2 sm:mt-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {products.map((product, index) => (
+                <ProductCard product={product} key={index} />
+              ))}
+            </div>
+          </div>
+        )}
         <div className="mt-6 flex justify-center gap-2 mx-auto max-w-screen-lg pl-8 pr-8 sm:pl-0 sm:pr-0 md:pl-8 lg:pl-0 lg:pr-0 md:pr-8">
           {Array.from({ length: totalPages }, (_, i) => (
             <button key={i} onClick={() => handlePageChange(i + 1)}>
