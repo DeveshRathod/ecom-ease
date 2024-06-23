@@ -6,16 +6,20 @@ import {
   addUser,
   deleteProduct,
   deleteUser,
+  fetchAllBrandNames,
   getAllNonAdminUsers,
   getAllProduct,
   getDashboard,
   getProduct,
+  removeBrand,
   updateProduct,
 } from "../controllers/admin.contoller.js";
 
 const router = express.Router();
 
 router.post("/addBrand", verifyUser, addBrand);
+router.post("/removeBrand", verifyUser, removeBrand);
+router.get("/getAllBrands", verifyUser, fetchAllBrandNames);
 router.post("/addProduct", verifyUser, addProduct);
 router.delete("/deleteProduct/:productId", verifyUser, deleteProduct);
 router.get("/getProduct/:productId", verifyUser, getProduct);

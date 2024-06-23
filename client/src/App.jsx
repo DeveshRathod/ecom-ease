@@ -15,6 +15,7 @@ import Explore from "./pages/Explore";
 import Settings from "./pages/Settings";
 import Product from "./pages/Product";
 import Order from "./pages/Order";
+import Brand from "./Dashboard/Brand";
 
 const App = () => {
   return (
@@ -37,6 +38,7 @@ const App = () => {
           <Route path="/users" element={<Users />} />
           <Route path="/products" element={<Products />} />
           <Route path="/addproduct" element={<AddProduct />} />
+          <Route path="/brands" element={<Brand />} />
         </Route>
       </Routes>
     </BrowserRouter>

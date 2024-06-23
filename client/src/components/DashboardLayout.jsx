@@ -39,6 +39,13 @@ function DashboardLayout({ children }) {
           >
             Dashboard
           </NavLink>
+          <NavLink
+            to="/brands"
+            className="flex items-center py-3 pl-6 nav-item"
+            activeclassname="active"
+          >
+            Brands
+          </NavLink>
           <div className="flex flex-col ">
             <div
               className="flex items-center py-3 pl-6 nav-item cursor-pointer"
@@ -104,9 +111,9 @@ function DashboardLayout({ children }) {
         )}
       </div>
 
-      <div className="w-full flex flex-col h-screen overflow-y-hidden">
-        <header className="w-full bg-white py-2 px-3 sm:hidden shadow-lg">
-          <div className="flex items-center justify-between ">
+      <div className="w-full flex flex-col h-screen overflow-y-hidden ">
+        <header className="min-w-full bg-white py-2 px-3 sm:hidden shadow-lg">
+          <div className="flex items-center justify-between">
             <h1 className="text-black text-xl font-semibold uppercase overflow-hidden whitespace-nowrap overflow-ellipsis">
               Admin
             </h1>
@@ -118,13 +125,24 @@ function DashboardLayout({ children }) {
             </button>
           </div>
 
-          <nav className={isSidebarOpen ? "flex flex-col pt-4" : "hidden"}>
+          <nav
+            className={
+              isSidebarOpen ? "flex flex-col pt-4 shadow-md" : "hidden"
+            }
+          >
             <NavLink
               to="/dashboard"
               className="flex items-center text-black py-2 pl-4 nav-item"
               activeclassname="active"
             >
               Dashboard
+            </NavLink>
+            <NavLink
+              to="/brands"
+              className="flex items-center text-black py-2 pl-4 nav-item"
+              activeclassname="active"
+            >
+              Brands
             </NavLink>
             <div className="flex flex-col ">
               <div
@@ -144,14 +162,14 @@ function DashboardLayout({ children }) {
                 <>
                   <NavLink
                     to="/products"
-                    className="flex items-center text-gray-600 opacity-75 hover:opacity-100 py-2 pl-12 nav-subitem"
+                    className="flex items-center text-black opacity-75 hover:opacity-100 py-2 pl-12 nav-subitem"
                     activeclassname="active"
                   >
                     All
                   </NavLink>
                   <NavLink
                     to="/addproduct"
-                    className="flex items-center text-gray-600 opacity-75 hover:opacity-100 py-2 pl-12 nav-subitem"
+                    className="flex items-center text-black opacity-75 hover:opacity-100 py-2 pl-12 nav-subitem"
                     activeclassname="active"
                   >
                     Create

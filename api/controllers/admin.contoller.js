@@ -4,27 +4,28 @@ import User from "../database/models/user.model.js";
 import Order from "../database/models/order.model.js";
 
 export const addBrand = async (req, res) => {
-  const { name, description, image, category } = req.body;
+  const { name, url } = req.body;
   const isAdmin = req.user.isAdmin;
-
-  console.log(req.body);
 
   if (!isAdmin) {
     return res.status(403).json({ message: "Only admins can add products" });
   }
 
-  if (!name || !description || !image || !category) {
+  if (!name || !url) {
     return res
       .status(400)
       .json({ message: "Please provide all required fields" });
   }
 
   try {
+    const brandId = Math.floor(
+      1000000000 + Math.random() * 9000000000
+    ).toString();
+
     const brand = new Brand({
+      brandId,
       name,
-      description,
-      image,
-      category,
+      url,
     });
 
     await brand.save();
@@ -32,6 +33,56 @@ export const addBrand = async (req, res) => {
     return res.status(201).json(brand);
   } catch (error) {
     return res.status(400).json({ message: error.message });
+  }
+};
+
+export const removeBrand = async (req, res) => {
+  const { brandId, brandName } = req.body;
+
+  if (!brandId || !brandName) {
+    return res.status(400).json({ error: "Brand ID and name are required" });
+  }
+
+  try {
+    const brand = await Brand.findOne({ brandId, name: brandName });
+
+    if (!brand) {
+      return res
+        .status(404)
+        .json({ message: "Brand not found or name does not match the ID" });
+    }
+
+    const productResult = await Product.deleteMany({ brand: brandName });
+
+    const brandResult = await Brand.deleteOne({
+      name: brandName,
+      brandId: brandId,
+    });
+
+    res.status(200).json({
+      message: `${productResult.deletedCount} product(s) deleted and the brand has been removed`,
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: "An error occurred while removing the brand and its products",
+    });
+  }
+};
+
+export const fetchAllBrandNames = async (req, res) => {
+  try {
+    const brands = await Brand.find({}, "name url brandId products");
+    const brandData = brands.map((brand) => ({
+      name: brand.name,
+      url: brand.url,
+      brandId: brand.brandId,
+      products: brand.products,
+    }));
+    res.status(200).json({ brandData });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "An error occurred while fetching the brand names" });
   }
 };
 
@@ -54,7 +105,7 @@ export const addProduct = async (req, res) => {
     specifications,
     images,
     category,
-    brand,
+    brand: brandName,
     sizes,
     stock,
     type,
@@ -67,7 +118,7 @@ export const addProduct = async (req, res) => {
   if (!returnable && refundable) {
     return res
       .status(400)
-      .json({ message: "Non returnable canonot be refundable" });
+      .json({ message: "Non returnable cannot be refundable" });
   }
 
   if (price <= 0) {
@@ -79,6 +130,16 @@ export const addProduct = async (req, res) => {
   }
 
   try {
+    let brand = await Brand.findOne({ name: brandName });
+
+    if (!brand) {
+      return res.status(404).json({ message: "Brand not found" });
+    }
+
+    brand.products++;
+
+    await brand.save();
+
     const product = new Product({
       name,
       price,
@@ -86,7 +147,7 @@ export const addProduct = async (req, res) => {
       category,
       specifications,
       images,
-      brand,
+      brand: brandName,
       stock,
       type,
       sizes,
@@ -95,7 +156,9 @@ export const addProduct = async (req, res) => {
       openbox,
       warranty,
     });
+
     await product.save();
+
     return res.status(201).json(product);
   } catch (error) {
     return res
@@ -114,7 +177,7 @@ export const deleteProduct = async (req, res) => {
   }
 
   if (!isAdmin) {
-    return res.status(404).json({ message: "Not an Admin" });
+    return res.status(403).json({ message: "Not an Admin" });
   }
 
   if (!productId) {
@@ -122,8 +185,19 @@ export const deleteProduct = async (req, res) => {
   }
 
   try {
-    const product = await Product.findByIdAndDelete(productId);
-    return res.status(200).json(product);
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    const brandName = product.brand;
+
+    await Brand.updateOne({ name: brandName }, { $inc: { products: -1 } });
+
+    const deletedProduct = await Product.findByIdAndDelete(productId);
+
+    return res.status(200).json(deletedProduct);
   } catch (error) {
     return res.status(500).json({ message: "Internal Server Error" });
   }

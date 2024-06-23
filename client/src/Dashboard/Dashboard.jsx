@@ -61,19 +61,23 @@ const Dashboard = () => {
   return (
     <DashboardLayout>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 p-10">
-        {boxes.map((box, index) => (
-          <div key={index} className="bg-white p-6 rounded-lg border shadow-md">
-            <img
-              src={box.image}
-              alt={box.label}
-              className="h-24 w-24 object-cover mb-4 mx-auto"
-            />
-            <p className="text-xl font-bold text-gray-800 text-center">
-              {box.number}
-            </p>
-            <p className="text-gray-600 text-center">{box.label}</p>
-          </div>
-        ))}
+        {details &&
+          boxes.map((box, index) => (
+            <div
+              key={index}
+              className="bg-white p-6 rounded-lg border shadow-md"
+            >
+              <img
+                src={box.image}
+                alt={box.label}
+                className="h-24 w-24 object-cover mb-4 mx-auto"
+              />
+              <p className="text-xl font-bold text-gray-800 text-center">
+                {box.number}
+              </p>
+              <p className="text-gray-600 text-center">{box.label}</p>
+            </div>
+          ))}
       </div>
     </DashboardLayout>
   );

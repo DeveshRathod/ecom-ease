@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import Product from "./product.model.js";
 
 const brandSchema = mongoose.Schema(
   {
@@ -8,17 +7,17 @@ const brandSchema = mongoose.Schema(
       required: true,
       unique: true,
     },
-    description: {
+    url: {
       type: String,
       required: true,
     },
-    image: {
-      type: String,
+    brandId: {
+      type: Number,
       required: true,
     },
-    category: {
-      type: String,
-      required: true,
+    products: {
+      type: Number,
+      default: 0,
     },
   },
   {
