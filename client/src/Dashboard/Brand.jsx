@@ -157,8 +157,8 @@ const Brand = () => {
                           onClick={() => toggleBrandIdVisibility(brand.brandId)}
                           style={{
                             cursor: "pointer",
-                            width: "300px",
-                            height: "100px",
+                            width: "225px",
+                            height: "80px",
                           }}
                         />
 

@@ -2,22 +2,24 @@ import Product from "../database/models/product.model.js";
 import User from "../database/models/user.model.js";
 
 export const getAllNewArrival = async (req, res) => {
-  const category = ["mobiles", "fashion", "electronics", "toys", "furniture"];
+  const categories = ["mobiles", "fashion", "electronics", "toys", "furniture"];
   try {
     const latestEntries = await Product.aggregate([
-      { $match: { category: { $in: category } } },
-      { $sort: { "entry.createdAt": -1 } },
+      { $match: { category: { $in: categories } } },
+      { $sort: { createdAt: -1 } },
       {
         $group: {
           _id: "$category",
-          entry: { $first: "$$ROOT" },
+          latestEntry: { $first: "$$ROOT" },
         },
       },
-      { $replaceRoot: { newRoot: "$entry" } },
     ]);
 
-    const resultArray = category
-      .map((cat) => latestEntries.find((entry) => entry.category === cat))
+    const resultArray = categories
+      .map((cat) => {
+        const foundEntry = latestEntries.find((entry) => entry._id === cat);
+        return foundEntry ? foundEntry.latestEntry : null;
+      })
       .filter(Boolean);
 
     return res.status(200).json(resultArray);

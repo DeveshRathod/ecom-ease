@@ -142,9 +142,6 @@ const Address = () => {
                 <div className="min-w-screen min-h-fit mt-4 bg-white">
                   <div className="relative mx-auto max-w-screen-lg">
                     <div className="p-4 bg-white shadow border rounded-lg">
-                      <h1 className="text-xl sm:text-3xl font-bold mb-4">
-                        Add Address
-                      </h1>
                       <form
                         onSubmit={handleSubmit}
                         className="grid grid-cols-1 gap-4 md:gap-6 lg:gap-8 md:grid-cols-2 lg:grid-cols-3"

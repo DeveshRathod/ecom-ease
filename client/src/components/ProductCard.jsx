@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
-import axios from "axios";
 
 const ProductCard = ({ product }) => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
@@ -26,7 +24,7 @@ const ProductCard = ({ product }) => {
         <div
           className="w-42 h-80 overflow-hidden rounded-md"
           onMouseEnter={() =>
-            setHoverTimeout(setTimeout(() => setIsHovered(true), 700))
+            setHoverTimeout(setTimeout(() => setIsHovered(true), 500))
           }
           onMouseLeave={() => {
             clearTimeout(hoverTimeout);
@@ -51,7 +49,7 @@ const ProductCard = ({ product }) => {
           </h2>
           {product.discount !== 0 ? (
             <div className="flex items-center">
-              <p className="text-base text-red-500 mr-2">
+              <p className="text-base text-black mr-2">
                 ₹
                 {discountedPrice(
                   product.price,

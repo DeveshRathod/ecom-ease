@@ -57,13 +57,16 @@ const userSchema = mongoose.Schema(
       type: Array,
       default: [],
     },
-    address: [{ type: mongoose.Schema.Types.ObjectId, ref: "Address" }],
+    address: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Address" }],
+      default: [],
+    },
     notifications: {
       type: Array,
       default: [],
     },
     orders: {
-      type: Array,
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Order" }],
       default: [],
     },
     isAdmin: {

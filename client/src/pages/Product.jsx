@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import Layout from "../components/Layout";
 import { useDispatch, useSelector } from "react-redux";
@@ -216,9 +216,12 @@ const Product = () => {
                       </button>
                     </>
                   )}
-                  <button className="px-3 py-2 rounded-md text-black border border-black hover:text-white hover:bg-black transition-all ease-in-out delay-75">
+                  <Link
+                    to={`/buy/${product._id}/${color}`}
+                    className="px-3 py-2 rounded-md text-black border border-black hover:text-white hover:bg-black transition-all ease-in-out delay-75"
+                  >
                     Buy Now
-                  </button>
+                  </Link>
                 </div>
               )}
               <div className="mt-4">

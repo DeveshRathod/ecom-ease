@@ -14,8 +14,8 @@ import AddProduct from "./Dashboard/AddProduct";
 import Explore from "./pages/Explore";
 import Settings from "./pages/Settings";
 import Product from "./pages/Product";
-import Order from "./pages/Order";
 import Brand from "./Dashboard/Brand";
+import BuySingle from "./pages/BuySingle";
 
 const App = () => {
   return (
@@ -29,7 +29,7 @@ const App = () => {
         <Route element={<PrivateRoute />}>
           <Route path="/cart" element={<Cart />} />
           <Route path="/setting" element={<Settings />} />
-          <Route path="/order" element={<Order />} />
+          <Route path="/buy/:id/:colorIndex" element={<BuySingle />} />
         </Route>
         <Route element={<AdminPrivateRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />

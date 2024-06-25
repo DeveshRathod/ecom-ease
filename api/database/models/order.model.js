@@ -8,46 +8,10 @@ const orderSchema = mongoose.Schema(
       ref: "User",
       required: true,
     },
-    products: [
-      {
-        name: {
-          type: String,
-          required: true,
-        },
-        productId: {
-          type: String,
-          required: true,
-        },
-        image: {
-          type: String,
-          required: true,
-        },
-        sold: {
-          type: String,
-          required: true,
-        },
-        stock: {
-          type: Number,
-          required: true,
-        },
-        price: {
-          type: Number,
-          required: true,
-        },
-        discount: {
-          type: Number,
-          required: true,
-        },
-        colorName: {
-          type: String,
-          required: true,
-        },
-        colorIndex: {
-          type: Number,
-          required: true,
-        },
-      },
-    ],
+    products: {
+      type: Array,
+      required: true,
+    },
     total: {
       type: Number,
       required: true,
