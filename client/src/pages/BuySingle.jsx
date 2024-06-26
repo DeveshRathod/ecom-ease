@@ -14,6 +14,7 @@ const BuySingle = () => {
   const [totalAmount, setTotalAmount] = useState(0);
   const [discountedPrice, setDiscountedPrice] = useState(0);
   const [discountAmount, setDiscountAmount] = useState(0);
+  const [isEmpty, setIsEmpty] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -26,6 +27,7 @@ const BuySingle = () => {
         );
         setProduct(response.data);
       } catch (error) {
+        setIsEmpty(true);
         console.error("Error fetching product:", error);
       }
     };
@@ -64,8 +66,12 @@ const BuySingle = () => {
           setAddresses(response.data);
           if (response.data.length > 0) {
             setSelectedAddress(response.data[0]._id);
+            setIsEmpty(false);
+          } else {
+            setIsEmpty(true);
           }
         } catch (error) {
+          setIsEmpty(true);
           console.error("Failed to fetch addresses", error);
           navigate("/signin");
         }
@@ -211,15 +217,25 @@ const BuySingle = () => {
               </div>
             </div>
             <button
-              className="mt-4 w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded hover:bg-blue-700"
+              className={`mt-4 w-full py-2 px-4 font-semibold rounded border ${
+                isEmpty
+                  ? "bg-gray-600 text-white border-black"
+                  : "bg-white text-black border-black hover:bg-black hover:text-white hover:border-black"
+              }`}
               onClick={proceedPayment}
+              disabled={isEmpty}
             >
-              Proceed to Payment
+              Buy Cash On Delivery
             </button>
             <p className="text-center my-4">Or</p>
             <button
-              className="w-full py-2 px-4 bg-green-500 text-white font-semibold rounded hover:bg-green-700"
+              className={`w-full py-2 px-4 font-semibold rounded border ${
+                isEmpty
+                  ? "bg-gray-600 text-white border-black"
+                  : "bg-black text-white hover:bg-white hover:text-black hover:border-black"
+              }`}
               onClick={proceedPayment}
+              disabled={isEmpty}
             >
               Proceed to Payment
             </button>

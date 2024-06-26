@@ -13,12 +13,12 @@ export const pay = async (req, res) => {
         currency: "inr",
         product_data: {
           name: product.name,
-          images: product.images[0].map((image) => image.url),
+          images: product.images[0].images[0].url,
           description: product.description,
         },
         unit_amount: product.unit_amount,
       },
-      quantity: product.quantity,
+      quantity: 1,
     }));
 
     const session = await stripe.checkout.sessions.create({

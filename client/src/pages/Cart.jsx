@@ -25,6 +25,7 @@ const Cart = () => {
   const [deliveryCharges, setDeliveryCharges] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
   const [addresses, setAddresses] = useState([]);
+  const [addressEmpty, setAddressEmpty] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -92,8 +93,11 @@ const Cart = () => {
           setAddresses(response.data);
           if (response.data.length > 0) {
             setSelectedAddress(response.data[0]._id);
+          } else {
+            setAddressEmpty(true);
           }
         } catch (error) {
+          setAddressEmpty(true);
           console.error("Failed to fetch addresses", error);
           navigate("/signin");
         }
@@ -300,15 +304,25 @@ const Cart = () => {
                 </div>
               </div>
               <button
-                className="mt-4 w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded hover:bg-blue-700"
+                className={`mt-4 w-full py-2 px-4 font-semibold rounded border ${
+                  addressEmpty
+                    ? "bg-gray-600 text-white border-black"
+                    : "bg-white text-black border-black hover:bg-black hover:text-white hover:border-black"
+                }`}
                 onClick={proceedPayment}
+                disabled={addressEmpty}
               >
-                Proceed to Payment
+                Buy Cash On Delivery
               </button>
               <p className="text-center my-4">Or</p>
               <button
-                className="w-full py-2 px-4 bg-green-500 text-white font-semibold rounded hover:bg-green-700"
+                className={`w-full py-2 px-4 font-semibold rounded border ${
+                  addressEmpty
+                    ? "bg-gray-600 text-white border-black"
+                    : "bg-black text-white hover:bg-white hover:text-black hover:border-black"
+                }`}
                 onClick={proceedPayment}
+                disabled={addressEmpty}
               >
                 Proceed to Payment
               </button>
