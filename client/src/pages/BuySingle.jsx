@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { addBilling, addProducts } from "../store/reducers/order.slice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const BuySingle = () => {
   const { id, colorIndex } = useParams();
@@ -17,6 +16,7 @@ const BuySingle = () => {
   const [isEmpty, setIsEmpty] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const currentUser = useSelector((state) => state.user.currentUser);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -87,18 +87,37 @@ const BuySingle = () => {
     setSelectedAddress(e.target.value);
   };
 
-  const proceedPayment = async () => {
+  const proceedPayment = async (typeOfPayment) => {
     if (!product) return;
 
-    dispatch(
-      addBilling({
-        totalAmount,
-        deliveryCharges,
-        discountedPrice,
-        discountAmount,
-      })
-    );
-    dispatch(addProducts(product));
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/payment/placeOrder",
+        {
+          totalAmount: product.price,
+          product: [
+            {
+              id: product.id,
+              name: product.name + "(" + product.images[colorIndex].name + ")",
+              price: product.price,
+              image: product.images[colorIndex].images[0].url,
+              colorIndex: colorIndex * 1,
+              brand: product.brand,
+              discount: product.discount,
+              stock: product.stock,
+            },
+          ],
+          typeOfPayment,
+          address: selectedAddress,
+          userId: currentUser._id,
+        }
+      );
+
+      console.log(response.data.product);
+      window.location.href = response.data.url;
+    } catch (error) {
+      console.error("Error placing order:", error);
+    }
   };
 
   if (!product) {
@@ -222,7 +241,7 @@ const BuySingle = () => {
                   ? "bg-gray-600 text-white border-black"
                   : "bg-white text-black border-black hover:bg-black hover:text-white hover:border-black"
               }`}
-              onClick={proceedPayment}
+              onClick={() => proceedPayment("COD")}
               disabled={isEmpty}
             >
               Buy Cash On Delivery
@@ -234,7 +253,7 @@ const BuySingle = () => {
                   ? "bg-gray-600 text-white border-black"
                   : "bg-black text-white hover:bg-white hover:text-black hover:border-black"
               }`}
-              onClick={proceedPayment}
+              onClick={() => proceedPayment("Stripe")}
               disabled={isEmpty}
             >
               Proceed to Payment

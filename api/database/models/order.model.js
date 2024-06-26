@@ -1,8 +1,13 @@
 import mongoose from "mongoose";
-import { addressSchema } from "./address.model.js";
+import { Address } from "./address.model.js";
 
 const orderSchema = mongoose.Schema(
   {
+    transactionId: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -12,12 +17,13 @@ const orderSchema = mongoose.Schema(
       type: Array,
       required: true,
     },
-    total: {
+    totalAmount: {
       type: Number,
       required: true,
     },
     address: {
-      type: addressSchema,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Address",
       required: true,
     },
     status: {
@@ -26,10 +32,6 @@ const orderSchema = mongoose.Schema(
     },
     typeOfPayment: {
       type: String,
-      required: true,
-    },
-    details: {
-      type: Array,
       required: true,
     },
   },

@@ -4,7 +4,6 @@ import { Link, useNavigate } from "react-router-dom";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { addBilling, addProducts } from "../store/reducers/order.slice";
 import CartImage from "../data/images/cart.svg";
 import { setCart } from "../store/reducers/cart.slice";
 
@@ -26,7 +25,7 @@ const Cart = () => {
   const [totalAmount, setTotalAmount] = useState(0);
   const [addresses, setAddresses] = useState([]);
   const [addressEmpty, setAddressEmpty] = useState(false);
-  const [selectedAddress, setSelectedAddress] = useState(null);
+  const [selectedAddress, setSelectedAddress] = useState({});
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const currentUser = useSelector((state) => state.user.currentUser);
@@ -153,17 +152,37 @@ const Cart = () => {
     setSelectedAddress(event.target.value);
   };
 
-  console.log(addresses);
+  const proceedPayment = async (typeOfPayment) => {
+    if (!cartItems || cartItems.length === 0) return;
 
-  const proceedPayment = () => {
-    const totalBillingInfo = {
-      totalAmount,
-      deliveryCharges,
-      discountedPrice: discountedTotalAmount,
-      discountAmount: totalDiscount,
-    };
-    dispatch(addBilling(totalBillingInfo));
-    dispatch(addProducts(cartItems));
+    const products = cartItems.map((item, index) => ({
+      id: item.id,
+      name: item.name + "(" + item.colorName + ")",
+      price: item.price,
+      image: item.image,
+      colorIndex: item.colorIndex,
+      brand: item.brand,
+      discount: item.discount,
+      stock: item.stock,
+    }));
+
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/payment/placeOrder",
+        {
+          totalAmount: totalAmount,
+          product: products,
+          typeOfPayment,
+          address: selectedAddress,
+          userId: currentUser._id,
+        }
+      );
+
+      console.log(response.data.product);
+      window.location.href = response.data.url;
+    } catch (error) {
+      console.error("Error placing order:", error);
+    }
   };
 
   if (!cartItems) {
@@ -173,8 +192,7 @@ const Cart = () => {
   return (
     <Layout>
       {!isEmpty ? (
-        <div className="flex flex-col sm:flex-row w-full pl-10 pr-10 pt-10">
-          {/* Left Section: Cart Items */}
+        <div className="flex flex-col sm:flex-row w-full sm:pl-20 pl-10 pr-10 pt-10 sm:pr-20">
           <div className="flex-1 p-4 m-2 border rounded-lg overflow-auto">
             <h2 className="text-lg font-semibold mb-4">Your Cart</h2>
             <div className="flex flex-col max-h-[580px] overflow-auto">
@@ -247,7 +265,7 @@ const Cart = () => {
                         name="address"
                         value={address._id}
                         onChange={handleAddressChange}
-                        checked={selectedAddress === address._id}
+                        checked={selectedAddress === address}
                         className="hidden"
                       />
                       <label
@@ -309,7 +327,7 @@ const Cart = () => {
                     ? "bg-gray-600 text-white border-black"
                     : "bg-white text-black border-black hover:bg-black hover:text-white hover:border-black"
                 }`}
-                onClick={proceedPayment}
+                onClick={() => proceedPayment("COD")}
                 disabled={addressEmpty}
               >
                 Buy Cash On Delivery
@@ -321,7 +339,7 @@ const Cart = () => {
                     ? "bg-gray-600 text-white border-black"
                     : "bg-black text-white hover:bg-white hover:text-black hover:border-black"
                 }`}
-                onClick={proceedPayment}
+                onClick={() => proceedPayment("Stripe")}
                 disabled={addressEmpty}
               >
                 Proceed to Payment

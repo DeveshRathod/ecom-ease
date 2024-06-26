@@ -111,8 +111,6 @@ const Explore = () => {
           </div>
         </div>
 
-        {console.log(products.length)}
-
         {isEmpty ? (
           <NothingToSell />
         ) : (
