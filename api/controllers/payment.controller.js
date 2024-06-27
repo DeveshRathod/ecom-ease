@@ -85,12 +85,9 @@ export const pay = async (req, res) => {
         mode: "payment",
         success_url: "http://localhost:5173/",
         cancel_url: "http://localhost:5173/setting",
-        customer_email: userEmail,
       });
 
       const createdOrderId = await createOrderInMongo(session);
-
-      console.log(sessionStripe);
 
       const user = await User.findById(userId).session(session);
       const userNotification = generateNotification(

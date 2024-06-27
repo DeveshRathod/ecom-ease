@@ -50,6 +50,7 @@ const BuySingle = () => {
     }
   }, [product]);
 
+  console.log(totalAmount);
   useEffect(() => {
     const fetchAddress = async () => {
       const token = localStorage.getItem("token");
@@ -95,7 +96,7 @@ const BuySingle = () => {
       const response = await axios.post(
         "http://localhost:4000/api/payment/placeOrder",
         {
-          totalAmount: product.price,
+          totalAmount,
           product: [
             {
               id: product.id,

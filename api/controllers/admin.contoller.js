@@ -385,11 +385,11 @@ export const getDashboard = async (req, res) => {
     const productCount = await Product.countDocuments();
 
     const pendingOrdersCount = await Order.countDocuments({
-      status: "pending",
+      status: "Placed" || "Shipped",
     });
 
     const completedOrdersCount = await Order.countDocuments({
-      status: "completed",
+      status: "Completed",
     });
 
     return res.status(200).json({
