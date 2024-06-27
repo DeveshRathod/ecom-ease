@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import Review from "./review.model.js";
 import Brand from "./brands.model.js";
 const imageSchema = mongoose.Schema({
   name: {

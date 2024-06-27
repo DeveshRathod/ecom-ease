@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import CartImage from "../data/images/cart.svg";
+import CartImage from "../data/images/cart.png";
 import { setCart } from "../store/reducers/cart.slice";
 
 const calculateDiscountedPrice = (price, discount) => {
@@ -167,6 +167,7 @@ const Cart = () => {
     }));
 
     try {
+      const token = localStorage.getItem("token");
       const response = await axios.post(
         "http://localhost:4000/api/payment/placeOrder",
         {
@@ -175,6 +176,11 @@ const Cart = () => {
           typeOfPayment,
           address: selectedAddress,
           userId: currentUser._id,
+        },
+        {
+          headers: {
+            authorization: `${token}`,
+          },
         }
       );
 
@@ -184,10 +190,6 @@ const Cart = () => {
       console.error("Error placing order:", error);
     }
   };
-
-  if (!cartItems) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <Layout>

@@ -8,7 +8,9 @@ import {
   signup,
   updateUser,
   deleteUser,
-  order,
+  getOrders,
+  getNotifications,
+  markAllNotificationsAsRead,
 } from "../controllers/user.controller.js";
 import verifyUser from "../utils/verifyUser.js";
 
@@ -22,6 +24,8 @@ router.delete("/delete", verifyUser, deleteUser);
 router.get("/getAddress", verifyUser, getAddress);
 router.post("/addAddress", verifyUser, addAddress);
 router.delete("/deleteAddress", verifyUser, deleteAddress);
-router.delete("/order", verifyUser, order);
+router.get("/getOrders", verifyUser, getOrders);
+router.get("/notifications", verifyUser, getNotifications);
+router.get("/markAsRead", verifyUser, markAllNotificationsAsRead);
 
 export default router;

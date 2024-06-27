@@ -91,6 +91,7 @@ const BuySingle = () => {
     if (!product) return;
 
     try {
+      const token = localStorage.getItem("token");
       const response = await axios.post(
         "http://localhost:4000/api/payment/placeOrder",
         {
@@ -110,6 +111,11 @@ const BuySingle = () => {
           typeOfPayment,
           address: selectedAddress,
           userId: currentUser._id,
+        },
+        {
+          headers: {
+            authorization: `${token}`,
+          },
         }
       );
 

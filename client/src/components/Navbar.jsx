@@ -6,6 +6,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { setCart } from "../store/reducers/cart.slice";
+import { setNotifications } from "../store/reducers/notification.slice";
 
 const Navbar = () => {
   const currentUser = useSelector((state) => state.user.currentUser);
@@ -13,6 +14,56 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
+  const [notificationCount, setNotificationCount] = useState(0);
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        const response = await axios.get(
+          "http://localhost:4000/api/user/notifications",
+          {
+            headers: {
+              authorization: `${token}`,
+            },
+          }
+        );
+
+        dispatch(setNotifications(response.data.notifications));
+        setNotificationCount(response.data.unreadCount);
+      } catch (err) {
+        setLoading(false);
+      }
+    };
+
+    fetchMessages();
+  }, [setNotifications]);
+
+  useEffect(() => {
+    const markAsRead = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        const response = await axios.get(
+          "http://localhost:4000/api/user/markAsRead",
+          {
+            headers: {
+              authorization: `${token}`,
+            },
+          }
+        );
+
+        if (response.statusCode === 200) {
+          setNotificationCount(0);
+        }
+      } catch (err) {
+        setLoading(false);
+      }
+    };
+
+    markAsRead();
+  }, []);
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -77,14 +128,15 @@ const Navbar = () => {
             </Link>
           </div>
         )}
+
         <div className="relative flex gap-8">
           {token && currentUser && (
             <div className="flex justify-center items-center gap-2 sm:gap-8">
-              <Link>
+              <Link to="/messages">
                 <div className="relative">
                   <NotificationsIcon sx={{ fontSize: 20 }} />
                   <div className="absolute top-3 right-3 bg-red-500 rounded-full w-4 h-4 flex items-center justify-center text-white text-xs">
-                    {0}
+                    {notificationCount}
                   </div>
                 </div>
               </Link>
@@ -112,7 +164,7 @@ const Navbar = () => {
                     <li
                       className={`${!currentUser.isAdmin ? "block" : "hidden"}`}
                     >
-                      <Link>Orders</Link>
+                      <Link to="/orders">Orders</Link>
                     </li>
 
                     <li>

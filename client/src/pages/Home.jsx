@@ -9,7 +9,6 @@ import image from "../data/images/heroimag.jpeg";
 import Latest from "../components/Latest";
 import Footer from "../components/Footer";
 import LatestSingle from "../components/LatestSingle";
-import Fashion from "../components/Fashion";
 
 const Home = () => {
   const currentUser = useSelector((state) => state.user.currentUser);
@@ -74,14 +73,6 @@ const Home = () => {
           </div>
         </div>
       </div>
-
-      {/* <div className="w-full mt-10 flex justify-center items-center">
-        <div className="w-full max-w-screen-xl mx-auto px-6 md:px-12 sm:px-0 py-4">
-          <div className="bg-white w-full h-full">
-            <Fashion />
-          </div>
-        </div>
-      </div> */}
 
       {/* New Arrivals */}
 

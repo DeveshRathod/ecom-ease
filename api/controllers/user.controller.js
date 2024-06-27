@@ -340,32 +340,97 @@ export const deleteAddress = async (req, res) => {
   }
 };
 
-export const order = async (req, res) => {
+export const getOrders = async (req, res) => {
+  const userId = req.user._id;
+  const { date } = req.query;
+
+  if (!userId) {
+    return res
+      .status(400)
+      .json({ error: "userId query parameter is required" });
+  }
+
   try {
-    const userId = req.user._id;
-    const { products, total, address, typeOfPayment, details } = req.body;
+    const user = await User.findById(userId);
 
-    const order = new Order({
-      userId: userId,
-      products: products,
-      total: total,
-      address: address,
-      typeOfPayment: typeOfPayment,
-      details: details,
-    });
-    await order.save();
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
 
-    await User.findByIdAndUpdate(
-      userId,
-      { $push: { orders: order._id } },
-      { new: true }
+    let orders = await Order.find({ _id: { $in: user.orders } });
+
+    if (date) {
+      const startDate = new Date(date);
+      startDate.setHours(0, 0, 0, 0);
+      const endDate = new Date(date);
+      endDate.setHours(23, 59, 59, 999);
+
+      orders = orders.filter(
+        (order) => order.createdAt >= startDate && order.createdAt <= endDate
+      );
+    }
+
+    // Sort orders by createdAt in descending order (newest first)
+    orders.sort((a, b) => b.createdAt - a.createdAt);
+
+    // Populate address details for each order
+    await Order.populate(orders, { path: "address", model: Address });
+
+    res.status(200).json({ orders });
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const getNotifications = async (req, res) => {
+  const userId = req.user._id;
+
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const sortedNotifications = user.notifications.sort(
+      (a, b) => new Date(b.date) - new Date(a.date)
     );
 
-    res
-      .status(201)
-      .json({ message: "Order placed successfully", order: order });
+    const unreadCount = sortedNotifications.filter(
+      (notification) => notification.status === "Unread"
+    ).length;
+
+    res.status(200).json({
+      notifications: sortedNotifications,
+      unreadCount: unreadCount,
+    });
   } catch (error) {
-    console.error("Error placing order:", error);
-    res.status(500).json({ message: "Failed to place order" });
+    console.error("Error fetching notifications:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const markAllNotificationsAsRead = async (req, res) => {
+  const userId = req.user._id;
+
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    user.notifications = user.notifications.map((notification) => ({
+      ...notification,
+      status: "Read",
+    }));
+
+    await user.save();
+
+    res.status(200).json({ message: "All notifications marked as read" });
+  } catch (error) {
+    console.error("Error marking notifications as read:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };

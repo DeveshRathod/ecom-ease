@@ -16,6 +16,8 @@ import Settings from "./pages/Settings";
 import Product from "./pages/Product";
 import Brand from "./Dashboard/Brand";
 import BuySingle from "./pages/BuySingle";
+import Order from "./pages/Order";
+import Messages from "./pages/Messages";
 
 const App = () => {
   return (
@@ -26,15 +28,18 @@ const App = () => {
         <Route path="/signin" element={<Signin />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/explore/:Category" element={<Explore />} />
+        <Route path="/messages" element={<Messages />} />
         <Route element={<PrivateRoute />}>
           <Route path="/cart" element={<Cart />} />
           <Route path="/setting" element={<Settings />} />
           <Route path="/buy/:id/:colorIndex" element={<BuySingle />} />
+          <Route path="/orders" element={<Order />} />
         </Route>
         <Route element={<AdminPrivateRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/adminsetting" element={<Settings />} />
-          <Route path="/orders" element={<Orders />} />
+          <Route path="/order" element={<Orders />} />
+          <Route path="/messages" element={<Messages />} />
           <Route path="/users" element={<Users />} />
           <Route path="/products" element={<Products />} />
           <Route path="/addproduct" element={<AddProduct />} />

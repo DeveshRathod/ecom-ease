@@ -8,8 +8,23 @@ const stripe = new Stripe(
   "sk_test_51PVVKZRsvxoA0WXZtXc6oZgGOJ1XZ4kAW0CDY8ITWk73QZEKGMpTdkHCwIiB7zSiM1CbsrYHDnlB8N0IuE5KMJTp00CZtRGdYi"
 );
 
+const generateOrderId = () => {
+  return "SE" + Math.random().toString(36).slice(2, 12).toUpperCase();
+};
+
+const generateNotification = (message, sender) => {
+  return {
+    message,
+    sender,
+    date: new Date(),
+    notificationId: uuidv4(),
+    status: "Unread",
+  };
+};
+
 export const pay = async (req, res) => {
   const { totalAmount, product, typeOfPayment, userId, address } = req.body;
+  const currentUser = req.user;
 
   const calculateFinalPrice = (price, discount) => {
     if (discount >= 0 && discount <= 100) {
@@ -21,6 +36,7 @@ export const pay = async (req, res) => {
   };
 
   const transactionId = uuidv4();
+  const orderId = generateOrderId();
 
   const createOrderInMongo = async (session) => {
     const order = new Order({
@@ -30,6 +46,7 @@ export const pay = async (req, res) => {
       address,
       typeOfPayment,
       transactionId,
+      orderId,
     });
 
     await order.save({ session });
@@ -68,33 +85,72 @@ export const pay = async (req, res) => {
         mode: "payment",
         success_url: "http://localhost:5173/",
         cancel_url: "http://localhost:5173/setting",
+        customer_email: userEmail,
       });
 
-      const orderId = await createOrderInMongo(session);
+      const createdOrderId = await createOrderInMongo(session);
+
+      console.log(sessionStripe);
+
+      const user = await User.findById(userId).session(session);
+      const userNotification = generateNotification(
+        `Your order with ID: ${orderId} has been placed.`,
+        `${currentUser.username} (User)`
+      );
 
       await User.findByIdAndUpdate(
         userId,
-        { $push: { orders: orderId } },
+        {
+          $push: { orders: createdOrderId, notifications: userNotification },
+        },
         { session }
       );
 
       await session.commitTransaction();
       session.endSession();
+
+      const admins = await User.find({ isAdmin: true });
+      const adminNotification = generateNotification(
+        `New order placed with ID: ${orderId}`,
+        `${userId} (User)`
+      );
+      admins.forEach(async (admin) => {
+        admin.notifications.push(adminNotification);
+        await admin.save();
+      });
 
       res.status(200).json({ url: sessionStripe.url, product });
     } else {
-      const orderId = await createOrderInMongo(session);
+      const createdOrderId = await createOrderInMongo(session);
+
+      const user = await User.findById(userId).session(session);
+      const userNotification = generateNotification(
+        `Your order with ID: ${orderId} has been placed.`,
+        `System (Admin)`
+      );
 
       await User.findByIdAndUpdate(
         userId,
-        { $push: { orders: orderId } },
+        {
+          $push: { orders: createdOrderId, notifications: userNotification },
+        },
         { session }
       );
 
       await session.commitTransaction();
       session.endSession();
 
-      res.status(200).json({ url: "http://localhost:5173/orders" }); // Adjust URL as needed
+      const admins = await User.find({ isAdmin: true });
+      const adminNotification = generateNotification(
+        `New order placed with ID: ${orderId}`,
+        `${userId} (User)`
+      );
+      admins.forEach(async (admin) => {
+        admin.notifications.push(adminNotification);
+        await admin.save();
+      });
+
+      res.status(200).json({ url: "http://localhost:5173/orders" });
     }
   } catch (error) {
     await session.abortTransaction();

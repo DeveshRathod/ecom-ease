@@ -3,6 +3,10 @@ import { Address } from "./address.model.js";
 
 const orderSchema = mongoose.Schema(
   {
+    orderId: {
+      type: String,
+      required: true,
+    },
     transactionId: {
       type: String,
       required: true,

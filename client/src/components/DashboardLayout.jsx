@@ -85,7 +85,7 @@ function DashboardLayout({ children }) {
             Users
           </NavLink>
           <NavLink
-            to="/orders"
+            to="/order"
             className="flex items-center py-3 pl-6 nav-item"
             activeclassname="active"
           >
@@ -186,7 +186,7 @@ function DashboardLayout({ children }) {
               Users
             </NavLink>
             <NavLink
-              to="/orders"
+              to="/order"
               className="flex items-center text-black opacity-75 hover:opacity-100 py-2 pl-4 nav-item"
               activeclassname="active"
             >
