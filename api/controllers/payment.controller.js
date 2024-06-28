@@ -148,7 +148,9 @@ export const pay = async (req, res) => {
         await admin.save();
       });
 
-      res.status(200).json({ url: "http://localhost:5173/orders" });
+      res
+        .status(200)
+        .json({ url: "https://shopease-36jj.onrender.com/orders" });
     }
   } catch (error) {
     await session.abortTransaction();
