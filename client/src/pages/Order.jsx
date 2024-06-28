@@ -24,7 +24,7 @@ const Order = () => {
       };
 
       const response = await axios.get(
-        `http://localhost:4000/api/user/getOrders?date=${date}`,
+        `/api/user/getOrders?date=${date}`,
         config
       );
       const ordersData = response.data.orders.map((order) => ({
@@ -126,20 +126,19 @@ const Order = () => {
                   </div>
                   {/* Expanded details section */}
                   <div className="mt-4">
-                    <div className="mt-2">
-                      <p className="font-semibold">Products:</p>
-                      <ul className="list-disc list-inside">
-                        {order.products.map((product) => (
-                          <li>
-                            {product.name} - ₹
-                            {calculateDiscountedPrice(
-                              product.price,
-                              product.discount
-                            )}
-                          </li>
-                        ))}
-                      </ul>
+                    <div className="mt-4">
+                      <div className="mt-2">
+                        <p className="font-semibold">Products:</p>
+                        <div className="list-disc list-inside">
+                          {order.products.map((product, index) => (
+                            <li key={index} className="text-gray-600">
+                              {product.name} - {product.price}
+                            </li>
+                          ))}
+                        </div>
+                      </div>
                     </div>
+
                     {order.status === "Placed" && (
                       <button
                         onClick={(e) => {

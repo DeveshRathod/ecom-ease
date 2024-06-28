@@ -14,14 +14,11 @@ const AdminPrivateRoute = () => {
       try {
         const token = localStorage.getItem("token");
         if (token) {
-          const response = await axios.get(
-            "http://localhost:4000/api/user/me",
-            {
-              headers: {
-                authorization: `${token}`,
-              },
-            }
-          );
+          const response = await axios.get("/api/user/me", {
+            headers: {
+              authorization: `${token}`,
+            },
+          });
 
           const userData = await response.data;
           dispatch(setUser(userData.currentUser));

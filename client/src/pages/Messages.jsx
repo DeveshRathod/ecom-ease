@@ -2,14 +2,15 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Layout from "../components/Layout";
 import { useDispatch, useSelector } from "react-redux";
-import { setNotifications } from "../store/reducers/notification.slice";
 import { Link } from "react-router-dom";
 import noMessage from "../data/images/noMessage.png";
+import {
+  setNotifications,
+  setNewNotificationCount,
+} from "../store/reducers/notification.slice";
 
 const Messages = () => {
   const [messages, setMessages] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [selectedIds, setSelectedIds] = useState([]);
   const dispatch = useDispatch();
   const [isEmpty, setIsEmpty] = useState(false);
@@ -27,32 +28,47 @@ const Messages = () => {
       try {
         const token = localStorage.getItem("token");
 
-        const response = await axios.get(
-          "http://localhost:4000/api/user/notifications",
-          {
-            headers: {
-              authorization: `${token}`,
-            },
-          }
-        );
+        const response = await axios.get("/api/user/notifications", {
+          headers: {
+            authorization: `${token}`,
+          },
+        });
 
         setMessages(response.data.notifications);
         dispatch(setNotifications(response.data.notifications));
-        setLoading(false);
+        dispatch(setNewNotificationCount(response.data.unreadCount));
         if (response.data.notifications.length === 0) {
           setIsEmpty(true);
         } else {
           setIsEmpty(false);
         }
       } catch (err) {
-        setError(err.message);
         setIsEmpty(true);
-        setLoading(false);
       }
     };
 
     fetchMessages();
-  }, []);
+  }, [dispatch]);
+
+  if (window.location.pathname === "/messages") {
+    useEffect(() => {
+      const markAsRead = async () => {
+        try {
+          const token = localStorage.getItem("token");
+
+          const response = await axios.get("/api/user/markAsRead", {
+            headers: {
+              authorization: `${token}`,
+            },
+          });
+
+          dispatch(setNewNotificationCount(0));
+        } catch (err) {}
+      };
+
+      markAsRead();
+    }, [dispatch]);
+  }
 
   const toggleSelect = (notificationId) => {
     if (selectedIds.includes(notificationId)) {
@@ -67,9 +83,35 @@ const Messages = () => {
     setSelectedIds(allIds);
   };
 
-  const deleteSelected = () => {
-    console.log("Selected notification IDs:", selectedIds);
-    // Implement delete functionality here
+  const deleteSelected = async () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const response = await axios.delete(
+          "http://localhost:4000/api/user/deleteNotifications",
+          {
+            data: {
+              notificationIds: selectedIds,
+            },
+            headers: {
+              authorization: `${token}`,
+            },
+          }
+        );
+
+        if (response.status === 200) {
+          dispatch(setNotifications(response.data));
+          setMessages(response.data);
+          if (response.data.length === 0) {
+            setIsEmpty(true);
+          }
+          setIsEmpty(true);
+          setSelectedIds([]);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
 
   return (

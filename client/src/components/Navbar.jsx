@@ -6,7 +6,10 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { setCart } from "../store/reducers/cart.slice";
-import { setNotifications } from "../store/reducers/notification.slice";
+import {
+  setNotifications,
+  setNewNotificationCount,
+} from "../store/reducers/notification.slice";
 
 const Navbar = () => {
   const currentUser = useSelector((state) => state.user.currentUser);
@@ -14,62 +17,58 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
-  const [notificationCount, setNotificationCount] = useState(0);
+  const notificationCount = useSelector(
+    (state) => state.notification.newNotificationCount
+  );
 
   useEffect(() => {
     const fetchMessages = async () => {
       try {
         const token = localStorage.getItem("token");
 
-        const response = await axios.get(
-          "http://localhost:4000/api/user/notifications",
-          {
-            headers: {
-              authorization: `${token}`,
-            },
-          }
-        );
+        const response = await axios.get("/api/user/notifications", {
+          headers: {
+            authorization: `${token}`,
+          },
+        });
 
         dispatch(setNotifications(response.data.notifications));
-        setNotificationCount(response.data.unreadCount);
+        dispatch(setNewNotificationCount(response.data.unreadCount));
       } catch (err) {
         setLoading(false);
       }
     };
 
     fetchMessages();
-  }, [setNotifications]);
+  }, [dispatch]);
 
   useEffect(() => {
     const markAsRead = async () => {
       try {
         const token = localStorage.getItem("token");
 
-        const response = await axios.get(
-          "http://localhost:4000/api/user/markAsRead",
-          {
-            headers: {
-              authorization: `${token}`,
-            },
-          }
-        );
+        const response = await axios.get("/api/user/markAsRead", {
+          headers: {
+            authorization: `${token}`,
+          },
+        });
 
-        if (response.statusCode === 200) {
-          setNotificationCount(0);
-        }
+        dispatch(setNewNotificationCount(0));
       } catch (err) {
         setLoading(false);
       }
-    };
 
-    markAsRead();
+      if (window.location.href === "/messages") {
+        markAsRead();
+      }
+    };
   }, []);
 
   useEffect(() => {
     const fetchCart = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/products/getcart",
+          "/api/products/getcart",
 
           {
             headers: {
@@ -86,7 +85,7 @@ const Navbar = () => {
     if (currentUser) {
       fetchCart();
     }
-  }, [setCart]);
+  }, [dispatch]);
 
   let settingUrl = "";
   if (currentUser && currentUser.isAdmin) {

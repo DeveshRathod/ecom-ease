@@ -447,12 +447,12 @@ export const deleteNotifications = async (req, res) => {
     }
 
     user.notifications = user.notifications.filter((notification) => {
-      return !notificationIds.includes(notification._id.toString());
+      return !notificationIds.includes(notification.notificationId);
     });
 
     await user.save();
 
-    res.status(200).json({ message: "Notifications deleted successfully" });
+    res.status(200).json(user.notifications);
   } catch (error) {
     console.error("Error deleting notifications:", error);
     res.status(500).json({ error: "Internal server error" });

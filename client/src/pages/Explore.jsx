@@ -21,7 +21,7 @@ const Explore = () => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/api/products/exploreProducts?category=${category}&searchQuery=${searchQuery}&type=${type}&page=${page}`
+          `/api/products/exploreProducts?category=${category}&searchQuery=${searchQuery}&type=${type}&page=${page}`
         );
 
         const { products, totalPages } = response.data;

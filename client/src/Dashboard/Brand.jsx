@@ -39,10 +39,7 @@ const Brand = () => {
           },
         };
 
-        const response = await axios.get(
-          "http://localhost:4000/api/admin/getAllBrands",
-          config
-        );
+        const response = await axios.get("/api/admin/getAllBrands", config);
         setBrands(response.data.brandData);
       } catch (error) {
         console.error("Error fetching brands:", error);
@@ -76,7 +73,7 @@ const Brand = () => {
       };
 
       const response = await axios.post(
-        "http://localhost:4000/api/admin/addBrand",
+        "/api/admin/addBrand",
         newBrand,
         config
       );
@@ -101,7 +98,7 @@ const Brand = () => {
       const { id } = deleteBrand;
 
       const response = await axios.post(
-        "http://localhost:4000/api/admin/removeBrand",
+        "/api/admin/removeBrand",
         { brandId: parseInt(id), brandName: deleteBrand.name },
         config
       );

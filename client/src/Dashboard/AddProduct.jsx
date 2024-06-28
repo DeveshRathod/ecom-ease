@@ -53,17 +53,14 @@ const AddProduct = () => {
     const token = localStorage.getItem("token");
     if (token) {
       try {
-        const response = await fetch(
-          "http://localhost:4000/api/admin/addProduct",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              authorization: token,
-            },
-            body: JSON.stringify(updatedForm),
-          }
-        );
+        const response = await fetch("/api/admin/addProduct", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: token,
+          },
+          body: JSON.stringify(updatedForm),
+        });
         const data = await response.json();
         if (!data.message) {
           console.log(data);

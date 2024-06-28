@@ -6,23 +6,29 @@ import userRoutes from "./routes/user.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 import productRoutes from "./routes/product.routes.js";
 import paymentRoute from "./routes/payment.routes.js";
+import path from "path";
 
-//configurations
+// configurations
 const app = express();
-app.use(express.static("public"));
 app.use(express.json());
 app.use(cors());
 dotenv.config();
+const __dirname = path.resolve();
 
-//connection to DB
+// connection to DB
 connectionDB();
 
-//routes
+app.listen(4000, () => {
+  console.log("Server Started");
+});
+
+// routes
 app.use("/api/user", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/payment", paymentRoute);
 
-app.listen(4000, () => {
-  console.log(`Server Started`);
+app.use(express.static(path.join(__dirname, "/client/dist")));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
 });

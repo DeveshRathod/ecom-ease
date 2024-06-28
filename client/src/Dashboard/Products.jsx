@@ -15,7 +15,7 @@ const Products = () => {
   const token = localStorage.getItem("token");
 
   const axiosInstance = axios.create({
-    baseURL: "http://localhost:4000/api/admin",
+    baseURL: "/api/admin",
     headers: {
       "Content-Type": "application/json",
       authorization: token ? `${token}` : "",
@@ -28,16 +28,12 @@ const Products = () => {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await axios.post(
-        "http://localhost:4000/api/admin/addProduct",
-        item,
-        {
-          headers: {
-            authorization: `${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await axios.post("/api/admin/addProduct", item, {
+        headers: {
+          authorization: `${token}`,
+          "Content-Type": "application/json",
+        },
+      });
       console.log("Product added successfully:", response.data);
       setShowModal(false);
       setUndoData({});
@@ -59,18 +55,15 @@ const Products = () => {
       const token = localStorage.getItem("token");
       if (token) {
         try {
-          const response = await axios.get(
-            "http://localhost:4000/api/admin/getAllProduct",
-            {
-              headers: {
-                authorization: `${token}`,
-              },
-              params: {
-                searchQuery: searchInput,
-                category: selectedCategory,
-              },
-            }
-          );
+          const response = await axios.get("/api/admin/getAllProduct", {
+            headers: {
+              authorization: `${token}`,
+            },
+            params: {
+              searchQuery: searchInput,
+              category: selectedCategory,
+            },
+          });
           const products = response.data;
           setItems(products);
           setFilteredItems(products);

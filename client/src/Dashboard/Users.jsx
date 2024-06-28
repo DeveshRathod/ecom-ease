@@ -20,7 +20,7 @@ const Users = () => {
       if (token) {
         try {
           const response = await axios.get(
-            `http://localhost:4000/api/admin/getUsers?searchquery=${searchQuery}&page=${currentPage}`,
+            `/api/admin/getUsers?searchquery=${searchQuery}&page=${currentPage}`,
             {
               headers: {
                 authorization: `${token}`,
@@ -70,16 +70,13 @@ const Users = () => {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await axios.delete(
-        `http://localhost:4000/api/admin/deleteUser`,
-        {
-          data: { userId: item._id },
-          headers: {
-            authorization: `${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await axios.delete(`/api/admin/deleteUser`, {
+        data: { userId: item._id },
+        headers: {
+          authorization: `${token}`,
+          "Content-Type": "application/json",
+        },
+      });
     } catch (err) {
       console.error("Error deleting user:", err);
     }
@@ -89,16 +86,12 @@ const Users = () => {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await axios.post(
-        "http://localhost:4000/api/admin/addUser",
-        user,
-        {
-          headers: {
-            authorization: `${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await axios.post("/api/admin/addUser", user, {
+        headers: {
+          authorization: `${token}`,
+          "Content-Type": "application/json",
+        },
+      });
       setShowModal(false);
       setUndoData({});
     } catch (error) {

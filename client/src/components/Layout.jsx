@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import axios from "axios";
 
 const SettingsWrapper = ({ children }) => {
   return (

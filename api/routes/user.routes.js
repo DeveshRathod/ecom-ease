@@ -11,6 +11,7 @@ import {
   getOrders,
   getNotifications,
   markAllNotificationsAsRead,
+  deleteNotifications,
 } from "../controllers/user.controller.js";
 import verifyUser from "../utils/verifyUser.js";
 
@@ -27,5 +28,6 @@ router.delete("/deleteAddress", verifyUser, deleteAddress);
 router.get("/getOrders", verifyUser, getOrders);
 router.get("/notifications", verifyUser, getNotifications);
 router.get("/markAsRead", verifyUser, markAllNotificationsAsRead);
+router.delete("/deleteNotifications", verifyUser, deleteNotifications);
 
 export default router;

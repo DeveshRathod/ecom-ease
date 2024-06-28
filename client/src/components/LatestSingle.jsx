@@ -7,9 +7,7 @@ const LatestSingle = () => {
   useEffect(() => {
     const fetchLatest = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:4000/api/products/newarrivals"
-        );
+        const response = await axios.get("/api/products/newarrivals");
         const latestData = await response.data;
         setproduct(latestData);
       } catch (error) {

@@ -32,10 +32,9 @@ const Product = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axios.post(
-          "http://localhost:4000/api/products/getProduct",
-          { productId: id }
-        );
+        const response = await axios.post("/api/products/getProduct", {
+          productId: id,
+        });
         setProduct(response.data);
         if (response.data) {
           setIsEmpty(false);
@@ -68,7 +67,7 @@ const Product = () => {
       }
 
       const response = await axios.post(
-        "http://localhost:4000/api/products/addToCart",
+        "/api/products/addToCart",
         { productId: id, colorIndex: color * 1 },
         { headers: { authorization: token } }
       );
@@ -86,7 +85,7 @@ const Product = () => {
       const token = localStorage.getItem("token");
 
       const response = await axios.post(
-        "http://localhost:4000/api/products/deleteCart",
+        "/api/products/deleteCart",
         { colorIndex: color * 1, productId: id },
         { headers: { authorization: token } }
       );

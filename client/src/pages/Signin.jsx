@@ -22,7 +22,7 @@ const Signin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:4000/api/user/signin", {
+      const response = await fetch("/api/user/signin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -43,7 +43,6 @@ const Signin = () => {
       setEmail("");
       setPassword("");
       dispatch(setUser(data.currentUser));
-      console.log(data);
       navigate("/");
     } catch (error) {
       setError("Cannot sign in");

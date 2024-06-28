@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import LatestSingle from "./LatestSingle";
 
 const Latest = () => {
   const [latest, setLatest] = useState([]);
@@ -9,9 +8,7 @@ const Latest = () => {
   useEffect(() => {
     const fetchLatest = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:4000/api/products/newarrivals"
-        );
+        const response = await axios.get("/api/products/newarrivals");
         const latestData = await response.data;
         setLatest(latestData);
       } catch (error) {

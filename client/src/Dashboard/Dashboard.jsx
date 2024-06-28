@@ -17,14 +17,11 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchDetails = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:4000/api/admin/getDashboardDetails",
-          {
-            headers: {
-              authorization: `${localStorage.getItem("token")}`,
-            },
-          }
-        );
+        const response = await axios.get("/api/admin/getDashboardDetails", {
+          headers: {
+            authorization: `${localStorage.getItem("token")}`,
+          },
+        });
         const detailsData = response.data;
         setDetails(detailsData);
       } catch (error) {

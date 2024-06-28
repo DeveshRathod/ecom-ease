@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../store/reducers/user.slice.js";
 import {
@@ -131,7 +131,7 @@ const Settings = () => {
           : formData.background;
         const newProfile = selectedFile ? profileUrl : formData.profile;
         const response = await axios.put(
-          "http://localhost:4000/api/user/update",
+          "/api/user/update",
           { ...formData, profile: newProfile, background: newBackground },
           {
             headers: {

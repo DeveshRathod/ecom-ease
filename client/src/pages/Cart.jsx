@@ -34,14 +34,11 @@ const Cart = () => {
     const fetchCart = async () => {
       const token = localStorage.getItem("token");
       try {
-        const response = await axios.get(
-          "http://localhost:4000/api/products/getCart",
-          {
-            headers: {
-              authorization: `${token}`,
-            },
-          }
-        );
+        const response = await axios.get("/api/products/getCart", {
+          headers: {
+            authorization: `${token}`,
+          },
+        });
         setCartItems(response.data);
         if (response.data.length === 0) {
           setIsEmpty(true);
@@ -81,14 +78,11 @@ const Cart = () => {
       const token = localStorage.getItem("token");
       if (token) {
         try {
-          const response = await axios.get(
-            "http://localhost:4000/api/user/getAddress",
-            {
-              headers: {
-                authorization: `${token}`,
-              },
-            }
-          );
+          const response = await axios.get("/api/user/getAddress", {
+            headers: {
+              authorization: `${token}`,
+            },
+          });
           setAddresses(response.data);
           if (response.data.length > 0) {
             setSelectedAddress(response.data[0]._id);
@@ -112,7 +106,7 @@ const Cart = () => {
     const token = localStorage.getItem("token");
     try {
       const response = await axios.post(
-        `http://localhost:4000/api/products/deleteCart`,
+        `/api/products/deleteCart`,
         { productId, colorIndex },
         {
           headers: {
@@ -169,13 +163,14 @@ const Cart = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        "http://localhost:4000/api/payment/placeOrder",
+        "/api/payment/placeOrder",
         {
           totalAmount: totalAmount,
           product: products,
           typeOfPayment,
           address: selectedAddress,
           userId: currentUser._id,
+          url: "http://localhost:5173/cart",
         },
         {
           headers: {

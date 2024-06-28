@@ -21,10 +21,9 @@ const BuySingle = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axios.post(
-          "http://localhost:4000/api/products/getProduct",
-          { productId: id }
-        );
+        const response = await axios.post("/api/products/getProduct", {
+          productId: id,
+        });
         setProduct(response.data);
       } catch (error) {
         setIsEmpty(true);
@@ -56,14 +55,11 @@ const BuySingle = () => {
       const token = localStorage.getItem("token");
       if (token) {
         try {
-          const response = await axios.get(
-            "http://localhost:4000/api/user/getAddress",
-            {
-              headers: {
-                authorization: `${token}`,
-              },
-            }
-          );
+          const response = await axios.get("/api/user/getAddress", {
+            headers: {
+              authorization: `${token}`,
+            },
+          });
           setAddresses(response.data);
           if (response.data.length > 0) {
             setSelectedAddress(response.data[0]._id);
@@ -94,7 +90,7 @@ const BuySingle = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        "http://localhost:4000/api/payment/placeOrder",
+        "/api/payment/placeOrder",
         {
           totalAmount,
           product: [
@@ -112,6 +108,7 @@ const BuySingle = () => {
           typeOfPayment,
           address: selectedAddress,
           userId: currentUser._id,
+          url: `http://localhost:5173/buy/${id}/${colorIndex}`,
         },
         {
           headers: {

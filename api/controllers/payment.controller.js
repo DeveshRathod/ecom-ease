@@ -23,7 +23,8 @@ const generateNotification = (message, sender) => {
 };
 
 export const pay = async (req, res) => {
-  const { totalAmount, product, typeOfPayment, userId, address } = req.body;
+  const { totalAmount, product, typeOfPayment, userId, address, url } =
+    req.body;
   const currentUser = req.user;
 
   const calculateFinalPrice = (price, discount) => {
@@ -83,8 +84,8 @@ export const pay = async (req, res) => {
         payment_method_types: ["card"],
         line_items: line_items,
         mode: "payment",
-        success_url: "http://localhost:5173/",
-        cancel_url: "http://localhost:5173/setting",
+        success_url: "http://localhost:5173/orders",
+        cancel_url: url,
       });
 
       const createdOrderId = await createOrderInMongo(session);

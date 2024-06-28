@@ -1,10 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
 
 const initialState = {
   notifications: [],
-  loading: false,
-  error: null,
+  newNotificationCount: 0,
 };
 
 export const notificationSlice = createSlice({
@@ -14,9 +12,13 @@ export const notificationSlice = createSlice({
     setNotifications: (state, action) => {
       state.notifications = action.payload;
     },
+    setNewNotificationCount: (state, action) => {
+      state.newNotificationCount = action.payload;
+    },
   },
 });
 
-export const { setNotifications } = notificationSlice.actions;
+export const { setNotifications, setNewNotificationCount } =
+  notificationSlice.actions;
 
 export default notificationSlice.reducer;

@@ -19,14 +19,11 @@ const Address = () => {
       const token = localStorage.getItem("token");
       if (token) {
         try {
-          const response = await axios.get(
-            "http://localhost:4000/api/user/getAddress",
-            {
-              headers: {
-                authorization: `${token}`,
-              },
-            }
-          );
+          const response = await axios.get("/api/user/getAddress", {
+            headers: {
+              authorization: `${token}`,
+            },
+          });
           setAddresses(response.data);
         } catch (error) {
           console.log(error);
@@ -43,17 +40,14 @@ const Address = () => {
     const token = localStorage.getItem("token");
     if (token) {
       try {
-        const response = await axios.delete(
-          `http://localhost:4000/api/user/deleteAddress`,
-          {
-            headers: {
-              authorization: `${token}`,
-            },
-            data: {
-              addressId: addressId,
-            },
-          }
-        );
+        const response = await axios.delete(`/api/user/deleteAddress`, {
+          headers: {
+            authorization: `${token}`,
+          },
+          data: {
+            addressId: addressId,
+          },
+        });
 
         setAddresses(addresses.filter((address) => address._id !== addressId));
       } catch (error) {
@@ -84,15 +78,11 @@ const Address = () => {
     const token = localStorage.getItem("token");
     if (token) {
       try {
-        const response = await axios.post(
-          "http://localhost:4000/api/user/addAddress",
-          addressData,
-          {
-            headers: {
-              authorization: `${token}`,
-            },
-          }
-        );
+        const response = await axios.post("/api/user/addAddress", addressData, {
+          headers: {
+            authorization: `${token}`,
+          },
+        });
         setAddresses([...addresses, response.data.address]);
         setShowForm(false);
         setAddressData({
