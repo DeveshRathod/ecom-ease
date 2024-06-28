@@ -49,7 +49,6 @@ const BuySingle = () => {
     }
   }, [product]);
 
-  console.log(totalAmount);
   useEffect(() => {
     const fetchAddress = async () => {
       const token = localStorage.getItem("token");
@@ -108,7 +107,7 @@ const BuySingle = () => {
           typeOfPayment,
           address: selectedAddress,
           userId: currentUser._id,
-          url: `http://localhost:5173/buy/${id}/${colorIndex}`,
+          url: `https://shopease-36jj.onrender.com/buy/${id}/${colorIndex}`,
         },
         {
           headers: {

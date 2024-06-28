@@ -87,17 +87,14 @@ const Messages = () => {
     const token = localStorage.getItem("token");
     if (token) {
       try {
-        const response = await axios.delete(
-          "http://localhost:4000/api/user/deleteNotifications",
-          {
-            data: {
-              notificationIds: selectedIds,
-            },
-            headers: {
-              authorization: `${token}`,
-            },
-          }
-        );
+        const response = await axios.delete("/api/user/deleteNotifications", {
+          data: {
+            notificationIds: selectedIds,
+          },
+          headers: {
+            authorization: `${token}`,
+          },
+        });
 
         if (response.status === 200) {
           dispatch(setNotifications(response.data));

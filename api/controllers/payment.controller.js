@@ -84,7 +84,7 @@ export const pay = async (req, res) => {
         payment_method_types: ["card"],
         line_items: line_items,
         mode: "payment",
-        success_url: "http://localhost:5173/orders",
+        success_url: "https://shopease-36jj.onrender.com/orders",
         cancel_url: url,
       });
 

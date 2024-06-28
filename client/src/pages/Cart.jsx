@@ -170,7 +170,7 @@ const Cart = () => {
           typeOfPayment,
           address: selectedAddress,
           userId: currentUser._id,
-          url: "http://localhost:5173/cart",
+          url: "https://shopease-36jj.onrender.com/cart",
         },
         {
           headers: {
