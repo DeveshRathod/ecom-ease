@@ -1,8 +1,13 @@
+import Brand from "../database/models/brands.model.js";
 import Product from "../database/models/product.model.js";
 import User from "../database/models/user.model.js";
 
+function escapeRegex(text) {
+  return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+}
+
 export const getAllNewArrival = async (req, res) => {
-  const categories = ["mobiles", "fashion", "electronics", "toys", "furniture"];
+  const categories = ["mobiles", "travels", "electronics", "toys"];
   try {
     const latestEntries = await Product.aggregate([
       { $match: { category: { $in: categories } } },
@@ -25,6 +30,68 @@ export const getAllNewArrival = async (req, res) => {
     return res.status(200).json(resultArray);
   } catch (error) {
     console.error("Error fetching latest entries:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const getLatestFurnitureProduct = async (req, res) => {
+  try {
+    const latestFurnitureProduct = await Product.findOne({
+      category: "furniture",
+    }).sort({ createdAt: -1 });
+
+    if (!latestFurnitureProduct) {
+      return res.status(404).json({ message: "No furniture products found" });
+    }
+
+    return res.status(200).json(latestFurnitureProduct);
+  } catch (error) {
+    console.error("Error fetching latest furniture product:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const getAllFashion = async (req, res) => {
+  try {
+    const latestProduct = await Product.findOne({ category: "fashion" }).sort({
+      createdAt: -1,
+    });
+
+    if (!latestProduct) {
+      return res.status(404).json({ message: "No fashion products found" });
+    }
+
+    const { brand } = latestProduct;
+
+    const productTypes = ["male", "female", "kids"];
+
+    const latestProductsByType = await Product.aggregate([
+      { $match: { brand, category: "fashion" } },
+      { $sort: { createdAt: -1 } },
+      {
+        $group: {
+          _id: "$type",
+          latestEntry: { $first: "$$ROOT" },
+        },
+      },
+      { $match: { _id: { $in: productTypes } } },
+    ]);
+
+    const resultArray = productTypes
+      .map((type) => {
+        const foundEntry = latestProductsByType.find(
+          (entry) => entry._id === type
+        );
+        return foundEntry ? foundEntry.latestEntry : null;
+      })
+      .filter(Boolean);
+
+    return res.status(200).json({ resultArray, brand });
+  } catch (error) {
+    console.error(
+      "Error fetching latest fashion products by brand and type:",
+      error
+    );
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -174,5 +241,52 @@ export const deleteCart = async (req, res) => {
   } catch (error) {
     console.error("Error deleting product from cart:", error);
     return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const suggestion = async (req, res) => {
+  const { searchQuery } = req.query;
+
+  if (
+    !searchQuery ||
+    searchQuery.trim() === "" ||
+    /[!@#$%^&*()_+={}\[\]:;"'<>,.?/\\|]/.test(searchQuery)
+  ) {
+    return res.json([]);
+  }
+
+  try {
+    const products = await Product.find({
+      $or: [
+        { name: { $regex: escapeRegex(searchQuery), $options: "i" } },
+        { brand: { $regex: escapeRegex(searchQuery), $options: "i" } },
+      ],
+    }).limit(4);
+
+    const suggestions = products.map((product) => {
+      const discount = product.discount || 0;
+      const discountedPrice = product.price - (product.price * discount) / 100;
+      return {
+        name: product.name,
+        price: discountedPrice.toFixed(2),
+      };
+    });
+
+    res.json(suggestions);
+  } catch (error) {
+    console.error("Error searching for suggestions:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export const allImages = async (req, res) => {
+  try {
+    const images = await Brand.find();
+
+    const imageUrls = images.map((image) => image.url);
+    res.json(imageUrls);
+  } catch (error) {
+    console.error("Error fetching images:", error);
+    res.status(500).json({ error: "Failed to fetch images" });
   }
 };

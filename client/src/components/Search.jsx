@@ -1,21 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
+import axios from "axios";
 
-const Search = ({ searchQuery, setSearchQuery }) => {
+const Search = ({ searchQuery, setSearchQuery, setClicked }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
+
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      if (!searchQuery || searchQuery.trim() === "") {
+        setSuggestions([]);
+        return;
+      }
+
+      try {
+        const response = await axios.get(
+          `/api/products/getSuggestion?searchQuery=${searchQuery}`
+        );
+        setSuggestions(response.data);
+      } catch (error) {
+        console.error("Error fetching suggestions:", error);
+        setSuggestions([]);
+      }
+    };
+
+    fetchSuggestions();
+  }, [searchQuery]);
 
   const handleInputChange = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
-
-    setSuggestions([
-      "Suggestion 1",
-      "Suggestion 2",
-      "Suggestion 3",
-      "Suggestion 4",
-    ]);
   };
 
   const handleKeyDown = (e) => {
@@ -24,23 +39,25 @@ const Search = ({ searchQuery, setSearchQuery }) => {
       setSelectedSuggestionIndex((prevIndex) =>
         prevIndex < suggestions.length - 1 ? prevIndex + 1 : prevIndex
       );
-      setSearchQuery(suggestions[selectedSuggestionIndex + 1] || searchQuery);
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       setSelectedSuggestionIndex((prevIndex) =>
         prevIndex > 0 ? prevIndex - 1 : prevIndex
       );
-      setSearchQuery(suggestions[selectedSuggestionIndex - 1] || searchQuery);
     } else if (e.key === "Enter") {
       if (selectedSuggestionIndex !== -1) {
-        setSearchQuery(suggestions[selectedSuggestionIndex]);
+        setSearchQuery(suggestions[selectedSuggestionIndex].name);
         setSuggestions([]);
+        setClicked(true);
+      } else {
+        setClicked(true);
+        setSearchQuery("");
       }
     }
   };
 
   const handleSuggestionClick = (suggestion) => {
-    setSearchQuery(suggestion);
+    setSearchQuery(suggestion.name);
     setSuggestions([]);
   };
 
@@ -70,7 +87,14 @@ const Search = ({ searchQuery, setSearchQuery }) => {
                 }`}
                 onClick={() => handleSuggestionClick(suggestion)}
               >
-                {suggestion}
+                <div className="flex justify-between">
+                  <p>
+                    {suggestion.name.length > 30
+                      ? `${suggestion.name.slice(0, 30)}...`
+                      : suggestion.name}
+                  </p>
+                  <p>{suggestion.price}</p>
+                </div>
               </div>
             ))}
           </div>

@@ -143,8 +143,15 @@ const Brand = () => {
                 <div className="flex flex-wrap w-full p-2 justify-center md:justify-start sm:justify-start gap-4">
                   {brands &&
                     brands.map((brand) => (
-                      <Card key={brand.brandId} sx={{ maxWidth: 250 }}>
-                        <CardHeader title={brand.name} />
+                      <Card key={brand.brandId} sx={{ maxWidth: 230 }}>
+                        <CardHeader
+                          title={brand.name}
+                          sx={{
+                            "& .MuiCardHeader-title": {
+                              fontSize: "1rem",
+                            },
+                          }}
+                        />
                         <CardMedia
                           component="img"
                           height="200"

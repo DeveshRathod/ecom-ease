@@ -3,6 +3,7 @@ import Layout from "../components/Layout";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
+import Loader from "../components/Loader";
 
 const BuySingle = () => {
   const { id, colorIndex } = useParams();
@@ -13,6 +14,7 @@ const BuySingle = () => {
   const [totalAmount, setTotalAmount] = useState(0);
   const [discountedPrice, setDiscountedPrice] = useState(0);
   const [discountAmount, setDiscountAmount] = useState(0);
+  const [loading, setLoading] = useState(true);
   const [isEmpty, setIsEmpty] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -51,6 +53,7 @@ const BuySingle = () => {
 
   useEffect(() => {
     const fetchAddress = async () => {
+      setLoading(true);
       const token = localStorage.getItem("token");
       if (token) {
         try {
@@ -70,6 +73,8 @@ const BuySingle = () => {
           setIsEmpty(true);
           console.error("Failed to fetch addresses", error);
           navigate("/signin");
+        } finally {
+          setTimeout(() => setLoading(false), 2000);
         }
       } else {
         navigate("/signin");
@@ -123,147 +128,144 @@ const BuySingle = () => {
     }
   };
 
-  if (!product) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <Layout>
-      <div className="sm:pl-20 pl-10 pr-10 pt-10 sm:pr-20 flex flex-col sm:flex-row md:flex-row w-full">
-        {/* Left Section: Product Details */}
-        <div className="flex-1 p-4 m-2 border rounded-lg overflow-auto">
-          <h2 className="text-lg font-semibold mb-4">Your Product</h2>
-          <div className="flex flex-col max-h-[580px] overflow-auto">
-            <div className="flex flex-col sm:flex-row items-start mb-4 p-2 relative">
-              <img
-                src={product.images[colorIndex].images[0].url}
-                alt={product.name}
-                className="w-20 h-20 mr-4 sm:w-24 sm:h-24 object-cover"
-              />
-              <div className="flex flex-col justify-between w-full">
-                <div>
-                  <h2 className="text-lg font-semibold">
-                    {product.name} ({product.images[colorIndex].name})
-                  </h2>
-                  <p className="text-gray-600">by {product.brand}</p>
-                  {product.stock - product.sold <= 5 && (
-                    <p className="text-red-500 text-xs">
-                      Only {product.stock - product.sold} left
-                    </p>
-                  )}
-                </div>
-                <div className="flex justify-start items-center mt-2">
-                  <p className="text-xs sm:text-lg">{discountedPrice}</p>
-                  {product.discount !== 0 && (
-                    <p className="text-gray-500 line-through text-xs pl-3">
-                      {product.price}
-                    </p>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Right Section: Address Selection and Billing Info */}
-        <div className="flex-1 p-4 m-2 border rounded-lg max-w-full">
-          {/* Address Selection */}
-          <div className="mb-6">
-            <h2 className="text-lg font-semibold mb-4">
-              Select Delivery Address
-            </h2>
-            <div className="max-h-64 overflow-auto border border-gray-200 rounded-md p-2">
-              {addresses.length > 0 ? (
-                addresses.map((address) => (
-                  <div key={address._id} className="w-full mb-3">
-                    <input
-                      type="radio"
-                      id={address._id}
-                      name="address"
-                      value={address._id}
-                      onChange={handleAddressChange}
-                      checked={selectedAddress === address._id}
-                      className="hidden"
-                    />
-                    <label
-                      htmlFor={address._id}
-                      className="w-full block cursor-pointer"
-                    >
-                      <div
-                        className={`border p-4 rounded ${
-                          selectedAddress === address._id
-                            ? "border-blue-500"
-                            : ""
-                        } hover:border-blue-500 transition duration-200`}
-                      >
-                        <button className="px-3 py-1 bg-gray-200 text-gray-600 rounded-sm mb-2">
-                          {address.type}
-                        </button>
-                        <div className="flex justify-between items-center">
-                          <h1 className="font-semibold">{address.name}</h1>
-                          <p>{address.mobile}</p>
-                        </div>
-                        <p className="text-xs text-gray-700 mt-2">
-                          {address.addressLine1}, {address.addressLine2},{" "}
-                          {address.addressLine3}, {address.pincode}
-                        </p>
-                      </div>
-                    </label>
+      {loading ? (
+        <Loader />
+      ) : (
+        <div className="sm:pl-20 pl-10 pr-10 pt-10 sm:pr-20 flex flex-col sm:flex-row md:flex-row w-full">
+          <div className="flex-1 p-4 m-2 border rounded-lg overflow-auto">
+            <h2 className="text-lg font-semibold mb-4">Your Product</h2>
+            <div className="flex flex-col max-h-[580px] overflow-auto">
+              <div className="flex flex-col sm:flex-row items-start mb-4 p-2 relative">
+                <img
+                  src={product.images[colorIndex].images[0].url}
+                  alt={product.name}
+                  className="w-20 h-20 mr-4 sm:w-24 sm:h-24 object-cover"
+                />
+                <div className="flex flex-col justify-between w-full">
+                  <div>
+                    <h2 className="text-lg font-semibold">
+                      {product.name} ({product.images[colorIndex].name})
+                    </h2>
+                    <p className="text-gray-600">by {product.brand}</p>
+                    {product.stock - product.sold <= 5 && (
+                      <p className="text-red-500 text-xs">
+                        Only {product.stock - product.sold} left
+                      </p>
+                    )}
                   </div>
-                ))
-              ) : (
-                <div>No addresses found. Please add an address.</div>
-              )}
+                  <div className="flex justify-start items-center mt-2">
+                    <p className="text-xs sm:text-lg">{discountedPrice}</p>
+                    {product.discount !== 0 && (
+                      <p className="text-gray-500 line-through text-xs pl-3">
+                        {product.price}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Billing Info */}
-          <div>
-            <h2 className="text-lg font-semibold mb-4">Billing Info</h2>
-            <div className="text-sm mb-4 space-y-2">
-              <div className="flex justify-between">
-                <p>Total Price:</p>
-                <p className="font-medium">{product.price}</p>
-              </div>
-              <div className="flex justify-between">
-                <p>Total Discount:</p>
-                <p className="text-red-500">-{discountAmount}</p>
-              </div>
-              <div className="flex justify-between">
-                <p>Delivery Charges:</p>
-                <p className="font-medium">{deliveryCharges}</p>
-              </div>
-              <div className="flex justify-between text-base font-semibold">
-                <p>Total Amount:</p>
-                <p className="text-blue-600">Rs.{totalAmount.toFixed(2)}</p>
+          <div className="flex-1 p-4 m-2 border rounded-lg max-w-full">
+            {/* Address Selection */}
+            <div className="mb-6">
+              <h2 className="text-lg font-semibold mb-4">
+                Select Delivery Address
+              </h2>
+              <div className="max-h-64 overflow-auto border border-gray-200 rounded-md p-2">
+                {addresses.length > 0 ? (
+                  addresses.map((address) => (
+                    <div key={address._id} className="w-full mb-3">
+                      <input
+                        type="radio"
+                        id={address._id}
+                        name="address"
+                        value={address._id}
+                        onChange={handleAddressChange}
+                        checked={selectedAddress === address._id}
+                        className="hidden"
+                      />
+                      <label
+                        htmlFor={address._id}
+                        className="w-full block cursor-pointer"
+                      >
+                        <div
+                          className={`border p-4 rounded ${
+                            selectedAddress === address._id
+                              ? "border-blue-500"
+                              : ""
+                          } hover:border-blue-500 transition duration-200`}
+                        >
+                          <button className="px-3 py-1 bg-gray-200 text-gray-600 rounded-sm mb-2">
+                            {address.type}
+                          </button>
+                          <div className="flex justify-between items-center">
+                            <h1 className="font-semibold">{address.name}</h1>
+                            <p>{address.mobile}</p>
+                          </div>
+                          <p className="text-xs text-gray-700 mt-2">
+                            {address.addressLine1}, {address.addressLine2},{" "}
+                            {address.addressLine3}, {address.pincode}
+                          </p>
+                        </div>
+                      </label>
+                    </div>
+                  ))
+                ) : (
+                  <div>No addresses found. Please add an address.</div>
+                )}
               </div>
             </div>
-            <button
-              className={`mt-4 w-full py-2 px-4 font-semibold rounded border ${
-                isEmpty
-                  ? "bg-gray-600 text-white border-black"
-                  : "bg-white text-black border-black hover:bg-black hover:text-white hover:border-black"
-              }`}
-              onClick={() => proceedPayment("COD")}
-              disabled={isEmpty}
-            >
-              Buy Cash On Delivery
-            </button>
-            <p className="text-center my-4">Or</p>
-            <button
-              className={`w-full py-2 px-4 font-semibold rounded border ${
-                isEmpty
-                  ? "bg-gray-600 text-white border-black"
-                  : "bg-black text-white hover:bg-white hover:text-black hover:border-black"
-              }`}
-              onClick={() => proceedPayment("Stripe")}
-              disabled={isEmpty}
-            >
-              Proceed to Payment
-            </button>
+
+            <div>
+              <h2 className="text-lg font-semibold mb-4">Billing Info</h2>
+              <div className="text-sm mb-4 space-y-2">
+                <div className="flex justify-between">
+                  <p>Total Price:</p>
+                  <p className="font-medium">{product.price}</p>
+                </div>
+                <div className="flex justify-between">
+                  <p>Total Discount:</p>
+                  <p className="text-red-500">-{discountAmount}</p>
+                </div>
+                <div className="flex justify-between">
+                  <p>Delivery Charges:</p>
+                  <p className="font-medium">{deliveryCharges}</p>
+                </div>
+                <div className="flex justify-between text-base font-semibold">
+                  <p>Total Amount:</p>
+                  <p className="text-blue-600">Rs.{totalAmount.toFixed(2)}</p>
+                </div>
+              </div>
+              <button
+                className={`mt-4 w-full py-2 px-4 font-semibold rounded border ${
+                  isEmpty
+                    ? "bg-gray-600 text-white border-black"
+                    : "bg-white text-black border-black hover:bg-black hover:text-white hover:border-black"
+                }`}
+                onClick={() => proceedPayment("COD")}
+                disabled={isEmpty}
+              >
+                Buy Cash On Delivery
+              </button>
+              <p className="text-center my-4">Or</p>
+              <button
+                className={`w-full py-2 px-4 font-semibold rounded border ${
+                  isEmpty
+                    ? "bg-gray-600 text-white border-black"
+                    : "bg-black text-white hover:bg-white hover:text-black hover:border-black"
+                }`}
+                onClick={() => proceedPayment("Stripe")}
+                disabled={isEmpty}
+              >
+                Proceed to Payment
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </Layout>
   );
 };

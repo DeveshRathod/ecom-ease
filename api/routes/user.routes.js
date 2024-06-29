@@ -12,6 +12,7 @@ import {
   getNotifications,
   markAllNotificationsAsRead,
   deleteNotifications,
+  cancelOrder,
 } from "../controllers/user.controller.js";
 import verifyUser from "../utils/verifyUser.js";
 
@@ -26,6 +27,7 @@ router.get("/getAddress", verifyUser, getAddress);
 router.post("/addAddress", verifyUser, addAddress);
 router.delete("/deleteAddress", verifyUser, deleteAddress);
 router.get("/getOrders", verifyUser, getOrders);
+router.post("/cancelOrder", verifyUser, cancelOrder);
 router.get("/notifications", verifyUser, getNotifications);
 router.get("/markAsRead", verifyUser, markAllNotificationsAsRead);
 router.delete("/deleteNotifications", verifyUser, deleteNotifications);

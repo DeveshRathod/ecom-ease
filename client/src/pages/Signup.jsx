@@ -3,6 +3,7 @@ import Authwrapper from "../components/Authwrapper";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUser } from "../store/reducers/user.slice";
+import Message from "../components/Message";
 
 const Signup = () => {
   const [firstName, setFirstName] = useState("");
@@ -11,6 +12,7 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -32,6 +34,14 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setSuccess("");
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
     try {
       const response = await fetch("/api/user/signup", {
         method: "POST",
@@ -46,30 +56,32 @@ const Signup = () => {
           confirmPassword: confirmPassword,
         }),
       });
+
       if (!response.ok) {
-        setError("Something went wrong");
+        const errorData = await response.json();
+        setError(errorData.message || "Something went wrong");
         return;
       }
+
       const data = await response.json();
       localStorage.setItem("token", data.token);
       const user = JSON.stringify(data.currentUser);
       localStorage.setItem("currentUser", user);
       dispatch(setUser(data.currentUser));
+
       setFirstName("");
       setLastName("");
       setEmail("");
       setPassword("");
       setConfirmPassword("");
-      navigate("/");
+      setSuccess("Signup successful! Redirecting to home page...");
+
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
     } catch (error) {
-      setError("Cannot sign up");
-      setFirstName("");
-      setLastName("");
-      setEmail("");
-      setPassword("");
-      setConfirmPassword("");
-      console.log(error.message);
-      return;
+      setError("Cannot sign up. Please try again.");
+      console.error(error.message);
     }
   };
 
@@ -91,7 +103,6 @@ const Signup = () => {
               placeholder="First Name"
             />
           </div>
-
           <div className="relative">
             <input
               type="text"
@@ -102,7 +113,6 @@ const Signup = () => {
               placeholder="Last Name"
             />
           </div>
-
           <div className="relative">
             <input
               type="email"
@@ -133,9 +143,25 @@ const Signup = () => {
               placeholder="Confirm Password"
             />
           </div>
+          {error && (
+            <Message
+              message={error}
+              setShowModal={setError}
+              showModel={error}
+              isError={true}
+            />
+          )}
+          {success && (
+            <Message
+              message={success}
+              setShowModal={setSuccess}
+              showModel={success}
+              isError={false}
+            />
+          )}
           <button
             type="submit"
-            className="w-full p-3 rounded-md bg-[#FFBE98] hover:opacity-95"
+            className="bg-black text-white w-full p-3 border border-black hover:border-black rounded-md  hover:bg-white hover:text-black transition duration-300 ease-in-out "
           >
             Sign Up
           </button>

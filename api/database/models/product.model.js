@@ -55,7 +55,7 @@ const productSchema = mongoose.Schema(
     },
     discount: {
       type: Number,
-      default: 0,
+      required: true,
     },
     brand: {
       type: String,

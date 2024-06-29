@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
@@ -9,108 +9,164 @@ import image from "../data/images/heroimag.jpeg";
 import Latest from "../components/Latest";
 import Footer from "../components/Footer";
 import LatestSingle from "../components/LatestSingle";
+import axios from "axios";
+import Loader from "../components/Loader";
+import LatestFashion from "../components/LatestFashion";
 
 const Home = () => {
   const currentUser = useSelector((state) => state.user.currentUser);
+  const [latestProducts, setLatestProducts] = useState([]);
+  const [brands, setBrands] = useState([]);
+  const [latestSingleProduct, setLatestSingleProduct] = useState(null);
+  const [fashionLatest, setFashionLatest] = useState({});
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [
+          brandsResponse,
+          latestResponse,
+          singleProductResponse,
+          fashionResponse,
+        ] = await Promise.all([
+          axios.get("/api/products/getBrands"),
+          axios.get("/api/products/newarrivals"),
+          axios.get("/api/products/newFurniture"),
+          axios.get("/api/products/newfashion"),
+        ]);
+
+        setBrands(brandsResponse.data);
+        setLatestProducts(latestResponse.data);
+        setLatestSingleProduct(singleProductResponse.data);
+        setFashionLatest(fashionResponse.data);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
-    <div>
-      {/* Header */}
-
-      <div>
-        <div className="h-full flex flex-col sm:flex-row items-center justify-center mt-20">
-          <div className="flex-1 flex flex-col justify-center items-center text-center sm:text-left px-6 sm:px-0 ml-0 sm:ml-7">
-            <div>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold mb-4 lg:mb-6 text-gray-800">
-                Welcome to ShopEase
-              </h1>
-              <p className="text-baseg mb-6 text-gray-600">
-                Find everything you need with ease on ShopEase.
-              </p>
-              <div className="flex flex-wrap justify-center sm:justify-start">
-                <Link
-                  to="/explore/all"
-                  className="bg-white text-black px-8 py-3 border border-black hover:border-black rounded-md  hover:bg-black hover:text-white transition duration-300 ease-in-out mr-4 mb-4 sm:mb-0 flex justify-center items-center gap-1"
-                >
-                  <div>
-                    <SearchIcon />
+    <>
+      {loading ? (
+        <Loader />
+      ) : (
+        <>
+          {/* Header */}
+          <div>
+            <div className="h-full flex flex-col sm:flex-row items-center justify-center mt-20">
+              <div className="flex-1 flex flex-col justify-center items-center text-center sm:text-left px-6 sm:px-0 ml-0 sm:ml-7">
+                <div>
+                  <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold mb-4 lg:mb-6 text-gray-800">
+                    Welcome to ShopEase
+                  </h1>
+                  <p className="text-baseg mb-6 text-gray-600">
+                    Find everything you need with ease on ShopEase.
+                  </p>
+                  <div className="flex flex-wrap justify-center sm:justify-start">
+                    <Link
+                      to="/explore/all"
+                      className="bg-white text-black px-8 py-3 border border-black hover:border-black rounded-md  hover:bg-black hover:text-white transition duration-300 ease-in-out mr-4 mb-4 sm:mb-0 flex justify-center items-center gap-1"
+                    >
+                      <div>
+                        <SearchIcon />
+                      </div>
+                      <p>Explore</p>
+                    </Link>
+                    {currentUser && currentUser.isAdmin && (
+                      <Link
+                        to="/dashboard"
+                        className=" bg-black border border-black text-white px-8 py-3 rounded-md hover:bg-white hover:text-black transition duration-300 ease-in-out mr-4 mb-4 sm:mb-0 flex justify-center items-center gap-2"
+                      >
+                        <div>
+                          <DashboardIcon />
+                        </div>
+                        <p>Dashboard</p>
+                      </Link>
+                    )}
                   </div>
-                  <p>Explore</p>
-                </Link>
-                {currentUser && currentUser.isAdmin && (
-                  <Link
-                    to="/dashboard"
-                    className=" bg-black border border-black text-white px-8 py-3 rounded-md hover:bg-white hover:text-black transition duration-300 ease-in-out mr-4 mb-4 sm:mb-0 flex justify-center items-center gap-2"
-                  >
-                    <div>
-                      <DashboardIcon />
-                    </div>
-                    <p>Dashboard</p>
-                  </Link>
-                )}
+                </div>
+              </div>
+              <div className="flex-1 mt-10 sm:mt-0">
+                <img
+                  src={image}
+                  alt="hero_image"
+                  className="w-5/6 sm:w-full h-auto md:h-full object-contain rounded-md shadow-lg"
+                />
               </div>
             </div>
           </div>
-          <div className="flex-1 mt-10 sm:mt-0">
-            <img
-              src={image}
-              alt="hero_image"
-              className="w-5/6 sm:w-full h-auto md:h-full object-contain rounded-md shadow-lg"
-            />
+
+          {/* Categories Section */}
+          <div className="w-full mt-10 flex justify-center items-center">
+            <div className="w-full max-w-screen-xl mx-auto px-6 md:px-12 sm:px-0 py-4">
+              <div className="text-xl font-bold text-gray-900 sm:text-3xl text-center mt-2 mb-5">
+                Categories you might like
+              </div>
+              <div className="bg-white w-full h-full">
+                <Category />
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
 
-      {/* Categories Section */}
-
-      <div className="w-full mt-10 flex justify-center items-center">
-        <div className="w-full max-w-screen-xl mx-auto px-6 md:px-12 sm:px-0 py-4">
-          <div className="text-xl font-bold text-gray-900 sm:text-3xl text-center mt-2 mb-5">
-            Categories you might like
+          {/* New Arrivals */}
+          <div className="w-full mt-10 flex justify-center items-center">
+            <div className="w-full max-w-screen-xl mx-auto pl-4 pr-4">
+              <div className="bg-white w-full h-full">
+                <LatestFashion fashionLatest={fashionLatest} />
+              </div>
+            </div>
           </div>
-          <div className="bg-white w-full h-full">
-            <Category />
+
+          {/* New Arrivals */}
+          <div className="w-full mt-10 flex justify-center items-center">
+            <div className="w-full max-w-screen-xl mx-auto px-6 md:px-12 sm:px-0 py-4">
+              <div className="bg-white w-full h-full">
+                <Latest latestProducts={latestProducts} />
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
 
-      {/* New Arrivals */}
-
-      <div className="w-full mt-10 flex justify-center items-center">
-        <div className="w-full max-w-screen-xl mx-auto px-6 md:px-12 sm:px-0 py-4">
-          <div className="bg-white w-full h-full">
-            <Latest />
+          {/* New Launched */}
+          <div className="w-full mt-10 flex justify-center items-center">
+            <div className="w-full max-w-screen-xl mx-auto px-6 md:px-12 sm:px-0 py-4">
+              <div className="bg-white w-full h-full">
+                <LatestSingle latestSingleProduct={latestSingleProduct} />
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
 
-      {/* New Launched */}
-
-      <div className="w-full mt-10 flex justify-center items-center">
-        <div className="w-full max-w-screen-xl mx-auto px-6 md:px-12 sm:px-0 py-4">
-          <div className="bg-white w-full h-full">
-            <LatestSingle />
+          {/* Brands */}
+          <div className="w-full flex justify-center flex-col pt-6 pb-6 mt-10 rounded-md gap-2 overflow-hidden">
+            <div className="text-3xl self-center mb-6 font-semibold">
+              Our Top Brands
+            </div>
+            <div className="h-fit w-full bg-white self-center">
+              <Carousel brands={brands} />
+            </div>
           </div>
-        </div>
-      </div>
 
-      {/* Brands */}
-
-      <div className=" w-full flex justify-center flex-col pt-6 pb-6 mt-10 rounded-md gap-2">
-        <div className="text-3xl self-center mb-6 font-semibold">
-          Our Top Brands
-        </div>
-        <div className="h-fit min-w-screen bg-white self-center">
-          <Carousel />
-        </div>
-      </div>
-
-      {/* Footer */}
-
-      <div>
-        <Footer />
-      </div>
-    </div>
+          {/* Footer */}
+          <div>
+            <Footer />
+          </div>
+        </>
+      )}
+    </>
   );
 };
 

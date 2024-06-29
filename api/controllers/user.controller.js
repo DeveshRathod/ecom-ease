@@ -3,6 +3,17 @@ import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
 import { Address } from "../database/models/address.model.js";
 import Order from "../database/models/order.model.js";
+import { v4 as uuidv4 } from "uuid";
+
+const generateNotification = (message, sender) => {
+  return {
+    message,
+    sender,
+    date: new Date(),
+    notificationId: uuidv4(),
+    status: "Unread",
+  };
+};
 
 function isValidEmail(email) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -380,6 +391,63 @@ export const getOrders = async (req, res) => {
   } catch (error) {
     console.error("Error fetching orders:", error);
     res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const cancelOrder = async (req, res) => {
+  const { orderId, transactionId } = req.body;
+  const userId = req.user._id;
+
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const order = user.orders.find((order) => order._id.toString() === orderId);
+
+    if (!order) {
+      return res
+        .status(404)
+        .json({ error: "Order not found in user's orders list" });
+    }
+
+    const orderInDb = await Order.findById(orderId);
+    if (!orderInDb) {
+      return res.status(404).json({ error: "Order not found in the database" });
+    }
+    orderInDb.status = "Requested cancellation";
+    await orderInDb.save();
+
+    const adminUser = await User.findOne({ isAdmin: true });
+
+    if (!adminUser) {
+      return res.status(404).json({ error: "Admin user not found" });
+    }
+
+    const adminMessage = `A cancellation request has been submitted for Order ID: ${orderId}, Transaction ID: ${transactionId}. Please review and process the request accordingly.`;
+    const adminNotification = generateNotification(adminMessage, userId);
+
+    adminUser.notifications.push(adminNotification);
+    await adminUser.save();
+
+    const userMessage = `Dear Customer, your cancellation request for Order ID: ${orderId} has been successfully submitted. If the payment has already been made, the refund process will be initiated shortly. Thank you for shopping with us.`;
+    const userNotification = generateNotification(userMessage, "System");
+
+    user.notifications.push(userNotification);
+
+    await user.save();
+
+    res.status(200).json({
+      message:
+        "Order cancellation requested and notifications sent to both admin and user",
+    });
+  } catch (error) {
+    console.error("Error canceling order:", error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while canceling the order" });
   }
 };
 

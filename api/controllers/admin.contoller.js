@@ -72,17 +72,20 @@ export const removeBrand = async (req, res) => {
 export const fetchAllBrandNames = async (req, res) => {
   try {
     const brands = await Brand.find({}, "name url brandId products");
-    const brandData = brands.map((brand) => ({
-      name: brand.name,
-      url: brand.url,
-      brandId: brand.brandId,
-      products: brand.products,
-    }));
+    const brandData = brands
+      .map((brand) => ({
+        name: brand.name,
+        url: brand.url,
+        brandId: brand.brandId,
+        products: brand.products,
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+
     res.status(200).json({ brandData });
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "An error occurred while fetching the brand names" });
+    res.status(500).json({
+      error: "An error occurred while fetching the brand names",
+    });
   }
 };
 
@@ -106,6 +109,7 @@ export const addProduct = async (req, res) => {
     images,
     category,
     brand: brandName,
+    discount,
     sizes,
     stock,
     type,
@@ -149,6 +153,7 @@ export const addProduct = async (req, res) => {
       images,
       brand: brandName,
       stock,
+      discount,
       type,
       sizes,
       returnable,

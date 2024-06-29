@@ -48,7 +48,15 @@ const AddProduct = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const updatedForm = { ...formData, images: allImages };
+    const updatedForm = {
+      ...formData,
+      discount: Number(formData.discount),
+      stock: Number(formData.stock),
+      warranty: Number(formData.warranty),
+      sizes: [formData.sizes],
+      price: Number(formData.price),
+      images: allImages,
+    };
 
     const token = localStorage.getItem("token");
     if (token) {

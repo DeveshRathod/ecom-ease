@@ -1,17 +1,16 @@
 import React from "react";
-import data from "../data/brands.json";
 import Marquee from "react-fast-marquee";
 
-const Carousel = () => {
+const Carousel = ({ brands }) => {
   return (
-    <div className=" w-full">
-      <Marquee direction="left" speed={20}>
-        {data.map((item, index) => (
-          <div key={index}>
+    <div className="w-full overflow-hidden">
+      <Marquee direction="left" speed={20} gradient={false}>
+        {brands.map((item, index) => (
+          <div key={index} className="flex items-center justify-center">
             <img
-              src={item.image}
-              alt={item.name}
-              className="w-40 h-20 object-contain mr-4"
+              src={item}
+              alt="brand"
+              className="w-40 h-20 object-contain mx-6"
             />
           </div>
         ))}
