@@ -19,9 +19,9 @@ const Messages = () => {
   const currentUser = useSelector((state) => state.user.currentUser);
 
   let url;
-  if (currentUser.isAdmin) {
+  if (currentUser && currentUser.isAdmin) {
     url = "/dashboard";
-  } else {
+  } else if (currentUser && !currentUser.isAdmin) {
     url = "/orders";
   }
 
@@ -111,7 +111,7 @@ const Messages = () => {
           if (response.data.length === 0) {
             setIsEmpty(true);
           }
-          setIsEmpty(true);
+
           setSelectedIds([]);
         }
       } catch (error) {

@@ -39,23 +39,23 @@ const LatestSingle = ({ latestSingleProduct }) => {
               <div className="lg:col-span-2 lg:py-8">
                 <ul className="grid grid-cols-2 gap-4">
                   <li>
-                    <a href="#" className="group block">
+                    <div className="group block">
                       <img
                         src={latestSingleProduct.images[0].images[0].url}
                         alt="Image"
                         className="aspect-square w-full rounded object-cover"
                       />
-                    </a>
+                    </div>
                   </li>
 
                   <li>
-                    <a href="#" className="group block">
+                    <div className="group block">
                       <img
                         src={latestSingleProduct.images[0].images[1].url}
                         alt=""
                         className="aspect-square w-full rounded object-cover"
                       />
-                    </a>
+                    </div>
                   </li>
                   <div className="mt-3">
                     <h3 className="font-medium text-gray-900 group-hover:underline group-hover:underline-offset-4">

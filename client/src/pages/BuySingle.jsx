@@ -93,6 +93,8 @@ const BuySingle = () => {
 
     try {
       const token = localStorage.getItem("token");
+      const successPath = window.location.origin + "/orders";
+      const cancelPath = window.location.origin + `/buy/${id}/${colorIndex}`;
       const response = await axios.post(
         "/api/payment/placeOrder",
         {
@@ -112,7 +114,8 @@ const BuySingle = () => {
           typeOfPayment,
           address: selectedAddress,
           userId: currentUser._id,
-          url: `https://shopease-36jj.onrender.com/buy/${id}/${colorIndex}`,
+          successURL: successPath,
+          cancelURL: cancelPath,
         },
         {
           headers: {
@@ -121,7 +124,6 @@ const BuySingle = () => {
         }
       );
 
-      console.log(response.data.product);
       window.location.href = response.data.url;
     } catch (error) {
       console.error("Error placing order:", error);

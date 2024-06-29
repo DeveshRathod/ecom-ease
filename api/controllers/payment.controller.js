@@ -23,8 +23,15 @@ const generateNotification = (message, sender) => {
 };
 
 export const pay = async (req, res) => {
-  const { totalAmount, product, typeOfPayment, userId, address, url } =
-    req.body;
+  const {
+    totalAmount,
+    product,
+    typeOfPayment,
+    userId,
+    address,
+    successURL,
+    cancelURL,
+  } = req.body;
   const currentUser = req.user;
 
   const calculateFinalPrice = (price, discount) => {
@@ -84,8 +91,8 @@ export const pay = async (req, res) => {
         payment_method_types: ["card"],
         line_items: line_items,
         mode: "payment",
-        success_url: "https://shopease-36jj.onrender.com/orders",
-        cancel_url: url,
+        success_url: successURL,
+        cancel_url: cancelURL,
       });
 
       const createdOrderId = await createOrderInMongo(session);
@@ -148,9 +155,7 @@ export const pay = async (req, res) => {
         await admin.save();
       });
 
-      res
-        .status(200)
-        .json({ url: "https://shopease-36jj.onrender.com/orders" });
+      res.status(200).json({ url: successURL });
     }
   } catch (error) {
     await session.abortTransaction();

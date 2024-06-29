@@ -167,6 +167,8 @@ const Cart = () => {
 
     try {
       const token = localStorage.getItem("token");
+      const successPath = window.location.origin + "/orders";
+      const cancelPath = window.location.origin + `/cart`;
       const response = await axios.post(
         "/api/payment/placeOrder",
         {
@@ -175,7 +177,8 @@ const Cart = () => {
           typeOfPayment,
           address: selectedAddress,
           userId: currentUser._id,
-          url: "https://shopease-36jj.onrender.com/cart",
+          successURL: successPath,
+          cancelURL: cancelPath,
         },
         {
           headers: {

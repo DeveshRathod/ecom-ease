@@ -46,25 +46,25 @@ const Footer = () => {
         <div className=" w-fit mt-6">
           <div className=" flex gap-8 justify-start">
             <a
-              href="#"
+              href="https://www.facebook.com/devesh.naik.92/"
               className="mx-auto max-w-md text-center leading-relaxed text-gray-500 lg:text-left"
             >
               <FacebookIcon />
             </a>
             <a
-              href="#"
+              href="https://www.instagram.com/devesh.naik.92/"
               className="mx-auto max-w-md text-center leading-relaxed text-gray-500 lg:text-left"
             >
               <InstagramIcon />
             </a>
             <a
-              href="#"
+              href="https://x.com/devnaik9302"
               className="mx-auto max-w-md text-center leading-relaxed text-gray-500 lg:text-left"
             >
               <TwitterIcon />
             </a>
             <a
-              href="#"
+              href="https://github.com/DeveshRathod/"
               className="mx-auto max-w-md text-center leading-relaxed text-gray-500 lg:text-left"
             >
               <GitHubIcon />

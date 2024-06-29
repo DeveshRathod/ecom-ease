@@ -123,7 +123,11 @@ const Product = () => {
                         src={image.url}
                         alt={image.name}
                         loading="lazy"
-                        className="w-28 h-20 object-contain cursor-pointer"
+                        className={`w-28 h-20 object-contain cursor-pointer ${
+                          index === selectedImageIndex
+                            ? "border-2 border-gray-500"
+                            : ""
+                        }`}
                         onClick={() => handleImageSelect(index)}
                       />
                     ))}
@@ -135,19 +139,22 @@ const Product = () => {
                           product.images[color].images[selectedImageIndex].url
                         }
                         alt={product.images[color].name}
-                        className="object-contain"
+                        className="object-contain w-full h-full"
                         loading="lazy"
                       />
                     </div>
                   </div>
                 </div>
                 <div className="flex-1 w-full p-2">
+                  {/* Product Title and Description */}
                   <h1 className="text-3xl font-semibold mb-2">
-                    {product.name}({product.images[color].name})
+                    {product.name} ({product.images[color].name})
                   </h1>
                   <h2 className="text-lg text-gray-600 mb-4">
                     {product.description}
                   </h2>
+
+                  {/* Pricing and Discounts */}
                   <div className="flex items-center">
                     <h2 className="text-2xl font-semibold mr-2">
                       {product.discount !== 0
@@ -168,11 +175,15 @@ const Product = () => {
                       </div>
                     )}
                   </div>
+
+                  {/* Color Selection */}
                   <div className="flex justify-start mt-4">
                     {product.images.map((colorData, index) => (
                       <div
                         key={index}
-                        className="relative w-8 h-8 rounded-full mx-1 cursor-pointer "
+                        className={`relative w-8 h-8 rounded-full mx-1 cursor-pointer ${
+                          color === index ? "border-2 border-gray-500" : ""
+                        }`}
                         style={{
                           backgroundColor: colorData.color,
                           border: "1px solid #6b7280",
@@ -189,6 +200,8 @@ const Product = () => {
                       </div>
                     ))}
                   </div>
+
+                  {/* Add to Cart and Buy Now */}
                   {currentUser &&
                     !currentUser.isAdmin &&
                     product.stock > product.sold && (
@@ -211,7 +224,7 @@ const Product = () => {
                                   type="number"
                                   id="Quantity"
                                   value={quantity}
-                                  className="h-10 w-6 border-transparent text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 outline-none [&::-webkit-outer-spin-button]:appearance-none"
+                                  className="h-10 w-6 border-transparent text-center sm:text-sm outline-none"
                                   readOnly
                                 />
                                 <button
@@ -242,6 +255,8 @@ const Product = () => {
                         </Link>
                       </div>
                     )}
+
+                  {/* Specifications */}
                   <div className="mt-4">
                     <h2 className="text-lg font-semibold mb-2">
                       Specifications:
@@ -254,6 +269,8 @@ const Product = () => {
                       ))}
                     </ul>
                   </div>
+
+                  {/* Additional Features */}
                   <div className="mt-4 flex flex-wrap overflow-x-auto justify-start items-center">
                     {product.openbox && (
                       <div

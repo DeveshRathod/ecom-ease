@@ -22,6 +22,8 @@ const Navbar = () => {
   );
 
   useEffect(() => {
+    if (currentUser) {
+    }
     const fetchMessages = async () => {
       try {
         const token = localStorage.getItem("token");
@@ -35,11 +37,13 @@ const Navbar = () => {
         dispatch(setNotifications(response.data.notifications));
         dispatch(setNewNotificationCount(response.data.unreadCount));
       } catch (err) {
-        setLoading(false);
+        console.error("Error fetching messages:", err);
       }
     };
 
-    fetchMessages();
+    if (currentUser) {
+      fetchMessages();
+    }
   }, [dispatch]);
 
   useEffect(() => {
@@ -55,10 +59,10 @@ const Navbar = () => {
 
         dispatch(setNewNotificationCount(0));
       } catch (err) {
-        setLoading(false);
+        console.error("Error marking as read", err);
       }
 
-      if (window.location.href === "/messages") {
+      if (window.location.href === "/messages" && currentUser) {
         markAsRead();
       }
     };
