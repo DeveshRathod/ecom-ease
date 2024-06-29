@@ -189,57 +189,59 @@ const Product = () => {
                       </div>
                     ))}
                   </div>
-                  {!currentUser.isAdmin && product.stock > product.sold && (
-                    <div className="flex pr-2 pb-2 gap-2 mt-4 pt-2">
-                      {quantity >= 1 ? (
-                        <>
-                          <div>
-                            <label htmlFor="Quantity" className="sr-only">
-                              Quantity
-                            </label>
-                            <div className="flex items-center rounded border border-black">
-                              <button
-                                type="button"
-                                className="size-10 leading-10 text-black transition hover:opacity-75"
-                                onClick={removeCart}
-                              >
-                                -
-                              </button>
-                              <input
-                                type="number"
-                                id="Quantity"
-                                value={quantity}
-                                className="h-10 w-6 border-transparent text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 outline-none [&::-webkit-outer-spin-button]:appearance-none"
-                                readOnly
-                              />
-                              <button
-                                type="button"
-                                className="size-10 leading-10 text-black transition hover:opacity-75"
-                                onClick={addToCart}
-                              >
-                                +
-                              </button>
+                  {currentUser &&
+                    !currentUser.isAdmin &&
+                    product.stock > product.sold && (
+                      <div className="flex pr-2 pb-2 gap-2 mt-4 pt-2">
+                        {quantity >= 1 ? (
+                          <>
+                            <div>
+                              <label htmlFor="Quantity" className="sr-only">
+                                Quantity
+                              </label>
+                              <div className="flex items-center rounded border border-black">
+                                <button
+                                  type="button"
+                                  className="size-10 leading-10 text-black transition hover:opacity-75"
+                                  onClick={removeCart}
+                                >
+                                  -
+                                </button>
+                                <input
+                                  type="number"
+                                  id="Quantity"
+                                  value={quantity}
+                                  className="h-10 w-6 border-transparent text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 outline-none [&::-webkit-outer-spin-button]:appearance-none"
+                                  readOnly
+                                />
+                                <button
+                                  type="button"
+                                  className="size-10 leading-10 text-black transition hover:opacity-75"
+                                  onClick={addToCart}
+                                >
+                                  +
+                                </button>
+                              </div>
                             </div>
-                          </div>
-                        </>
-                      ) : (
-                        <>
-                          <button
-                            className="px-3 py-2 rounded-md bg-black text-white border border-black hover:text-black hover:border hover:border-black hover:bg-white transition-all ease-in-out delay-75"
-                            onClick={addToCart}
-                          >
-                            Add to Cart
-                          </button>
-                        </>
-                      )}
-                      <Link
-                        to={`/buy/${product._id}/${color}`}
-                        className="px-3 py-2 rounded-md text-black border border-black hover:text-white hover:bg-black transition-all ease-in-out delay-75"
-                      >
-                        Buy Now
-                      </Link>
-                    </div>
-                  )}
+                          </>
+                        ) : (
+                          <>
+                            <button
+                              className="px-3 py-2 rounded-md bg-black text-white border border-black hover:text-black hover:border hover:border-black hover:bg-white transition-all ease-in-out delay-75"
+                              onClick={addToCart}
+                            >
+                              Add to Cart
+                            </button>
+                          </>
+                        )}
+                        <Link
+                          to={`/buy/${product._id}/${color}`}
+                          className="px-3 py-2 rounded-md text-black border border-black hover:text-white hover:bg-black transition-all ease-in-out delay-75"
+                        >
+                          Buy Now
+                        </Link>
+                      </div>
+                    )}
                   <div className="mt-4">
                     <h2 className="text-lg font-semibold mb-2">
                       Specifications:
