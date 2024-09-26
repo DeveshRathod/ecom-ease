@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Loader from "../components/Loader";
 
 const BuySingle = () => {
@@ -16,7 +16,6 @@ const BuySingle = () => {
   const [discountAmount, setDiscountAmount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [isEmpty, setIsEmpty] = useState(false);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const currentUser = useSelector((state) => state.user.currentUser);
 

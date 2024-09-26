@@ -74,13 +74,13 @@ const Home = () => {
                   <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold mb-4 lg:mb-6 text-gray-800">
                     Welcome to ShopEase
                   </h1>
-                  <p className="text-baseg mb-6 text-gray-600">
+                  <p className="text-base mb-6 text-gray-600">
                     Find everything you need with ease on ShopEase.
                   </p>
                   <div className="flex flex-wrap justify-center sm:justify-start">
                     <Link
                       to="/explore/all"
-                      className="bg-white text-black px-8 py-3 border border-black hover:border-black rounded-md  hover:bg-black hover:text-white transition duration-300 ease-in-out mr-4 mb-4 sm:mb-0 flex justify-center items-center gap-1"
+                      className="bg-white text-black px-8 py-3 border border-black hover:border-black rounded-md hover:bg-black hover:text-white transition duration-300 ease-in-out mr-4 mb-4 sm:mb-0 flex justify-center items-center gap-1"
                     >
                       <div>
                         <SearchIcon />
@@ -90,7 +90,7 @@ const Home = () => {
                     {currentUser && currentUser.isAdmin && (
                       <Link
                         to="/dashboard"
-                        className=" bg-black border border-black text-white px-8 py-3 rounded-md hover:bg-white hover:text-black transition duration-300 ease-in-out mr-4 mb-4 sm:mb-0 flex justify-center items-center gap-2"
+                        className="bg-black border border-black text-white px-8 py-3 rounded-md hover:bg-white hover:text-black transition duration-300 ease-in-out mr-4 mb-4 sm:mb-0 flex justify-center items-center gap-2"
                       >
                         <div>
                           <DashboardIcon />
@@ -123,42 +123,52 @@ const Home = () => {
             </div>
           </div>
 
-          {/* New Arrivals */}
-          <div className="w-full mt-10 flex justify-center items-center">
-            <div className="w-full max-w-screen-xl mx-auto pl-4 pr-4">
-              <div className="bg-white w-full h-full">
-                <LatestFashion fashionLatest={fashionLatest} />
+          {/* New Arrivals - Fashion */}
+          {fashionLatest &&
+            fashionLatest.resultArray &&
+            fashionLatest.resultArray.length > 0 && (
+              <div className="w-full mt-10 flex justify-center items-center">
+                <div className="w-full max-w-screen-xl mx-auto pl-4 pr-4">
+                  <div className="bg-white w-full h-full">
+                    <LatestFashion fashionLatest={fashionLatest} />
+                  </div>
+                </div>
+              </div>
+            )}
+
+          {/* New Arrivals - Latest Products */}
+          {latestProducts && latestProducts.length > 0 && (
+            <div className="w-full mt-10 flex justify-center items-center">
+              <div className="w-full max-w-screen-xl mx-auto px-6 md:px-12 sm:px-0 py-4">
+                <div className="bg-white w-full h-full">
+                  <Latest latestProducts={latestProducts} />
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
-          {/* New Arrivals */}
-          <div className="w-full mt-10 flex justify-center items-center">
-            <div className="w-full max-w-screen-xl mx-auto px-6 md:px-12 sm:px-0 py-4">
-              <div className="bg-white w-full h-full">
-                <Latest latestProducts={latestProducts} />
+          {/* New Launched - Single Product */}
+          {latestSingleProduct && (
+            <div className="w-full mt-10 flex justify-center items-center">
+              <div className="w-full max-w-screen-xl mx-auto px-6 md:px-12 sm:px-0 py-4">
+                <div className="bg-white w-full h-full">
+                  <LatestSingle latestSingleProduct={latestSingleProduct} />
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
-          {/* New Launched */}
-          <div className="w-full mt-10 flex justify-center items-center">
-            <div className="w-full max-w-screen-xl mx-auto px-6 md:px-12 sm:px-0 py-4">
-              <div className="bg-white w-full h-full">
-                <LatestSingle latestSingleProduct={latestSingleProduct} />
+          {/* Brands Section */}
+          {brands && brands.length > 0 && (
+            <div className="w-full flex justify-center flex-col pt-6 pb-6 mt-10 rounded-md gap-2 overflow-hidden">
+              <div className="text-3xl self-center mb-6 font-semibold">
+                Our Top Brands
+              </div>
+              <div className="h-fit w-full bg-white self-center">
+                <Carousel brands={brands} />
               </div>
             </div>
-          </div>
-
-          {/* Brands */}
-          <div className="w-full flex justify-center flex-col pt-6 pb-6 mt-10 rounded-md gap-2 overflow-hidden">
-            <div className="text-3xl self-center mb-6 font-semibold">
-              Our Top Brands
-            </div>
-            <div className="h-fit w-full bg-white self-center">
-              <Carousel brands={brands} />
-            </div>
-          </div>
+          )}
 
           {/* Footer */}
           <div>
