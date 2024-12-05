@@ -20,7 +20,7 @@ const Order = () => {
 
   useEffect(() => {
     fetchOrders(selectedDate);
-  }, [selectedDate]);
+  }, []);
 
   const fetchOrders = async (date) => {
     setLoading(true);
@@ -94,9 +94,25 @@ const Order = () => {
         <Loader />
       ) : (
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          <div className="w-full sm:w-1/3 flex justify-center items-center gap-3 mb-4">
+            <input
+              type="date"
+              value={selectedDate}
+              onChange={handleDateChange}
+              className="w-full p-2 border rounded"
+            />
+            <button
+              className=" p-2 bg-green-500 text-white rounded"
+              onClick={() => {
+                fetchOrders(selectedDate);
+              }}
+            >
+              Apply
+            </button>
+          </div>
           {isEmpty ? (
             <div className="flex flex-col sm:flex-row md:flex-row w-full justify-center">
-              <div className=" w-full h-fit flex justify-center items-center flex-col gap-5 border bg-gray-50 pt-6 pb-10 rounded-md">
+              <div className=" w-full h-fit flex justify-center items-center flex-col gap-5 border bg-gray-50 pt-6  pb-10 rounded-md">
                 <img
                   src={noOrder}
                   alt="empty_cart"
@@ -113,15 +129,6 @@ const Order = () => {
             </div>
           ) : (
             <>
-              <div className="w-full sm:w-1/3">
-                <input
-                  type="date"
-                  value={selectedDate}
-                  onChange={handleDateChange}
-                  className="w-full p-2 border rounded"
-                />
-              </div>
-
               <ul className="space-y-4 mt-4">
                 {currentOrders.map((order) => (
                   <div
