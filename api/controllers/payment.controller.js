@@ -3,6 +3,7 @@ import Order from "../database/models/order.model.js";
 import User from "../database/models/user.model.js";
 import { v4 as uuidv4 } from "uuid";
 import mongoose from "mongoose";
+import { Address } from "../database/models/address.model.js";
 
 const stripe = new Stripe(
   "sk_test_51PVVKZRsvxoA0WXZtXc6oZgGOJ1XZ4kAW0CDY8ITWk73QZEKGMpTdkHCwIiB7zSiM1CbsrYHDnlB8N0IuE5KMJTp00CZtRGdYi"
@@ -32,56 +33,59 @@ export const pay = async (req, res) => {
     successURL,
     cancelURL,
   } = req.body;
+
   const currentUser = req.user;
-
-  const calculateFinalPrice = (price, discount) => {
-    if (discount >= 0 && discount <= 100) {
-      const discountedPrice = price * (1 - discount / 100);
-      return discountedPrice;
-    } else {
-      return price;
-    }
-  };
-
   const transactionId = uuidv4();
   const orderId = generateOrderId();
-
-  const createOrderInMongo = async (session) => {
-    const order = new Order({
-      userId,
-      products: product,
-      totalAmount,
-      address,
-      typeOfPayment,
-      transactionId,
-      orderId,
-    });
-
-    await order.save({ session });
-    return order._id;
-  };
 
   const session = await mongoose.startSession();
   session.startTransaction();
 
   try {
-    if (typeOfPayment === "Stripe") {
-      const line_items = product.map((product) => {
-        let amount = calculateFinalPrice(product.price, product.discount);
+    // Fetch the full address document using the provided address ObjectId
+    const addressDoc = await Address.findById(address).session(session);
+    if (!addressDoc) throw new Error("Address not found");
 
-        if (totalAmount < 500) {
-          amount += 40;
-        }
+    // Construct the full address object from the fetched address
+    const fullAddress = {
+      type: addressDoc.type,
+      name: addressDoc.name,
+      mobile: addressDoc.mobile,
+      addressLine1: addressDoc.addressLine1,
+      addressLine2: addressDoc.addressLine2,
+      addressLine3: addressDoc.addressLine3,
+      pincode: addressDoc.pincode,
+    };
+
+    const createOrderInMongo = async () => {
+      const order = new Order({
+        userId,
+        products: product,
+        totalAmount,
+        addressId: address, // Store the address ID as a reference
+        address: fullAddress, // Store the full address in the `address` field
+        typeOfPayment,
+        transactionId,
+        orderId,
+      });
+      await order.save({ session });
+      return order._id;
+    };
+
+    if (typeOfPayment === "Stripe") {
+      const line_items = product.map((item) => {
+        let amount = item.price * (1 - (item.discount || 0) / 100);
+        if (totalAmount < 500) amount += 40;
 
         return {
           price_data: {
             currency: "inr",
             product_data: {
-              name: product.name,
-              images: [product.image],
-              description: product.brand,
+              name: item.name,
+              images: [item.image],
+              description: item.brand,
             },
-            unit_amount: amount * 100,
+            unit_amount: Math.round(amount * 100),
           },
           quantity: 1,
         };
@@ -89,25 +93,22 @@ export const pay = async (req, res) => {
 
       const sessionStripe = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
-        line_items: line_items,
+        line_items,
         mode: "payment",
         success_url: successURL,
         cancel_url: cancelURL,
       });
 
-      const createdOrderId = await createOrderInMongo(session);
+      const createdOrderId = await createOrderInMongo();
 
-      const user = await User.findById(userId).session(session);
       const userNotification = generateNotification(
         `Your order with ID: ${orderId} has been placed.`,
-        `${currentUser.username} (User)`
+        `${currentUser?.username || "System"} (User)`
       );
 
       await User.findByIdAndUpdate(
         userId,
-        {
-          $push: { orders: createdOrderId, notifications: userNotification },
-        },
+        { $push: { orders: createdOrderId, notifications: userNotification } },
         { session }
       );
 
@@ -119,16 +120,16 @@ export const pay = async (req, res) => {
         `New order placed with ID: ${orderId}`,
         `${userId} (User)`
       );
-      admins.forEach(async (admin) => {
+
+      for (const admin of admins) {
         admin.notifications.push(adminNotification);
         await admin.save();
-      });
+      }
 
-      res.status(200).json({ url: sessionStripe.url, product });
+      return res.status(200).json({ url: sessionStripe.url, product });
     } else {
-      const createdOrderId = await createOrderInMongo(session);
+      const createdOrderId = await createOrderInMongo();
 
-      const user = await User.findById(userId).session(session);
       const userNotification = generateNotification(
         `Your order with ID: ${orderId} has been placed.`,
         `System (Admin)`
@@ -136,9 +137,7 @@ export const pay = async (req, res) => {
 
       await User.findByIdAndUpdate(
         userId,
-        {
-          $push: { orders: createdOrderId, notifications: userNotification },
-        },
+        { $push: { orders: createdOrderId, notifications: userNotification } },
         { session }
       );
 
@@ -150,16 +149,18 @@ export const pay = async (req, res) => {
         `New order placed with ID: ${orderId}`,
         `${userId} (User)`
       );
-      admins.forEach(async (admin) => {
+
+      for (const admin of admins) {
         admin.notifications.push(adminNotification);
         await admin.save();
-      });
+      }
 
-      res.status(200).json({ url: successURL });
+      return res.status(200).json({ url: successURL });
     }
   } catch (error) {
     await session.abortTransaction();
     session.endSession();
-    res.status(500).send({ error: error.message });
+    console.error("Error in pay controller:", error);
+    return res.status(500).json({ error: error.message });
   }
 };

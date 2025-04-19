@@ -368,14 +368,22 @@ export const getOrders = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    let orders = await Order.find({ _id: { $in: user.orders } });
+    // Fetch the orders where the user has placed them
+    let orders = await Order.find({ _id: { $in: user.orders } })
+      .populate("address") // Populate the address field directly
+      .exec();
+
+    if (!orders || orders.length === 0) {
+      return res.status(404).json({ error: "No orders found" });
+    }
 
     if (date) {
       const startDate = new Date(date);
-      startDate.setHours(0, 0, 0, 0);
+      startDate.setHours(0, 0, 0, 0); // Set to the start of the day
       const endDate = new Date(date);
-      endDate.setHours(23, 59, 59, 999);
+      endDate.setHours(23, 59, 59, 999); // Set to the end of the day
 
+      // Filter orders by date range
       orders = orders.filter(
         (order) => order.createdAt >= startDate && order.createdAt <= endDate
       );
@@ -383,9 +391,6 @@ export const getOrders = async (req, res) => {
 
     // Sort orders by createdAt in descending order (newest first)
     orders.sort((a, b) => b.createdAt - a.createdAt);
-
-    // Populate address details for each order
-    await Order.populate(orders, { path: "address", model: Address });
 
     res.status(200).json({ orders });
   } catch (error) {
